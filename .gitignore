@@ -1,0 +1,53 @@
+# ===== Build output =====
+target/
+*.jar
+!.mvn/wrapper/maven-wrapper.jar
+
+# ===== Maven local repo (KHONG day len - rat nang) =====
+.m2/
+
+# ===== Du lieu MySQL cuc bo (KHONG day len - rat nang, chua du lieu) =====
+.mysql-data/
+
+# ===== Cong cu / IDE =====
+.tools/
+.idea/
+.vscode/
+.claude/
+*.iml
+*.log
+
+# ===== Log app cuc bo =====
+.app-*.err
+.app-*.log
+.app-start.*
+
+# ===== File cuc bo, khong day len =====
+*.zip
+*.sql
+*.bat
+*.ps1
+
+# ===== SECRET - TUYET DOI KHONG day len GitHub =====
+google-credentials.json
+*-credentials.json
+secrets.properties
+.env
+application-secret.properties
+
+# ===== Tai lieu noi bo (chua thong tin nhay cam, khong day len) =====
+FIX_SUMMARY.md
+PRODUCTION_DEPLOY.md
+RESTART_NOW.md
+START_PRODUCTION.md
+AUDIT_REPORT.md
+HANDOVER_CHECKLIST.md
+TEST_REPORT.md
+CHANGELOG.md
+
+# ===== He dieu hanh =====
+Thumbs.db
+.DS_Store
+
+# ===== Node (neu co) =====
+node_modules/

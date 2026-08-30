@@ -1,0 +1,15 @@
+# Khong copy cac thu muc/file khong can vao Docker image
+target/
+.tools/
+.git/
+.gitignore
+*.md
+*.zip
+*.sql
+*.bat
+*.ps1
+*.log
+.idea/
+.vscode/
+*.iml
+node_modules/

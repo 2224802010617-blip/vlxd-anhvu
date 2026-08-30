@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>&#272;&#7863;t h&agrave;ng - VLXD Anh V&#360;</title>
+    <link rel="icon" type="image/svg+xml" href="/images/anh-vu-logo.svg">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
+    <link rel="stylesheet" th:href="@{/css/style.css(v=27)}">
+</head>
+<body>
+<header class="qh-header-wrap">
+    <div class="qh-topbar">
+        <div class="container qh-topbar-inner">
+            <span class="qh-topbar-item">&#128205; &#272;&#7883;a ch&#7881;: 617 Nguy&#7877;n Hu&#7879;, P. B&igrave;nh Long, TP. &#272;&#7891;ng Nai</span>
+            <span class="qh-topbar-item" th:text="|&#9993; Email: ${email}|">&#9993; Email: xaydungvantaidaphuongthucanhvu@gmail.com</span>
+            <div class="qh-topbar-right">
+                <a th:if="${zaloReady}" th:href="${zalo}" target="_blank" rel="noopener">Zalo</a>
+                <a class="qh-login" th:if="${!authenticated}" href="/dang-nhap">&#272;&#259;ng nh&#7853;p</a>
+                <form class="qh-logout" th:if="${authenticated}" th:action="@{/logout}" method="post">
+                    <span th:text="${currentEmail}">khach@gmail.com</span>
+                    <button type="submit">&#272;&#259;ng xu&#7845;t</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="qh-main">
+        <div class="container qh-main-inner">
+            <a class="qh-logo" href="/">
+                <img src="/images/anh-vu-logo.svg" alt="Anh Vu logo" loading="eager" decoding="async">
+            </a>
+            <div class="qh-brand">
+                <h1>VLXD ANH V&#360;</h1>
+                <p>&#8220;S&#7843;n ph&#7849;m ch&#7845;t l&#432;&#7907;ng - Gi&aacute; c&#7843; c&#7841;nh tranh&#8221;</p>
+            </div>
+            <div class="qh-hotline">
+                <span>Hotline:</span>
+                <a href="tel:0866785645">0866 785 645</a>
+            </div>
+        </div>
+    </div>
+    <nav class="qh-menu">
+        <div class="container qh-menu-inner">
+            <div class="qh-menu-links">
+                <a href="/">TRANG CH&#7910;</a>
+                <a href="/gioi-thieu">GI&#7898;I THI&#7878;U</a>
+                <a href="/san-pham">S&#7842;N PH&#7848;M</a>
+                <a href="/bao-gia">B&Aacute;O GI&Aacute;</a>
+                <a class="is-active" href="/dat-hang">&#272;&#7862;T H&Agrave;NG</a>
+                <a href="/tra-cuu-don-hang">TRA C&#7912;U</a>
+                <a th:if="${isAdmin}" href="/admin">ADMIN</a>
+            </div>
+            <form class="qh-search global-search" method="get" action="/san-pham" autocomplete="off">
+                <input id="productSearchInput" name="keyword" placeholder="Nh&#7853;p t&#7915; kh&oacute;a">
+                <button type="submit" aria-label="Tim kiem">&#128269;</button>
+            </form>
+        </div>
+    </nav>
+</header>
+
+<main class="container" style="padding-top:32px;padding-bottom:60px;">
+    <section class="order-section animate-in is-visible">
+        <div class="order-intro">
+            <div class="section-heading">
+                <span>&#272;&#7863;t h&agrave;ng</span>
+                <h2>G&#7917;i th&ocirc;ng tin &#273;&#7863;t h&agrave;ng cho c&ocirc;ng ty</h2>
+                <p th:if="${selectedProduct != null and !selectedProduct.isBlank()}">S&#7843;n ph&#7849;m &#273;&atilde; ch&#7885;n: <b th:text="${selectedProduct}">S&#7843;n ph&#7849;m</b></p>
+            </div>
+            <div class="order-visual-3d" aria-hidden="true">
+                <div class="material-stage">
+                    <span class="material-cube cube-brick"><i></i><b></b></span>
+                    <span class="material-cube cube-cement"><i></i><b></b></span>
+                    <span class="material-cube cube-steel"><i></i><b></b></span>
+                    <span class="material-shadow"></span>
+                </div>
+            </div>
+        </div>
+        <div class="form-success" th:if="${orderSuccess}">&#272;&#417;n h&agrave;ng &#273;&atilde; &#273;&#432;&#7907;c ghi nh&#7853;n. Vui l&ograve;ng xem h&#432;&#7899;ng d&#7851;n thanh to&aacute;n b&ecirc;n d&#432;&#7899;i.</div>
+        <form class="order-form order-form-v9" th:action="@{/order-request}" th:object="${orderForm}" method="post">
+            <div class="form-error" th:if="${#fields.hasErrors('*')}">Vui l&ograve;ng ki&#7875;m tra l&#7841;i th&ocirc;ng tin.</div>
+            <label class="order-field">
+                <span>T&ecirc;n kh&aacute;ch h&agrave;ng</span>
+                <input th:field="*{customerName}" placeholder="VD: Nguy&#7877;n V&#259;n An">
+                <small class="field-error" th:if="${#fields.hasErrors('customerName')}" th:errors="*{customerName}"></small>
+            </label>
+            <label class="order-field">
+                <span>S&#7889; &#273;i&#7879;n tho&#7841;i</span>
+                <input th:field="*{phone}" placeholder="VD: 0908 222 394">
+                <small class="field-error" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></small>
+            </label>
+            <label class="order-field" style="grid-column: 1 / -1;">
+                <span>&#272;&#7883;a ch&#7881; giao h&agrave;ng</span>
+                <input th:field="*{address}" placeholder="S&#7889; nh&agrave;, ph&#432;&#7901;ng/x&atilde;, khu v&#7921;c giao">
+                <small class="field-error" th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></small>
+            </label>
+            <label class="order-field">
+                <span>S&#7843;n ph&#7849;m</span>
+                <select th:field="*{productName}">
+                    <option value="">Ch&#7885;n s&#7843;n ph&#7849;m</option>
+                    <option th:each="product : ${products}" th:value="${product.name}" th:text="|${product.name} (${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} &#8363;/${product.unit})|">S&#7843;n ph&#7849;m</option>
+                </select>
+                <small class="field-error" th:if="${#fields.hasErrors('productName')}" th:errors="*{productName}"></small>
+            </label>
+            <label class="order-field">
+                <span>S&#7889; l&#432;&#7907;ng</span>
+                <input th:field="*{quantity}" type="number" step="0.01" min="0.01" placeholder="VD: 10">
+                <small class="field-error" th:if="${#fields.hasErrors('quantity')}" th:errors="*{quantity}"></small>
+            </label>
+            <label class="order-field">
+                <span>V&#7853;n chuy&#7875;n &amp; B&#7889;c x&#7871;p</span>
+                <select name="shippingOptions" class="shipping-select">
+                    <option value="xe-tai">Xe t&#7843;i v&agrave;o t&#7853;n n&#417;i (&#272;&#432;&#7901;ng l&#7899;n)</option>
+                    <option value="xe-bagac">Xe ba g&aacute;c (H&#7867;m nh&#7887;)</option>
+                    <option value="can-boc-vac">C&#7847;n thu&ecirc; ng&#432;&#7901;i b&#7889;c v&aacute;c</option>
+                </select>
+            </label>
+            <label class="order-field">
+                <span>Ph&#432;&#417;ng th&#7913;c thanh to&aacute;n</span>
+                <select th:field="*{paymentMethod}">
+                    <option value="">Ch&#7885;n ph&#432;&#417;ng th&#7913;c thanh to&aacute;n</option>
+                    <option value="BANK_TRANSFER">Chuy&#7875;n kho&#7843;n MB Bank / VietQR</option>
+                    <option value="COD">Thanh to&aacute;n khi nh&#7853;n h&agrave;ng</option>
+                </select>
+                <small class="field-error" th:if="${#fields.hasErrors('paymentMethod')}" th:errors="*{paymentMethod}"></small>
+            </label>
+            <label class="order-field order-field-wide">
+                <span>Ghi ch&uacute;</span>
+                <textarea th:field="*{note}" rows="3" placeholder="Th&#7901;i gian giao, lo&#7841;i xe, v&#7883; tr&iacute; c&ocirc;ng tr&igrave;nh..."></textarea>
+                <small class="field-error" th:if="${#fields.hasErrors('note')}" th:errors="*{note}"></small>
+            </label>
+            <button class="btn btn-danger" type="submit">T&iacute;nh ti&#7873;n v&agrave; g&#7917;i &#273;&#417;n</button>
+        </form>
+    </section>
+
+    <section id="payment" class="payment-section animate-in is-visible" th:if="${orderSuccess}">
+        <div class="section-heading">
+            <span>Thanh to&aacute;n &#273;&#417;n h&agrave;ng</span>
+            <h2 th:if="${onlinePaymentAllowed}">T&#7893;ng ti&#7873;n d&#432;&#7899;i 100 tri&#7879;u: c&oacute; th&#7875; chuy&#7875;n kho&#7843;n</h2>
+            <h2 th:if="${storePaymentRequired and !priceNeedsConfirmation}">T&#7893;ng ti&#7873;n t&#7915; 100 tri&#7879;u: vui l&ograve;ng &#273;&#7871;n c&#7917;a h&agrave;ng</h2>
+            <h2 th:if="${priceNeedsConfirmation}">S&#7843;n ph&#7849;m c&#7847;n x&aacute;c nh&#7853;n gi&aacute;: vui l&ograve;ng &#273;&#7871;n c&#7917;a h&agrave;ng</h2>
+            <p th:if="${onlinePaymentAllowed}">QR b&ecirc;n d&#432;&#7899;i &#273;&atilde; g&#7855;n &#273;&uacute;ng s&#7889; ti&#7873;n v&agrave; n&#7897;i dung chuy&#7875;n kho&#7843;n cho &#273;&#417;n h&agrave;ng n&agrave;y.</p>
+            <p th:if="${storePaymentRequired and !priceNeedsConfirmation}">&#272;&#417;n h&agrave;ng gi&aacute; tr&#7883; l&#7899;n c&#7847;n x&aacute;c nh&#7853;n tr&#7921;c ti&#7871;p t&#7841;i c&#7917;a h&agrave;ng &#273;&#7875; ch&#7889;t gi&aacute;, h&#7907;p &#273;&#7891;ng v&agrave; l&#7883;ch giao.</p>
+            <p th:if="${priceNeedsConfirmation}">S&#7843;n ph&#7849;m n&agrave;y ch&#432;a c&oacute; gi&aacute; b&aacute;n c&#7909; th&#7875;, nh&acirc;n vi&ecirc;n s&#7869; x&aacute;c nh&#7853;n v&agrave; b&aacute;o l&#7841;i cho kh&aacute;ch h&agrave;ng.</p>
+        </div>
+
+        <div class="payment-summary">
+            <article><span>S&#7843;n ph&#7849;m</span><strong th:text="${orderedProductName}">S&#7843;n ph&#7849;m</strong></article>
+            <article><span>S&#7889; l&#432;&#7907;ng</span><strong th:text="|${orderedQuantity} ${orderedUnit}|">0</strong></article>
+            <article><span>&#272;&#417;n gi&aacute;</span><strong th:text="${unitPriceDisplay}">0 VN&#272;</strong></article>
+            <article><span>T&#7841;m t&iacute;nh</span><strong th:text="${orderTotalDisplay}">0 VN&#272;</strong></article>
+            <article class="payment-note" style="grid-column: 1 / -1; background-color: #fff3f3; color: #d32f2f; padding: 12px; border-radius: 6px; font-size: 0.9em; text-align: center; margin-top: 10px;">
+                <strong>* L&#432;u &yacute;:</strong> S&#7889; ti&#7873;n tr&ecirc;n l&agrave; t&#7841;m t&iacute;nh cho ti&#7873;n h&agrave;ng, <strong>ch&#432;a bao g&#7891;m ph&iacute; v&#7853;n chuy&#7875;n v&agrave; b&#7889;c x&#7871;p</strong> (n&#7871;u c&oacute;). Nh&acirc;n vi&ecirc;n s&#7869; g&#7885;i l&#7841;i &#273;&#7875; b&aacute;o c&#432;&#7899;c v&#7853;n chuy&#7875;n ch&iacute;nh x&aacute;c d&#7921;a v&agrave;o &#273;&#7883;a ch&#7881; c&#7911;a b&#7841;n.
+            </article>
+        </div>
+
+        <div class="store-payment-alert" th:if="${storePaymentRequired}">
+            <strong>Vui l&ograve;ng &#273;&#7871;n c&#7917;a h&agrave;ng &#273;&#7875; thanh to&aacute;n</strong>
+            <span th:if="${!priceNeedsConfirmation}">Ng&#432;&#7905;ng thanh to&aacute;n online t&#7889;i &#273;a: d&#432;&#7899;i 100.000.000 VN&#272;.</span>
+            <span th:if="${priceNeedsConfirmation}">S&#7843;n ph&#7849;m ch&#432;a c&oacute; gi&aacute; s&#7869; kh&ocirc;ng t&#7841;o QR 0 &#273;&#7891;ng.</span>
+            <span>&#272;&#7883;a ch&#7881;: 617 Nguy&#7877;n Hu&#7879;, T&#7893; 8 KP Ph&uacute; C&#432;&#7901;ng, Ph&#432;&#7901;ng B&igrave;nh Long, TP. &#272;&#7891;ng Nai.</span>
+        </div>
+
+        <div class="qr-card qr-card-business" th:if="${bankTransferSelected and onlinePaymentAllowed}">
+            <div class="qr-scan-box">
+                <span>Qu&eacute;t VietQR</span>
+                <img class="qr-real" th:attr="src=${paymentQrUrl}" alt="VietQR MB Bank Anh Vu">
+                <small>QR &#273;&atilde; g&#7855;n s&#7889; ti&#7873;n v&agrave; n&#7897;i dung</small>
+            </div>
+            <div class="qr-payment-info">
+                <small th:text="${bankName}">Ng&acirc;n h&agrave;ng Qu&acirc;n &#272;&#7897;i - Chi nh&aacute;nh B&igrave;nh Long</small>
+                <strong th:text="${bankAccount}">1991777790</strong>
+                <span th:text="${companyName}">C&Ocirc;NG TY TNHH MTV TM DV XD ANH V&#360;</span>
+                <em>N&#7897;i dung chuy&#7875;n kho&#7843;n: <b th:text="${paymentContent}">ANHVU-DH</b></em>
+                <em>S&#7889; ti&#7873;n thanh to&aacute;n: <b th:text="${orderTotalDisplay}">0 VN&#272;</b></em>
+            </div>
+        </div>
+
+        <div class="cod-note" th:if="${!bankTransferSelected and onlinePaymentAllowed}">
+            <strong>B&#7841;n &#273;&atilde; ch&#7885;n thanh to&aacute;n khi nh&#7853;n h&agrave;ng.</strong>
+            <span>N&#7871;u mu&#7889;n chuy&#7875;n kho&#7843;n, vui l&ograve;ng g&#7917;i l&#7841;i &#273;&#417;n v&agrave; ch&#7885;n MB Bank / VietQR.</span>
+        </div>
+    </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script th:src="@{/js/main.js(v=22)}"></script>
+</body>
+</html>

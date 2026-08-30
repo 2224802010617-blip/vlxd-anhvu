@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Admin - VLXD Anh Vu</title>
+    <link rel="icon" type="image/svg+xml" href="/images/anh-vu-logo.svg">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
+    <link rel="stylesheet" th:href="@{/css/style.css(v=27)}">
+</head>
+<body class="admin-body">
+<header class="admin-topbar">
+    <div class="container admin-topbar__inner">
+        <a class="admin-brand" href="/">
+            <img src="/images/anh-vu-logo.svg" alt="Anh Vu logo">
+            <span>
+                <strong>Dashboard qu&#7843;n tr&#7883;</strong>
+                <small th:text="${adminEmail}">admin@anhvu.vn</small>
+            </span>
+        </a>
+        <div class="admin-topbar__actions">
+            <a class="admin-action admin-action--ghost" href="/">Trang ch&#7911;</a>
+            <form th:action="@{/logout}" method="post">
+                <button class="admin-action admin-action--solid" type="submit">&#272;&#259;ng xu&#7845;t</button>
+            </form>
+        </div>
+    </div>
+</header>
+
+<main class="admin-page container">
+    <section class="admin-hero admin-surface reveal-on-scroll">
+        <div class="admin-hero__content">
+            <p class="admin-kicker">C&Ocirc;NG TY TNHH MTV TM DV XD ANH V&#360;</p>
+            <h1>Kh&ocirc;ng gian &#273;i&#7873;u h&agrave;nh g&#7885;n h&#417;n, s&aacute;ng h&#417;n v&agrave; nh&igrave;n chuy&ecirc;n nghi&#7879;p h&#417;n.</h1>
+            <p class="admin-hero__desc">
+                M&#7897;t m&agrave;n h&igrave;nh &#273;&#7875; theo d&otilde;i &#273;&#417;n h&agrave;ng, b&aacute;o gi&aacute;, kho h&agrave;ng v&agrave; doanh s&#7889; &#273;ang ch&#7841;y.
+            </p>
+            <div class="admin-hero__chips">
+                <span>&#272;&#417;n h&agrave;ng</span>
+                <span>B&aacute;o gi&aacute;</span>
+                <span>Kho h&agrave;ng</span>
+                <span>B&aacute;o c&aacute;o</span>
+            </div>
+        </div>
+
+        <div class="admin-hero__side">
+            <div class="admin-hero__status">
+                <span class="dot-live"></span>
+                H&#7879; th&#7889;ng &#273;ang ho&#7841;t &#273;&#7897;ng
+            </div>
+            <div class="admin-hero__stack">
+                <article>
+                    <span>&#272;&#417;n ch&#7901;</span>
+                    <strong th:text="${pendingOrders}">0</strong>
+                </article>
+                <article>
+                    <span>B&aacute;o gi&aacute; ch&#7901;</span>
+                    <strong th:text="${pendingQuotes}">0</strong>
+                </article>
+                <article>
+                    <span>S&#7855;p h&#7871;t h&agrave;ng</span>
+                    <strong th:text="${lowStock}">0</strong>
+                </article>
+                <article>
+                    <span>&#272;&atilde; b&aacute;n</span>
+                    <strong th:text="${#numbers.formatDecimal(totalUnitsSold, 1, 'COMMA', 0, 'POINT')}">0</strong>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <div class="admin-message success reveal-on-scroll" th:if="${adminSuccess}" th:text="${adminSuccess}">&#272;&atilde; c&#7853;p nh&#7853;t.</div>
+    <div class="admin-message error reveal-on-scroll" th:if="${adminError}" th:text="${adminError}">C&oacute; l&#7895;i.</div>
+
+    <section class="admin-metrics reveal-on-scroll">
+        <article class="metric-card">
+            <span>S&#7843;n ph&#7849;m</span>
+            <strong data-countup th:text="${productCount}">0</strong>
+        </article>
+        <article class="metric-card">
+            <span>Danh m&#7909;c</span>
+            <strong data-countup th:text="${categoryCount}">0</strong>
+        </article>
+        <article class="metric-card">
+            <span>&#272;&#417;n h&agrave;ng</span>
+            <strong data-countup th:text="${orderCount}">0</strong>
+        </article>
+        <article class="metric-card">
+            <span>B&aacute;o gi&aacute;</span>
+            <strong data-countup th:text="${quoteCount}">0</strong>
+        </article>
+        <article class="metric-card">
+            <span>S&#7855;p h&#7871;t h&agrave;ng</span>
+            <strong data-countup th:text="${lowStock}">0</strong>
+        </article>
+        <article class="metric-card">
+            <span>SL &#273;&atilde; b&aacute;n</span>
+            <strong data-countup th:text="${#numbers.formatDecimal(totalUnitsSold, 1, 'COMMA', 0, 'POINT')}">0</strong>
+        </article>
+        <article class="metric-card">
+            <span>&#272;&#417;n ch&#7901;</span>
+            <strong data-countup th:text="${pendingOrders}">0</strong>
+        </article>
+        <article class="metric-card">
+            <span>B&aacute;o gi&aacute; ch&#7901;</span>
+            <strong data-countup th:text="${pendingQuotes}">0</strong>
+        </article>
+    </section>
+
+    <section class="admin-charts reveal-on-scroll">
+        <article class="admin-panel chart-card">
+            <div class="panel-head">
+                <h2>Bi&#7875;u &#273;&#7891; s&#7889; l&#432;&#7907;ng b&aacute;n h&agrave;ng</h2>
+                <span>Top s&#7843;n ph&#7849;m theo s&#7889; l&#432;&#7907;ng</span>
+            </div>
+            <canvas id="salesChart" width="560" height="320"></canvas>
+        </article>
+        <article class="admin-panel chart-card">
+            <div class="panel-head">
+                <h2>Bi&#7875;u &#273;&#7891; h&agrave;ng h&oacute;a trong kho</h2>
+                <span>T&#7893;ng t&#7891;n kho theo danh m&#7909;c</span>
+            </div>
+            <canvas id="stockChart" width="560" height="320"></canvas>
+        </article>
+    </section>
+
+    <section class="admin-grid reveal-on-scroll">
+        <article class="admin-panel">
+            <div class="panel-head">
+                <h2 id="orders">Qu&#7843;n l&yacute; &#273;&#417;n &#273;&#7863;t h&agrave;ng</h2>
+                <span>&#431;u ti&ecirc;n x&#7917; l&yacute; &#273;&#417;n m&#7899;i v&agrave; &#273;ang v&#7853;n chuy&#7875;n</span>
+            </div>
+            <div class="table-responsive admin-table-wrap">
+                <table class="table align-middle admin-table">
+                    <thead>
+                    <tr>
+                        <th>Kh&aacute;ch</th>
+                        <th>S&#7843;n ph&#7849;m</th>
+                        <th>SL</th>
+                        <th>Thanh to&aacute;n</th>
+                        <th>Tr&#7841;ng th&aacute;i</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="order : ${orders}">
+                        <td>
+                            <b th:text="${order.customerName}">Kh&aacute;ch</b>
+                            <small th:text="${order.phone}">Phone</small>
+                        </td>
+                        <td>
+                            <b th:text="${order.productName}">S&#7843;n ph&#7849;m</b>
+                            <small th:text="${order.address}">&#272;&#7883;a ch&#7881;</small>
+                        </td>
+                        <td th:text="${order.quantity}">0</td>
+                        <td th:text="${order.paymentMethod}">Payment</td>
+                        <td>
+                            <span class="status-pill"
+                                  th:classappend="${order.status == 'NEW' ? ' status-new' : (order.status == 'COMPLETED' ? ' status-done' : (order.status == 'CANCELED' ? ' status-cancel' : ' status-progress'))}"
+                                  th:text="${order.status}">NEW</span>
+                            <form class="status-form" th:action="@{|/admin/orders/${order.id}/status|}" method="post">
+                                <select name="status">
+                                    <option th:each="statusOption : ${orderStatuses}"
+                                            th:value="${statusOption}"
+                                            th:text="${statusOption}"
+                                            th:selected="${statusOption == order.status}">NEW</option>
+                                </select>
+                                <button type="submit">L&#432;u</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(orders)}">
+                        <td colspan="5">Ch&#432;a c&oacute; &#273;&#417;n h&agrave;ng.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </article>
+
+        <article class="admin-panel">
+            <div class="panel-head">
+                <h2 id="quotes">Y&ecirc;u c&#7847;u b&aacute;o gi&aacute;</h2>
+                <span>Theo d&otilde;i kh&aacute;ch c&#7847;n ph&#7843;n h&#7891;i</span>
+            </div>
+            <div class="table-responsive admin-table-wrap">
+                <table class="table align-middle admin-table">
+                    <thead>
+                    <tr>
+                        <th>Kh&aacute;ch</th>
+                        <th>S&#7889; &#273;i&#7879;n tho&#7841;i</th>
+                        <th>N&#7897;i dung</th>
+                        <th>Tr&#7841;ng th&aacute;i</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="quote : ${quotes}">
+                        <td th:text="${quote.customerName}">Kh&aacute;ch</td>
+                        <td th:text="${quote.phone}">Phone</td>
+                        <td class="table-note" th:text="${quote.content}">N&#7897;i dung</td>
+                        <td>
+                            <span class="status-pill"
+                                  th:classappend="${quote.status == 'NEW' ? ' status-new' : (quote.status == 'CLOSED' ? ' status-done' : ' status-progress')}"
+                                  th:text="${quote.status}">NEW</span>
+                            <form class="status-form" th:action="@{|/admin/quotes/${quote.id}/status|}" method="post">
+                                <select name="status">
+                                    <option th:each="statusOption : ${quoteStatuses}"
+                                            th:value="${statusOption}"
+                                            th:text="${statusOption}"
+                                            th:selected="${statusOption == quote.status}">NEW</option>
+                                </select>
+                                <button type="submit">L&#432;u</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(quotes)}">
+                        <td colspan="4">Ch&#432;a c&oacute; y&ecirc;u c&#7847;u b&aacute;o gi&aacute;.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </article>
+
+        <article class="admin-panel admin-panel--wide">
+            <div class="panel-head">
+                <h2 id="inventory">Qu&#7843;n l&yacute; kho h&agrave;ng</h2>
+                <span>Ch&#7881;nh t&#7891;n kho, gi&aacute; b&aacute;n v&agrave; tr&#7841;ng th&aacute;i ngay tr&ecirc;n b&#7843;ng</span>
+            </div>
+            <div class="table-responsive admin-table-wrap">
+                <table class="table align-middle admin-table inventory-table">
+                    <thead>
+                    <tr>
+                        <th>S&#7843;n ph&#7849;m</th>
+                        <th>Nh&oacute;m</th>
+                        <th>&#272;&#417;n v&#7883;</th>
+                        <th>Kho / gi&aacute; / tr&#7841;ng th&aacute;i</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="product : ${products}">
+                        <td>
+                            <div class="inventory-product">
+                                <img th:src="${product.imagePath}" alt="Vat lieu xay dung">
+                                <div>
+                                    <b th:text="${product.name}">S&#7843;n ph&#7849;m</b>
+                                    <small th:text="${product.description}">M&ocirc; t&#7843;</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td th:text="${product.category.name}">Nh&oacute;m</td>
+                        <td th:text="${product.unit}">&#272;&#417;n v&#7883;</td>
+                        <td>
+                            <form class="inventory-form" th:action="@{|/admin/products/${product.id}/inventory|}" method="post">
+                                <input name="stockQuantity" type="number" min="0" th:value="${product.stockQuantity}" aria-label="Ton kho">
+                                <input name="price" type="number" min="0" step="100" th:value="${product.price}" aria-label="Gia">
+                                <label class="inventory-toggle">
+                                    <input name="active" type="checkbox" value="true" th:checked="${product.active}">
+                                    <span>&#272;ang b&aacute;n</span>
+                                </label>
+                                <button type="submit">L&#432;u kho</button>
+                            </form>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </article>
+    </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script th:src="@{/js/main.js(v=22)}"></script>
+<script th:inline="javascript">
+    window.adminChartData = {
+        salesLabels: JSON.parse(/*[[${salesLabelsJson}]]*/ "[]"),
+        salesData: JSON.parse(/*[[${salesDataJson}]]*/ "[]"),
+        stockLabels: JSON.parse(/*[[${stockLabelsJson}]]*/ "[]"),
+        stockData: JSON.parse(/*[[${stockDataJson}]]*/ "[]")
+    };
+</script>
+<script th:src="@{/js/admin.js(v=2)}"></script>
+</body>
+</html>

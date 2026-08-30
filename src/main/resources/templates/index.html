@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>VLXD Anh V&#361; - V&#7853;t li&#7879;u x&acirc;y d&#7921;ng &#272;&#7891;ng Nai</title>
+    <meta name="description" content="VLXD Anh Vu - Cung cap gach, xi mang, cat da, thep va vat tu thi cong tai Binh Long, Dong Nai. Bao gia nhanh, giao tan cong trinh, cam ket dung trong luong.">
+    <meta name="keywords" content="vat lieu xay dung, VLXD Anh Vu, gach, xi mang, cat da, thep, Dong Nai, Binh Long, bao gia vat lieu">
+    <meta name="author" content="CONG TY TNHH MTV TM DV XD ANH VU">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="VLXD Anh Vu - Vat lieu xay dung Dong Nai">
+    <meta property="og:description" content="Gach, xi mang, cat da, thep va vat tu thi cong. Bao gia nhanh, giao tan cong trinh tai Binh Long - Dong Nai.">
+    <meta property="og:image" content="/images/materials/hero-construction.jpg">
+    <meta property="og:locale" content="vi_VN">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" type="image/svg+xml" href="/images/anh-vu-logo.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
+    <link rel="stylesheet" th:href="@{/css/style.css(v=27)}">
+    <style>
+        body, button, input, select, textarea {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+        }
+    </style>
+</head>
+<body>
+<header class="qh-header-wrap">
+    <!-- Top bar xanh -->
+    <div class="qh-topbar">
+        <div class="container qh-topbar-inner">
+            <span class="qh-topbar-item">&#128205; &#272;&#7883;a ch&#7881;: 617 Nguy&#7877;n Hu&#7879;, P. B&igrave;nh Long, TP. &#272;&#7891;ng Nai</span>
+            <span class="qh-topbar-item" th:text="|&#9993; Email: ${email}|">&#9993; Email: xaydungvantaidaphuongthucanhvu@gmail.com</span>
+            <div class="qh-topbar-right">
+                <a th:if="${zaloReady}" th:href="${zalo}" target="_blank" rel="noopener">Zalo</a>
+                <a class="qh-login" th:if="${!authenticated}" href="/dang-nhap">&#272;&#259;ng nh&#7853;p</a>
+                <form class="qh-logout" th:if="${authenticated}" th:action="@{/logout}" method="post">
+                    <span th:text="${currentEmail}">khach@gmail.com</span>
+                    <button type="submit">&#272;&#259;ng xu&#7845;t</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header chinh (logo + ten + hotline) -->
+    <div class="qh-main">
+        <div class="container qh-main-inner">
+            <a class="qh-logo" href="/">
+                <img src="/images/anh-vu-logo.svg" alt="Anh Vu logo" loading="eager" decoding="async">
+            </a>
+            <div class="qh-brand">
+                <h1>VLXD ANH V&#360;</h1>
+                <p>&#8220;S&#7843;n ph&#7849;m ch&#7845;t l&#432;&#7907;ng - Gi&aacute; c&#7843; c&#7841;nh tranh&#8221;</p>
+            </div>
+            <div class="qh-hotline">
+                <span>Hotline:</span>
+                <a href="tel:0866785645">0866 785 645</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Menu do full width -->
+    <nav class="qh-menu">
+        <div class="container qh-menu-inner">
+            <div class="qh-menu-links">
+                <a class="is-active" href="/">TRANG CH&#7910;</a>
+                <a href="/gioi-thieu">GI&#7898;I THI&#7878;U</a>
+                <a href="/san-pham">S&#7842;N PH&#7848;M</a>
+                <a href="/bao-gia">B&Aacute;O GI&Aacute;</a>
+                <a href="/dat-hang">&#272;&#7862;T H&Agrave;NG</a>
+                <a href="/tra-cuu-don-hang">TRA C&#7912;U</a>
+                <a th:if="${isAdmin}" href="/admin">ADMIN</a>
+            </div>
+            <form class="qh-search global-search" method="get" action="/san-pham" autocomplete="off">
+                <input id="productSearchInput" name="keyword" placeholder="Nh&#7853;p t&#7915; kh&oacute;a">
+                <button type="submit" aria-label="Tim kiem">&#128269;</button>
+            </form>
+        </div>
+    </nav>
+</header>
+
+<section class="qh-hero" id="heroSlideshow" aria-label="Vat lieu xay dung Anh Vu">
+    <img class="qh-hero-img is-active" src="/images/materials/hero-construction.jpg" alt="Cong trinh xay dung" loading="eager" decoding="async">
+    <img class="qh-hero-img" src="/images/materials/warehouse.jpg" alt="Kho vat lieu xay dung Anh Vu" loading="lazy" decoding="async">
+    <img class="qh-hero-img" src="/images/materials/brick.jpg" alt="Gach xay dung" loading="lazy" decoding="async">
+    <img class="qh-hero-img" src="/images/materials/steel.jpg" alt="Thep xay dung" loading="lazy" decoding="async">
+
+    <div class="qh-hero-overlay">
+        <div class="container qh-hero-content">
+            <span class="qh-hero-kicker">VLXD - V&#7852;N T&#7842;I - X&Acirc;Y D&#7920;NG</span>
+            <h2>C&Ocirc;NG TY TNHH MTV TM DV XD ANH V&#360;</h2>
+            <p>Cung c&#7845;p g&#7841;ch, xi m&#259;ng, c&aacute;t, &#273;&aacute;, th&eacute;p v&agrave; v&#7853;t t&#432; thi c&ocirc;ng cho nh&agrave; d&acirc;n, th&#7847;u x&acirc;y d&#7921;ng v&agrave; c&ocirc;ng tr&igrave;nh t&#7841;i khu v&#7921;c &#272;&#7891;ng Nai.</p>
+            <div class="qh-hero-buttons">
+                <a class="btn btn-danger btn-lg" href="/san-pham">Xem s&#7843;n ph&#7849;m</a>
+                <a class="btn btn-light btn-lg" href="/dat-hang">&#272;&#7863;t h&agrave;ng ngay</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="qh-hero-dots" id="heroDots" aria-hidden="true"></div>
+</section>
+
+<!-- TRUST BADGES SECTION -->
+<section class="trust-badges-section" style="background-color: #f8f9fa; padding: 20px 0; border-bottom: 1px solid #e9ecef;">
+    <div class="container">
+        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 24px; text-align: center;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="background: #e3f2fd; color: #0d6efd; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">&#10003;</span>
+                <span style="font-weight: 600; color: #495057;">Cam k&#7871;t &#273;&#7911; h&agrave;ng, &#273;&#7911; tr&#7885;ng l&#432;&#7907;ng</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="background: #e3f2fd; color: #0d6efd; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">&#10003;</span>
+                <span style="font-weight: 600; color: #495057;">Giao &#273;&uacute;ng ti&#7871;n &#273;&#7897; c&ocirc;ng tr&igrave;nh</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="background: #e3f2fd; color: #0d6efd; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">&#10003;</span>
+                <span style="font-weight: 600; color: #495057;">C&oacute; ch&#7913;ng ch&#7881; CO/CQ nh&agrave; m&aacute;y</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+                <span style="background: #e3f2fd; color: #0d6efd; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">&#10003;</span>
+                <span style="font-weight: 600; color: #495057;">C&oacute; xe t&#7843;i, xe ba g&aacute;c giao t&#7853;n n&#417;i</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SO LIEU CHAY TANG DAN (co animation dem so) -->
+<section class="stats-section animate-in">
+    <div class="container stats-grid">
+        <div class="stat-item">
+            <span class="stat-icon">&#127959;&#65039;</span>
+            <strong class="stat-number" data-count="15" data-suffix="+">0</strong>
+            <span>N&#259;m kinh nghi&#7879;m</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-icon">&#128230;</span>
+            <strong class="stat-number" data-count="40" data-suffix="+">0</strong>
+            <span>Lo&#7841;i v&#7853;t li&#7879;u</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-icon">&#128667;</span>
+            <strong class="stat-number" data-count="2500" data-suffix="+">0</strong>
+            <span>C&ocirc;ng tr&igrave;nh &#273;&atilde; giao</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-icon">&#9878;&#65039;</span>
+            <strong class="stat-number" data-count="99" data-suffix="%">0</strong>
+            <span>Kh&aacute;ch h&agrave;ng h&agrave;i l&ograve;ng</span>
+        </div>
+    </div>
+</section>
+
+<div class="floating-contact" aria-label="Lien he nhanh" style="background: transparent !important; border: none !important; box-shadow: none !important; padding: 0 !important; backdrop-filter: none !important; display: flex; flex-direction: column; gap: 12px; align-items: flex-end;">
+    <button class="float-item ai-float" id="chatToggle" type="button" aria-label="Mo chatbox AI" aria-expanded="false" style="border-radius: 50% !important; box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important; font-size: 11px; font-weight: 700; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); animation: pulse 2s ease-in-out infinite;">T&#432; v&#7845;n</button>
+    <a class="float-item zalo" th:if="${zaloReady}" th:href="${zalo}" target="_blank" rel="noopener" aria-label="Chat Zalo" style="border-radius: 50% !important; box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);">Zalo</a>
+    <a class="float-item location" href="/bao-gia" aria-label="Bao gia si" style="background: #ed1b2f; color: white; width: auto; padding: 0 20px; font-weight: bold; border-radius: 30px !important; box-shadow: 0 4px 16px rgba(237,27,47,0.4) !important; height: 54px; display: flex; align-items: center; text-decoration: none; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); animation: glow 3s ease-in-out infinite;">Y&ecirc;u c&#7847;u b&aacute;o gi&aacute;</a>
+</div>
+<style>
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); box-shadow: 0 6px 20px rgba(237, 27, 47, 0.4); }
+}
+@keyframes glow {
+    0%, 100% { box-shadow: 0 4px 16px rgba(237,27,47,0.4); }
+    50% { box-shadow: 0 6px 24px rgba(237,27,47,0.7), 0 0 30px rgba(237,27,47,0.3); }
+}
+.float-item:hover {
+    transform: translateY(-4px) scale(1.05) !important;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.25) !important;
+}
+.float-item.location:hover {
+    background: #d11828 !important;
+    box-shadow: 0 8px 30px rgba(237,27,47,0.6) !important;
+}
+</style>
+
+<section class="ai-chatbox" id="aiChatbox" aria-label="Tro ly AI VLXD Anh Vu">
+    <div class="chat-panel" id="chatPanel" hidden>
+        <div class="chat-head">
+            <div>
+                <strong>AI VLXD Anh V&#361;</strong>
+                <span>Tr&#7907; l&yacute; t&#432; v&#7845;n 24/7</span>
+            </div>
+            <button type="button" id="chatClose" aria-label="Dong chat">&times;</button>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="chat-message bot">Xin ch&agrave;o, t&ocirc;i c&oacute; th&#7875; t&#432; v&#7845;n v&#7853;t li&#7879;u, g&#7907;i &yacute; &#273;&#7883;nh m&#7913;c, h&#432;&#7899;ng d&#7851;n ch&#7885;n v&#7853;t t&#432; v&agrave; &#273;&#7863;t h&agrave;ng.</div>
+        </div>
+        <div class="chat-quick">
+            <button type="button" data-question="T&ocirc;i c&#7847;n x&acirc;y t&#432;&#7901;ng 100m2 th&igrave; n&ecirc;n t&iacute;nh v&#7853;t t&#432; sao?">T&iacute;nh 100m2</button>
+            <button type="button" data-question="C&ocirc;ng ty c&oacute; nh&#7919;ng nh&oacute;m s&#7843;n ph&#7849;m n&agrave;o?">Nh&oacute;m h&agrave;ng</button>
+            <button type="button" data-question="T&ocirc;i mu&#7889;n nh&#7853;n b&aacute;o gi&aacute; s&#7881;">B&aacute;o gi&aacute; s&#7881;</button>
+        </div>
+        <form class="chat-form" id="chatForm">
+            <input id="chatInput" autocomplete="off" placeholder="Nh&#7853;p c&acirc;u h&#7887;i v&#7873; c&aacute;t, &#273;&aacute;, xi m&#259;ng, th&eacute;p...">
+            <button type="submit">G&#7917;i</button>
+        </form>
+    </div>
+</section>
+
+<main>
+
+    <section class="container showroom-section animate-in">
+        <div class="section-heading">
+            <span>Danh m&#7909;c ng&agrave;nh VLXD</span>
+            <h2>Nh&oacute;m h&agrave;ng ph&#7909;c v&#7909; thi c&ocirc;ng</h2>
+        </div>
+        <div class="showroom-grid">
+            <a class="showroom-card" href="/san-pham?category=gach"><img src="/images/materials/brick.jpg" alt="Gach xay dung"><b>G&#7841;ch</b><span>G&#7841;ch &#7889;ng, g&#7841;ch th&#7867;, g&#7841;ch block</span></a>
+            <a class="showroom-card" href="/san-pham?category=xi-mang"><img src="/images/materials/cement.jpg" alt="Xi mang"><b>Xi m&#259;ng</b><span>PCB40, bao 50kg, x&acirc;y t&ocirc; v&agrave; k&#7871;t c&#7845;u</span></a>
+            <a class="showroom-card" href="/san-pham?category=cat-da"><img src="/images/materials/sand.jpg" alt="Cat da xay dung"><b>C&aacute;t - &#273;&aacute;</b><span>C&aacute;t x&acirc;y, c&aacute;t t&ocirc;, &#273;&aacute; 1x2, &#273;&aacute; mi</span></a>
+            <a class="showroom-card" href="/san-pham?category=thep"><img src="/images/materials/steel.jpg" alt="Thep xay dung"><b>Th&eacute;p</b><span>Th&eacute;p c&acirc;y, th&eacute;p cu&#7897;n, th&eacute;p theo quy c&aacute;ch</span></a>
+            <a class="showroom-card" href="/san-pham?category=dich-vu"><img src="/images/products/san-lap-mat-bang.jpg" alt="Dich vu xay dung"><b>D&#7883;ch v&#7909;</b><span>San l&#7845;p, gi&agrave;n gi&aacute;o, &#273;&agrave;o m&oacute;ng, &#273;&agrave;o ao</span></a>
+        </div>
+    </section>
+
+    <section id="products" class="container products-section animate-in">
+        <div class="section-heading">
+            <span>S&#7843;n ph&#7849;m n&#7893;i b&#7853;t</span>
+            <h2>V&#7853;t li&#7879;u b&aacute;n ch&#7841;y nh&#7845;t</h2>
+        </div>
+        <div class="product-grid">
+            <article class="product-card" th:each="product : ${featuredProducts}">
+                <a class="product-image" th:href="@{'/san-pham/' + ${product.id}}" aria-label="Xem chi tiet">
+                    <img th:src="${product.imagePath}" alt="Vat lieu xay dung" loading="lazy" decoding="async">
+                    <span th:text="${product.category.name}">Danh m&#7909;c</span>
+                </a>
+                <div class="product-body">
+                    <h3><a th:href="@{'/san-pham/' + ${product.id}}" th:text="${product.name}">T&ecirc;n s&#7843;n ph&#7849;m</a></h3>
+                    <p th:text="${product.description}">M&ocirc; t&#7843;</p>
+                    <a class="detail-link" th:href="@{'/san-pham/' + ${product.id}}">Xem chi ti&#7871;t &#8594;</a>
+                    <div class="product-price-row">
+                        <span class="product-price" th:if="${product.price != null and product.price.doubleValue() > 0}" th:text="|${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} &#8363;/${product.unit}|">0 &#8363;</span>
+                        <span class="product-price price-contact" th:unless="${product.price != null and product.price.doubleValue() > 0}">Li&ecirc;n h&#7879; b&aacute;o gi&aacute;</span>
+                    </div>
+                    <div class="product-line" th:if="${product.price != null and product.price.doubleValue() > 0}"><span>T&#7891;n kho</span><strong th:text="|${product.stockQuantity} ${product.unit}|">0</strong></div>
+                    <div class="product-actions">
+                        <a class="btn btn-sm btn-danger btn-order" th:href="@{/dat-hang(product=${product.name})}">&#272;&#7863;t h&agrave;ng</a>
+                        <a class="btn btn-sm btn-outline-success" href="/bao-gia">B&aacute;o gi&aacute; s&#7881;</a>
+                    </div>
+                </div>
+            </article>
+        </div>
+        <div class="products-more">
+            <a class="btn btn-outline-dark btn-lg" href="/san-pham">Xem t&#7845;t c&#7843; 40 s&#7843;n ph&#7849;m &#8594;</a>
+        </div>
+    </section>
+
+    <section class="container testimonials-section animate-in">
+        <div class="section-heading">
+            <span>Cam k&#7871;t c&#7911;a ch&uacute;ng t&ocirc;i</span>
+            <h2>V&igrave; sao ch&#7885;n VLXD Anh V&#361;</h2>
+        </div>
+        <div class="testimonial-grid commit-grid">
+            <article>
+                <div class="commit-icon">&#128666;</div>
+                <strong>Giao h&agrave;ng nhanh, t&#7853;n c&ocirc;ng tr&igrave;nh</strong>
+                <p>&#272;&#7897;i xe t&#7843;i, xe ben, xe ba g&aacute;c giao t&#7853;n ch&acirc;n c&ocirc;ng tr&igrave;nh, k&#7875; c&#7843; h&#7867;m nh&#7887; v&agrave; khu v&#7921;c &#273;ang thi c&ocirc;ng.</p>
+            </article>
+            <article>
+                <div class="commit-icon">&#9878;&#65039;</div>
+                <strong>&#272;&uacute;ng tr&#7885;ng l&#432;&#7907;ng, &#273;&uacute;ng ch&#7845;t l&#432;&#7907;ng</strong>
+                <p>C&acirc;n &#273;o r&otilde; r&agrave;ng, v&#7853;t li&#7879;u &#273;&uacute;ng ch&#7911;ng lo&#7841;i cam k&#7871;t. G&#7841;ch, xi m&#259;ng, th&eacute;p c&oacute; ngu&#7891;n g&#7889;c r&otilde; r&agrave;ng.</p>
+            </article>
+            <article>
+                <div class="commit-icon">&#128176;</div>
+                <strong>Gi&aacute; c&#7841;nh tranh, b&aacute;o gi&aacute; nhanh</strong>
+                <p>Gi&aacute; ni&ecirc;m y&#7871;t r&otilde; tr&ecirc;n web. &#272;&#417;n kh&#7889;i l&#432;&#7907;ng l&#7899;n cho nh&agrave; th&#7847;u c&oacute; gi&aacute; &#432;u &#273;&atilde;i ri&ecirc;ng, ph&#7843;n h&#7891;i trong ng&agrave;y.</p>
+            </article>
+            <article>
+                <div class="commit-icon">&#128241;</div>
+                <strong>T&#432; v&#7845;n t&#7853;n t&igrave;nh 24/7</strong>
+                <p>Tr&#7907; l&yacute; AI tr&ecirc;n web + hotline/Zalo lu&ocirc;n s&#7861;n s&agrave;ng t&#432; v&#7845;n &#273;&#7883;nh m&#7913;c, ch&#7885;n v&#7853;t li&#7879;u ph&ugrave; h&#7907;p cho t&#7915;ng h&#7841;ng m&#7909;c.</p>
+            </article>
+        </div>
+    </section>
+
+    <section id="business-info" class="container business-card animate-in">
+        <div class="section-heading">
+            <span>Th&ocirc;ng tin doanh nghi&#7879;p</span>
+            <h2>C&ocirc;ng ty TNHH MTV TM DV XD Anh V&#361;</h2>
+        </div>
+        <div class="business-grid">
+            <article><span>&#272;&#7883;a ch&#7881;</span><strong>617 Nguy&#7877;n Hu&#7879;, T&#7893; 8 KP Ph&uacute; C&#432;&#7901;ng, Ph&#432;&#7901;ng B&igrave;nh Long, Th&agrave;nh Ph&#7889; &#272;&#7891;ng Nai</strong></article>
+            <article><span>M&atilde; s&#7889; thu&#7871;</span><strong>3901312239</strong></article>
+            <article><span>Gmail</span><strong th:text="${email}">xaydungvantaidaphuongthucanhvu@gmail.com</strong></article>
+            <article th:if="${phone != null and !phone.isBlank()}"><span>&#272;i&#7879;n tho&#7841;i</span><strong><a th:href="|tel:${phone}|" th:text="${phone}">0866785645</a></strong></article>
+            <article th:if="${zaloReady}"><span>Zalo</span><strong><a th:href="${zalo}" target="_blank" rel="noopener">Chat Zalo</a></strong></article>
+        </div>
+    </section>
+</main>
+
+<footer class="footer">
+    <div class="container footer-grid">
+        <div class="footer-col footer-brand">
+            <img src="/images/anh-vu-logo.svg" alt="Anh Vu logo" loading="lazy" decoding="async">
+            <strong th:text="${companyName}">C&Ocirc;NG TY TNHH MTV TM DV XD ANH V&#360;</strong>
+            <p>Chuy&ecirc;n cung c&#7845;p g&#7841;ch, xi m&#259;ng, c&aacute;t &#273;&aacute;, th&eacute;p v&agrave; v&#7853;n t&#7843;i thi c&ocirc;ng cho nh&agrave; d&acirc;n v&agrave; nh&agrave; th&#7847;u t&#7841;i B&igrave;nh Long - &#272;&#7891;ng Nai.</p>
+        </div>
+        <div class="footer-col">
+            <h4>Danh m&#7909;c</h4>
+            <a th:href="@{|/san-pham?category=gach|}">G&#7841;ch x&acirc;y d&#7921;ng</a>
+            <a th:href="@{|/san-pham?category=xi-mang|}">Xi m&#259;ng</a>
+            <a th:href="@{|/san-pham?category=cat-da|}">C&aacute;t - &#273;&aacute;</a>
+            <a th:href="@{|/san-pham?category=thep|}">Th&eacute;p</a>
+        </div>
+        <div class="footer-col">
+            <h4>D&#7883;ch v&#7909;</h4>
+            <a href="/dat-hang">&#272;&#7863;t h&agrave;ng online</a>
+            <a href="/bao-gia">B&aacute;o gi&aacute; s&#7881;</a>
+            <a href="/tra-cuu-don-hang">Tra c&#7913;u &#273;&#417;n h&agrave;ng</a>
+            <a href="/bao-gia">T&iacute;nh v&#7853;t li&#7879;u</a>
+            <a href="/gioi-thieu">Gi&#7899;i thi&#7879;u</a>
+        </div>
+        <div class="footer-col">
+            <h4>Li&ecirc;n h&#7879;</h4>
+            <span th:text="|Gmail: ${email}|">Gmail: xaydungvantaidaphuongthucanhvu@gmail.com</span>
+            <span th:if="${phone != null and !phone.isBlank()}" th:text="|S&#272;T: ${phone}|">S&#272;T: 0866785645</span>
+            <span>MST: 3901312239</span>
+            <span>617 Nguy&#7877;n Hu&#7879;, P. B&igrave;nh Long, TP. &#272;&#7891;ng Nai</span>
+        </div>
+    </div>
+    <div class="container footer-bottom">
+        <span>&#169; 2026 <b th:text="${companyName}">C&Ocirc;NG TY TNHH MTV TM DV XD ANH V&#360;</b>. M&#7885;i quy&#7873;n &#273;&#432;&#7907;c b&#7843;o l&#432;u.</span>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script th:src="@{/js/main.js(v=22)}"></script>
+
+<!-- Scroll to Top Button -->
+<button id="scrollToTopBtn" title="L&ecirc;n &#273;&#7847;u trang" style="display: none; position: fixed; bottom: 85px; right: 20px; z-index: 98; border: none; outline: none; background-color: var(--primary); color: white; cursor: pointer; padding: 12px; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.3); transition: all 0.3s; width: 45px; height: 45px; align-items: center; justify-content: center;">&#8593;</button>
+
+<script>
+    // Scroll to top logic
+    let topBtn = document.getElementById("scrollToTopBtn");
+    window.onscroll = function() {
+        if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+            topBtn.style.display = "flex";
+        } else {
+            topBtn.style.display = "none";
+        }
+    };
+    topBtn.onclick = function() {
+        window.scrollTo({top: 0, behavior: "smooth"});
+    };
+
+    // ===== Hero slideshow full man hinh (crossfade + nut cham) =====
+    (function () {
+        const box = document.getElementById("heroSlideshow");
+        if (!box) return;
+        const slides = box.querySelectorAll(".qh-hero-img");
+        const dotsBox = document.getElementById("heroDots");
+        if (slides.length < 2) return;
+        let current = 0;
+        let timer = null;
+
+        // Tao nut cham cho tung anh
+        const dots = [];
+        if (dotsBox) {
+            slides.forEach((_, i) => {
+                const b = document.createElement("button");
+                b.type = "button";
+                b.setAttribute("aria-label", "Anh " + (i + 1));
+                if (i === 0) b.classList.add("is-active");
+                b.addEventListener("click", () => { goTo(i); restart(); });
+                dotsBox.appendChild(b);
+                dots.push(b);
+            });
+        }
+
+        const goTo = (idx) => {
+            slides[current].classList.remove("is-active");
+            if (dots[current]) dots[current].classList.remove("is-active");
+            current = (idx + slides.length) % slides.length;
+            slides[current].classList.add("is-active");
+            if (dots[current]) dots[current].classList.add("is-active");
+        };
+
+        const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        const start = () => { if (!prefersReduced) timer = window.setInterval(() => goTo(current + 1), 4500); };
+        const restart = () => { if (timer) window.clearInterval(timer); start(); };
+        start();
+    })();
+
+    // ===== So lieu chay tang dan khi cuon toi =====
+    (function () {
+        const nums = document.querySelectorAll(".stat-number");
+        if (!nums.length) return;
+
+        const animateCount = (el) => {
+            const target = parseInt(el.dataset.count, 10) || 0;
+            const suffix = el.dataset.suffix || "";
+            const duration = 1600;
+            const start = performance.now();
+            const step = (now) => {
+                const progress = Math.min((now - start) / duration, 1);
+                // easeOutCubic cho cam giac cham dan luc cuoi
+                const eased = 1 - Math.pow(1 - progress, 3);
+                const value = Math.round(target * eased);
+                el.textContent = value.toLocaleString("vi-VN") + suffix;
+                if (progress < 1) requestAnimationFrame(step);
+            };
+            requestAnimationFrame(step);
+        };
+
+        if ("IntersectionObserver" in window) {
+            const obs = new IntersectionObserver((entries, observer) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        animateCount(entry.target);
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.4 });
+            nums.forEach((n) => obs.observe(n));
+        } else {
+            nums.forEach((n) => animateCount(n));
+        }
+    })();
+</script>
+</body>
+</html>

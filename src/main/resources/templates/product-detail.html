@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="|${product.name} - VLXD Anh V&#360;|">Chi tiet san pham - VLXD Anh Vu</title>
+    <link rel="icon" type="image/svg+xml" href="/images/anh-vu-logo.svg">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
+    <link rel="stylesheet" th:href="@{/css/style.css(v=27)}">
+</head>
+<body>
+<header class="qh-header-wrap">
+    <div class="qh-topbar">
+        <div class="container qh-topbar-inner">
+            <span class="qh-topbar-item">&#128205; &#272;&#7883;a ch&#7881;: 617 Nguy&#7877;n Hu&#7879;, P. B&igrave;nh Long, TP. &#272;&#7891;ng Nai</span>
+            <span class="qh-topbar-item" th:text="|&#9993; Email: ${email}|">&#9993; Email: xaydungvantaidaphuongthucanhvu@gmail.com</span>
+            <div class="qh-topbar-right">
+                <a th:if="${zaloReady}" th:href="${zalo}" target="_blank" rel="noopener">Zalo</a>
+                <a class="qh-login" th:if="${!authenticated}" href="/dang-nhap">&#272;&#259;ng nh&#7853;p</a>
+                <form class="qh-logout" th:if="${authenticated}" th:action="@{/logout}" method="post">
+                    <span th:text="${currentEmail}">khach@gmail.com</span>
+                    <button type="submit">&#272;&#259;ng xu&#7845;t</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="qh-main">
+        <div class="container qh-main-inner">
+            <a class="qh-logo" href="/">
+                <img src="/images/anh-vu-logo.svg" alt="Anh Vu logo" loading="eager" decoding="async">
+            </a>
+            <div class="qh-brand">
+                <h1>VLXD ANH V&#360;</h1>
+                <p>&#8220;S&#7843;n ph&#7849;m ch&#7845;t l&#432;&#7907;ng - Gi&aacute; c&#7843; c&#7841;nh tranh&#8221;</p>
+            </div>
+            <div class="qh-hotline">
+                <span>Hotline:</span>
+                <a href="tel:0866785645">0866 785 645</a>
+            </div>
+        </div>
+    </div>
+    <nav class="qh-menu">
+        <div class="container qh-menu-inner">
+            <div class="qh-menu-links">
+                <a href="/">TRANG CH&#7910;</a>
+                <a href="/gioi-thieu">GI&#7898;I THI&#7878;U</a>
+                <a class="is-active" href="/san-pham">S&#7842;N PH&#7848;M</a>
+                <a href="/bao-gia">B&Aacute;O GI&Aacute;</a>
+                <a href="/dat-hang">&#272;&#7862;T H&Agrave;NG</a>
+                <a href="/tra-cuu-don-hang">TRA C&#7912;U</a>
+                <a th:if="${isAdmin}" href="/admin">ADMIN</a>
+            </div>
+            <form class="qh-search global-search" method="get" action="/san-pham" autocomplete="off">
+                <input id="productSearchInput" name="keyword" placeholder="Nh&#7853;p t&#7915; kh&oacute;a">
+                <button type="submit" aria-label="Tim kiem">&#128269;</button>
+            </form>
+        </div>
+    </nav>
+</header>
+
+<main class="container" style="padding-top:28px;padding-bottom:60px;">
+    <nav class="detail-breadcrumb" aria-label="breadcrumb">
+        <a href="/">Trang ch&#7911;</a> <i>/</i>
+        <a href="/san-pham">S&#7843;n ph&#7849;m</a> <i>/</i>
+        <span th:text="${product.name}">S&#7843;n ph&#7849;m</span>
+    </nav>
+
+    <section class="detail-wrap">
+        <div class="detail-gallery">
+            <img th:src="${product.imagePath}" th:alt="${product.name}" loading="eager" decoding="async">
+            <span class="detail-category" th:text="${product.category.name}">Danh m&#7909;c</span>
+        </div>
+        <div class="detail-info">
+            <h1 th:text="${product.name}">T&ecirc;n s&#7843;n ph&#7849;m</h1>
+            <div class="detail-price-row">
+                <span class="detail-price" th:if="${product.price != null and product.price.doubleValue() > 0}" th:text="|${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} &#8363;/${product.unit}|">0 &#8363;</span>
+                <span class="detail-price price-contact" th:unless="${product.price != null and product.price.doubleValue() > 0}">Li&ecirc;n h&#7879; b&aacute;o gi&aacute;</span>
+                <span class="stock-pill in-stock" th:if="${product.price != null and product.price.doubleValue() > 0 and product.stockQuantity > 0}">C&ograve;n h&agrave;ng</span>
+                <span class="stock-pill out-stock" th:if="${product.price != null and product.price.doubleValue() > 0 and product.stockQuantity <= 0}">H&#7871;t h&agrave;ng</span>
+            </div>
+            <p class="detail-desc" th:text="${product.description}">M&ocirc; t&#7843; s&#7843;n ph&#7849;m</p>
+            <div class="detail-specs">
+                <div class="detail-line" th:if="${product.price != null and product.price.doubleValue() > 0}"><span>&#272;&#417;n gi&aacute;</span><strong th:text="|${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} &#8363;/${product.unit}|">0 &#8363;</strong></div>
+                <div class="detail-line" th:unless="${product.price != null and product.price.doubleValue() > 0}"><span>&#272;&#417;n gi&aacute;</span><strong>Li&ecirc;n h&#7879; &#273;&#7875; b&aacute;o gi&aacute;</strong></div>
+                <div class="detail-line"><span>&#272;&#417;n v&#7883; t&iacute;nh</span><strong th:text="${product.unit}">&#273;&#417;n v&#7883;</strong></div>
+                <div class="detail-line" th:if="${product.price != null and product.price.doubleValue() > 0}"><span>T&#7891;n kho</span><strong th:text="|${product.stockQuantity} ${product.unit}|">0</strong></div>
+                <div class="detail-line"><span>Danh m&#7909;c</span><strong th:text="${product.category.name}">Danh m&#7909;c</strong></div>
+            </div>
+            <div class="detail-actions">
+                <a class="btn btn-danger btn-lg" th:href="@{/dat-hang(product=${product.name})}">&#272;&#7863;t h&agrave;ng ngay</a>
+                <a class="btn btn-outline-success btn-lg" href="/bao-gia">Nh&#7853;n b&aacute;o gi&aacute; s&#7881;</a>
+            </div>
+            <div class="detail-hotline">
+                <span>C&#7847;n t&#432; v&#7845;n nhanh? G&#7885;i:</span>
+                <a th:if="${phone != null and !phone.isBlank()}" th:href="|tel:${phone}|" th:text="${phone}">0866785645</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="detail-related" th:if="${relatedProducts != null and !relatedProducts.isEmpty()}">
+        <div class="section-heading">
+            <span>S&#7843;n ph&#7849;m c&ugrave;ng nh&oacute;m</span>
+            <h2 th:text="|C&aacute;c s&#7843;n ph&#7849;m ${product.category.name} kh&aacute;c|">S&#7843;n ph&#7849;m li&ecirc;n quan</h2>
+        </div>
+        <div class="product-grid">
+            <article class="product-card" th:each="item : ${relatedProducts}">
+                <a class="product-image" th:href="@{'/san-pham/' + ${item.id}}">
+                    <img th:src="${item.imagePath}" alt="Vat lieu xay dung" loading="lazy" decoding="async">
+                    <span th:text="${item.category.name}">Danh m&#7909;c</span>
+                </a>
+                <div class="product-body">
+                    <h3><a th:href="@{'/san-pham/' + ${item.id}}" th:text="${item.name}">T&ecirc;n s&#7843;n ph&#7849;m</a></h3>
+                    <p th:text="${item.description}">M&ocirc; t&#7843;</p>
+                    <a class="detail-link" th:href="@{'/san-pham/' + ${item.id}}">Xem chi ti&#7871;t &#8594;</a>
+                    <div class="product-price-row">
+                        <span class="product-price" th:if="${item.price != null and item.price.doubleValue() > 0}" th:text="|${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'POINT')} &#8363;/${item.unit}|">0 &#8363;</span>
+                        <span class="product-price price-contact" th:unless="${item.price != null and item.price.doubleValue() > 0}">Li&ecirc;n h&#7879; b&aacute;o gi&aacute;</span>
+                        <span class="stock-pill in-stock" th:if="${item.price != null and item.price.doubleValue() > 0 and item.stockQuantity > 0}">C&ograve;n h&agrave;ng</span>
+                        <span class="stock-pill out-stock" th:if="${item.price != null and item.price.doubleValue() > 0 and item.stockQuantity <= 0}">H&#7871;t h&agrave;ng</span>
+                    </div>
+                    <div class="product-line" th:if="${item.price != null and item.price.doubleValue() > 0}"><span>T&#7891;n kho</span><strong th:text="|${item.stockQuantity} ${item.unit}|">0</strong></div>
+                    <div class="product-actions">
+                        <a class="btn btn-sm btn-danger btn-order" th:href="@{/dat-hang(product=${item.name})}">&#272;&#7863;t h&agrave;ng</a>
+                        <a class="btn btn-sm btn-outline-success" href="/bao-gia">B&aacute;o gi&aacute; s&#7881;</a>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </section>
+</main>
+
+<footer class="footer">
+    <div class="container footer-grid">
+        <div class="footer-col footer-brand">
+            <img src="/images/anh-vu-logo.svg" alt="Anh Vu logo" loading="lazy" decoding="async">
+            <strong th:text="${companyName}">C&Ocirc;NG TY TNHH MTV TM DV XD ANH V&#360;</strong>
+            <p>Chuy&ecirc;n cung c&#7845;p g&#7841;ch, xi m&#259;ng, c&aacute;t &#273;&aacute;, th&eacute;p v&agrave; v&#7853;n t&#7843;i thi c&ocirc;ng cho nh&agrave; d&acirc;n v&agrave; nh&agrave; th&#7847;u t&#7841;i B&igrave;nh Long - &#272;&#7891;ng Nai.</p>
+        </div>
+        <div class="footer-col">
+            <h4>Danh m&#7909;c</h4>
+            <a th:href="@{|/san-pham?category=gach|}">G&#7841;ch x&acirc;y d&#7921;ng</a>
+            <a th:href="@{|/san-pham?category=xi-mang|}">Xi m&#259;ng</a>
+            <a th:href="@{|/san-pham?category=cat-da|}">C&aacute;t - &#273;&aacute;</a>
+            <a th:href="@{|/san-pham?category=thep|}">Th&eacute;p</a>
+        </div>
+        <div class="footer-col">
+            <h4>D&#7883;ch v&#7909;</h4>
+            <a href="/dat-hang">&#272;&#7863;t h&agrave;ng online</a>
+            <a href="/bao-gia">B&aacute;o gi&aacute; s&#7881;</a>
+            <a href="/bao-gia">T&iacute;nh v&#7853;t li&#7879;u</a>
+        </div>
+        <div class="footer-col">
+            <h4>Li&ecirc;n h&#7879;</h4>
+            <span th:text="|Gmail: ${email}|">Gmail: xaydungvantaidaphuongthucanhvu@gmail.com</span>
+            <span th:if="${phone != null and !phone.isBlank()}" th:text="|S&#272;T: ${phone}|">S&#272;T: 0866785645</span>
+            <span>MST: 3901312239</span>
+            <span>617 Nguy&#7877;n Hu&#7879;, P. B&igrave;nh Long, TP. &#272;&#7891;ng Nai</span>
+        </div>
+    </div>
+    <div class="container footer-bottom">
+        <span>&#169; 2026 <b th:text="${companyName}">C&Ocirc;NG TY TNHH MTV TM DV XD ANH V&#360;</b>. M&#7885;i quy&#7873;n &#273;&#432;&#7907;c b&#7843;o l&#432;u.</span>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script th:src="@{/js/main.js(v=22)}"></script>
+</body>
+</html>

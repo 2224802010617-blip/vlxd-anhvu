@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="460" height="160" viewBox="0 0 460 160" role="img" aria-label="Anh Vu logo">
+  <defs>
+    <linearGradient id="gold" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#fff45c"/>
+      <stop offset="1" stop-color="#d9a900"/>
+    </linearGradient>
+    <linearGradient id="red" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#ff2525"/>
+      <stop offset="1" stop-color="#b60000"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="5" flood-color="#000" flood-opacity=".35"/>
+    </filter>
+  </defs>
+  <rect width="460" height="160" rx="18" fill="#111827"/>
+  <g filter="url(#shadow)">
+    <path d="M42 112 C88 52 152 42 232 56 C310 70 368 52 426 26 C370 76 310 92 230 82 C150 72 88 82 42 112Z" fill="url(#gold)"/>
+    <path d="M48 114 C98 84 152 78 226 88 C290 96 352 84 418 52 C354 102 286 122 210 108 C142 96 90 100 48 114Z" fill="#e20d13"/>
+    <path d="M98 92 L98 48 L128 22 L158 48 L158 92 Z" fill="url(#gold)"/>
+    <path d="M112 92 V54 H121 V92 M134 92 V42 H143 V92" stroke="#111827" stroke-width="7"/>
+    <path d="M178 91 L214 35 H246 L282 91 H246 L235 74 H212 L202 91 Z M222 55 L217 64 H230 Z" fill="url(#red)"/>
+    <path d="M285 35 H321 L348 73 L376 35 H413 L364 91 H333 Z" fill="url(#red)"/>
+  </g>
+  <text x="55" y="145" font-family="Arial Black, Arial, sans-serif" font-size="42" fill="#f51616" font-weight="900" letter-spacing="2">ANH VU</text>
+</svg>

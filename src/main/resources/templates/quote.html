@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>B&aacute;o gi&aacute; - VLXD Anh V&#361;</title>
+    <link rel="icon" type="image/svg+xml" href="/images/anh-vu-logo.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
+    <link rel="stylesheet" th:href="@{/css/style.css(v=27)}">
+    <style>
+        body, button, input, select, textarea {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+        }
+    </style>
+</head>
+<body>
+<header class="qh-header-wrap">
+    <div class="qh-topbar">
+        <div class="container qh-topbar-inner">
+            <span class="qh-topbar-item">&#128205; &#272;&#7883;a ch&#7881;: 617 Nguy&#7877;n Hu&#7879;, P. B&igrave;nh Long, TP. &#272;&#7891;ng Nai</span>
+            <span class="qh-topbar-item" th:text="|&#9993; Email: ${email}|">&#9993; Email: xaydungvantaidaphuongthucanhvu@gmail.com</span>
+            <div class="qh-topbar-right">
+                <a th:if="${zaloReady}" th:href="${zalo}" target="_blank" rel="noopener">Zalo</a>
+                <a class="qh-login" th:if="${!authenticated}" href="/dang-nhap">&#272;&#259;ng nh&#7853;p</a>
+                <form class="qh-logout" th:if="${authenticated}" th:action="@{/logout}" method="post">
+                    <span th:text="${currentEmail}">khach@gmail.com</span>
+                    <button type="submit">&#272;&#259;ng xu&#7845;t</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="qh-main">
+        <div class="container qh-main-inner">
+            <a class="qh-logo" href="/">
+                <img src="/images/anh-vu-logo.svg" alt="Anh Vu logo" loading="eager" decoding="async">
+            </a>
+            <div class="qh-brand">
+                <h1>VLXD ANH V&#360;</h1>
+                <p>&#8220;S&#7843;n ph&#7849;m ch&#7845;t l&#432;&#7907;ng - Gi&aacute; c&#7843; c&#7841;nh tranh&#8221;</p>
+            </div>
+            <div class="qh-hotline">
+                <span>Hotline:</span>
+                <a href="tel:0866785645">0866 785 645</a>
+            </div>
+        </div>
+    </div>
+    <nav class="qh-menu">
+        <div class="container qh-menu-inner">
+            <div class="qh-menu-links">
+                <a href="/">TRANG CH&#7910;</a>
+                <a href="/gioi-thieu">GI&#7898;I THI&#7878;U</a>
+                <a href="/san-pham">S&#7842;N PH&#7848;M</a>
+                <a class="is-active" href="/bao-gia">B&Aacute;O GI&Aacute;</a>
+                <a href="/dat-hang">&#272;&#7862;T H&Agrave;NG</a>
+                <a href="/tra-cuu-don-hang">TRA C&#7912;U</a>
+                <a th:if="${isAdmin}" href="/admin">ADMIN</a>
+            </div>
+            <form class="qh-search global-search" method="get" action="/san-pham" autocomplete="off">
+                <input id="productSearchInput" name="keyword" placeholder="Nh&#7853;p t&#7915; kh&oacute;a">
+                <button type="submit" aria-label="Tim kiem">&#128269;</button>
+            </form>
+        </div>
+    </nav>
+</header>
+
+<section class="hero-showcase">
+    <div class="hero-slide">
+        <div class="hero-text animate-in">
+            <span>B&aacute;o gi&aacute; s&#7881; - T&iacute;nh v&#7853;t li&#7879;u</span>
+            <h1>G&#7917;i danh s&aacute;ch v&#7853;t t&#432;, nh&#7853;n ph&#7843;n h&#7891;i nhanh</h1>
+            <p>Y&ecirc;u c&#7847;u b&aacute;o gi&aacute; c&#7911;a qu&yacute; kh&aacute;ch &#273;&#432;&#7907;c g&#7917;i tr&#7921;c ti&#7871;p &#273;&#7871;n ph&ograve;ng kinh doanh &#8212; ph&ugrave; h&#7907;p cho nh&agrave; th&#7847;u v&agrave; &#273;&#417;n h&agrave;ng kh&#7889;i l&#432;&#7907;ng l&#7899;n.</p>
+            <div class="hero-buttons">
+                <a class="btn btn-danger btn-lg" href="/dat-hang">&#272;&#7863;t h&agrave;ng ngay</a>
+                <a class="btn btn-light btn-lg" href="tel:0866785645">G&#7885;i hotline</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="floating-contact" aria-label="Lien he nhanh" style="background: transparent !important; border: none !important; box-shadow: none !important; padding: 0 !important; backdrop-filter: none !important; display: flex; flex-direction: column; gap: 12px; align-items: flex-end;">
+    <button class="float-item ai-float" id="chatToggle" type="button" aria-label="Mo chatbox AI" aria-expanded="false" style="border-radius: 50% !important; box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important; font-size: 11px; font-weight: 700; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); animation: pulse 2s ease-in-out infinite;">T&#432; v&#7845;n</button>
+    <a class="float-item zalo" th:if="${zaloReady}" th:href="${zalo}" target="_blank" rel="noopener" aria-label="Chat Zalo" style="border-radius: 50% !important; box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);">Zalo</a>
+    <a class="float-item location" href="#quote-form" aria-label="Bao gia si" style="background: #ed1b2f; color: white; width: auto; padding: 0 20px; font-weight: bold; border-radius: 30px !important; box-shadow: 0 4px 16px rgba(237,27,47,0.4) !important; height: 54px; display: flex; align-items: center; text-decoration: none; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); animation: glow 3s ease-in-out infinite;">Y&ecirc;u c&#7847;u b&aacute;o gi&aacute;</a>
+</div>
+<style>
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); box-shadow: 0 6px 20px rgba(237, 27, 47, 0.4); }
+}
+@keyframes glow {
+    0%, 100% { box-shadow: 0 4px 16px rgba(237,27,47,0.4); }
+    50% { box-shadow: 0 6px 24px rgba(237,27,47,0.7), 0 0 30px rgba(237,27,47,0.3); }
+}
+.float-item:hover {
+    transform: translateY(-4px) scale(1.05) !important;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.25) !important;
+}
+.float-item.location:hover {
+    background: #d11828 !important;
+    box-shadow: 0 8px 30px rgba(237,27,47,0.6) !important;
+}
+</style>
+
+<section class="ai-chatbox" id="aiChatbox" aria-label="Tro ly AI VLXD Anh Vu">
+    <div class="chat-panel" id="chatPanel" hidden>
+        <div class="chat-head">
+            <div>
+                <strong>AI VLXD Anh V&#361;</strong>
+                <span>Tr&#7907; l&yacute; t&#432; v&#7845;n 24/7</span>
+            </div>
+            <button type="button" id="chatClose" aria-label="Dong chat">&times;</button>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="chat-message bot">Xin ch&agrave;o, t&ocirc;i c&oacute; th&#7875; t&#432; v&#7845;n v&#7853;t li&#7879;u, g&#7907;i &yacute; &#273;&#7883;nh m&#7913;c, h&#432;&#7899;ng d&#7851;n ch&#7885;n v&#7853;t t&#432; v&agrave; &#273;&#7863;t h&agrave;ng.</div>
+        </div>
+        <div class="chat-quick">
+            <button type="button" data-question="T&ocirc;i c&#7847;n x&acirc;y t&#432;&#7901;ng 100m2 th&igrave; n&ecirc;n t&iacute;nh v&#7853;t t&#432; sao?">T&iacute;nh 100m2</button>
+            <button type="button" data-question="C&ocirc;ng ty c&oacute; nh&#7919;ng nh&oacute;m s&#7843;n ph&#7849;m n&agrave;o?">Nh&oacute;m h&agrave;ng</button>
+            <button type="button" data-question="T&ocirc;i mu&#7889;n nh&#7853;n b&aacute;o gi&aacute; s&#7881;">B&aacute;o gi&aacute; s&#7881;</button>
+        </div>
+        <form class="chat-form" id="chatForm">
+            <input id="chatInput" autocomplete="off" placeholder="Nh&#7853;p c&acirc;u h&#7887;i v&#7873; c&aacute;t, &#273;&aacute;, xi m&#259;ng, th&eacute;p...">
+            <button type="submit">G&#7917;i</button>
+        </form>
+    </div>
+</section>
+
+<main>
+    <section id="smart-estimator" class="container smart-estimator-section animate-in">
+        <div class="section-heading">
+            <span>AI d&#7921; to&aacute;n nhanh</span>
+            <h2>Nh&#7853;p nhu c&#7847;u, web g&#7907;i &yacute; combo v&#7853;t t&#432; ph&ugrave; h&#7907;p</h2>
+        </div>
+        <div class="estimator-shell">
+            <form class="estimator-form" id="smartEstimatorForm">
+                <label>
+                    <span>Lo&#7841;i c&ocirc;ng vi&#7879;c</span>
+                    <select id="estimateType">
+                        <option value="xay-to">X&acirc;y t&ocirc; / t&#432;&#7901;ng nh&agrave;</option>
+                        <option value="be-tong">B&ecirc; t&ocirc;ng / s&agrave;n / m&oacute;ng</option>
+                        <option value="san-lap">San l&#7845;p m&#7863;t b&#7857;ng</option>
+                        <option value="khung-thep">Khung th&eacute;p / gia c&#432;&#7901;ng</option>
+                    </select>
+                </label>
+                <label>
+                    <span>Di&#7879;n t&iacute;ch d&#7921; ki&#7871;n (m2)</span>
+                    <input id="estimateArea" type="number" min="1" value="100" inputmode="decimal">
+                </label>
+                <label>
+                    <span>Ng&acirc;n s&aacute;ch v&#7853;t t&#432;</span>
+                    <select id="estimateBudget">
+                        <option value="standard">Ti&ecirc;u chu&#7849;n</option>
+                        <option value="saving">Ti&#7871;t ki&#7879;m</option>
+                        <option value="premium">&#431;u ti&ecirc;n ch&#7845;t l&#432;&#7907;ng</option>
+                    </select>
+                </label>
+                <button class="btn btn-danger" type="submit">G&#7907;i &yacute; ngay</button>
+            </form>
+            <div class="estimator-result" id="smartEstimatorResult" aria-live="polite">
+                <div class="estimate-score">
+                    <span>&#272;&#7897; ph&ugrave; h&#7907;p</span>
+                    <strong id="estimateScore">92%</strong>
+                </div>
+                <div>
+                    <b id="estimateTitle">Combo x&acirc;y t&ocirc; d&acirc;n d&#7909;ng</b>
+                    <p id="estimateSummary">Ph&ugrave; h&#7907;p cho t&#432;&#7901;ng nh&agrave;, s&#7917;a ch&#7919;a v&agrave; c&ocirc;ng tr&igrave;nh nh&#7887;. Web s&#7869; g&#7907;i &yacute; nh&oacute;m h&agrave;ng n&ecirc;n b&aacute;o gi&aacute; tr&#432;&#7899;c.</p>
+                    <div class="estimate-tags" id="estimateTags">
+                        <span>G&#7841;ch</span><span>Xi m&#259;ng</span><span>C&aacute;t x&acirc;y</span>
+                    </div>
+                    <div class="estimate-actions">
+                        <a class="btn btn-sm btn-danger" href="#quote-form">G&#7917;i b&aacute;o gi&aacute;</a>
+                        <a class="btn btn-sm btn-outline-dark" href="/san-pham">Xem s&#7843;n ph&#7849;m</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="calculator" class="container calculator-panel animate-in">
+        <div class="section-heading">
+            <span>C&ocirc;ng c&#7909; &#273;&#7863;c th&ugrave;</span>
+            <h2>T&iacute;nh nhanh v&#7853;t li&#7879;u theo m2</h2>
+        </div>
+        <form class="calc-form" id="quickCalcForm">
+            <label>
+                <span>Lo&#7841;i v&#7853;t li&#7879;u</span>
+                <select id="calcMaterial">
+                    <option value="55|vi&ecirc;n|g&#7841;ch &#7889;ng x&acirc;y t&#432;&#7901;ng 10 (d&agrave;y 100mm)">G&#7841;ch &#7889;ng - x&acirc;y t&#432;&#7901;ng 10</option>
+                    <option value="110|vi&ecirc;n|g&#7841;ch &#7889;ng x&acirc;y t&#432;&#7901;ng 20 (d&agrave;y 200mm)">G&#7841;ch &#7889;ng - x&acirc;y t&#432;&#7901;ng 20</option>
+                    <option value="0.35|bao|xi m&#259;ng x&acirc;y t&ocirc; (v&#7919;a tr&aacute;t t&#432;&#7901;ng)">Xi m&#259;ng - x&acirc;y t&ocirc;</option>
+                    <option value="0.05|kh&#7889;i (m&sup3;)|c&aacute;t x&acirc;y t&ocirc;">C&aacute;t - x&acirc;y t&ocirc;</option>
+                    <option value="7|bao|xi m&#259;ng cho 1m&sup3; b&ecirc; t&ocirc;ng" data-perunit="m&sup3;">Xi m&#259;ng - b&ecirc; t&ocirc;ng (t&iacute;nh theo m&sup3;)</option>
+                    <option value="0.9|kh&#7889;i (m&sup3;)|&#273;&aacute; 1x2 cho 1m&sup3; b&ecirc; t&ocirc;ng" data-perunit="m&sup3;">&#272;&aacute; 1x2 - b&ecirc; t&ocirc;ng (t&iacute;nh theo m&sup3;)</option>
+                    <option value="custom|&#273;&#417;n v&#7883;|t&#7921; nh&#7853;p &#273;&#7883;nh m&#7913;c">T&#7921; nh&#7853;p &#273;&#7883;nh m&#7913;c ri&ecirc;ng</option>
+                </select>
+            </label>
+            <label>
+                <span id="calcAreaLabel">Di&#7879;n t&iacute;ch thi c&ocirc;ng (m&sup2;)</span>
+                <input id="calcArea" type="number" step="0.01" min="0" placeholder="V&iacute; d&#7909;: 100" value="100">
+            </label>
+            <label>
+                <span>&#272;&#7883;nh m&#7913;c / <span id="calcRateUnit">m&sup2;</span></span>
+                <input id="calcRate" type="number" step="0.001" min="0" value="55">
+            </label>
+            <button class="btn btn-danger" type="button" id="calcBtn">T&iacute;nh ngay</button>
+        </form>
+        <div class="result-box" id="calcResult" hidden>
+            <span>K&#7871;t qu&#7843; t&#7841;m t&iacute;nh (c&#7847;n chu&#7849;n b&#7883;)</span>
+            <strong><span id="calcQty">0</span> <span id="calcUnit">&#273;&#417;n v&#7883;</span></strong>
+            <small id="calcNote" style="display:block; margin-top:8px; font-weight:400; color:#065f46; line-height:1.5;"></small>
+        </div>
+    </section>
+
+    <section id="quote-form" class="quote-band animate-in">
+        <div class="container quote-layout">
+            <div>
+                <span>B&aacute;o gi&aacute; s&#7881;</span>
+                <h2>G&#7917;i danh s&aacute;ch v&#7853;t t&#432;, nh&#7853;n ph&#7843;n h&#7891;i nhanh</h2>
+                <p>Y&ecirc;u c&#7847;u b&aacute;o gi&aacute; c&#7911;a qu&yacute; kh&aacute;ch s&#7869; &#273;&#432;&#7907;c g&#7917;i tr&#7921;c ti&#7871;p &#273;&#7871;n ph&ograve;ng kinh doanh, ph&ugrave; h&#7907;p cho nh&agrave; th&#7847;u v&agrave; &#273;&#417;n h&agrave;ng kh&#7889;i l&#432;&#7907;ng l&#7899;n.</p>
+            </div>
+            <form class="quote-form" action="/quote-request" th:object="${quoteForm}" method="post">
+                <div class="quote-success" th:if="${quoteSuccess}">Y&ecirc;u c&#7847;u b&aacute;o gi&aacute; &#273;&atilde; &#273;&#432;&#7907;c ghi nh&#7853;n.</div>
+                <div class="form-error" th:if="${quoteForm != null and #fields.hasErrors('*')}">Vui l&ograve;ng ki&#7875;m tra l&#7841;i th&ocirc;ng tin.</div>
+                <input th:field="*{customerName}" placeholder="T&ecirc;n kh&aacute;ch h&agrave;ng">
+                <div class="field-error" th:if="${#fields.hasErrors('customerName')}" th:errors="*{customerName}"></div>
+                <input th:field="*{phone}" placeholder="S&#7889; &#273;i&#7879;n tho&#7841;i">
+                <div class="field-error" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></div>
+                <input th:field="*{address}" placeholder="&#272;&#7883;a ch&#7881; giao h&agrave;ng">
+                <div class="field-error" th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></div>
+                <textarea th:field="*{content}" rows="4" placeholder="Danh s&aacute;ch v&#7853;t t&#432;, s&#7889; l&#432;&#7907;ng, ghi ch&uacute;..."></textarea>
+                <div class="field-error" th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></div>
+                <button class="btn btn-light w-100" type="submit">G&#7917;i y&ecirc;u c&#7847;u</button>
+            </form>
+        </div>
+    </section>
+</main>
+
+<footer class="footer">
+    <div class="container footer-grid">
+        <div class="footer-col footer-brand">
+            <img src="/images/anh-vu-logo.svg" alt="Anh Vu logo" loading="lazy" decoding="async">
+            <strong th:text="${companyName}">C&Ocirc;NG TY TNHH MTV TM DV XD ANH V&#360;</strong>
+            <p>Chuy&ecirc;n cung c&#7845;p g&#7841;ch, xi m&#259;ng, c&aacute;t &#273;&aacute;, th&eacute;p v&agrave; v&#7853;n t&#7843;i thi c&ocirc;ng cho nh&agrave; d&acirc;n v&agrave; nh&agrave; th&#7847;u t&#7841;i B&igrave;nh Long - &#272;&#7891;ng Nai.</p>
+        </div>
+        <div class="footer-col">
+            <h4>Danh m&#7909;c</h4>
+            <a th:href="@{|/san-pham?category=gach|}">G&#7841;ch x&acirc;y d&#7921;ng</a>
+            <a th:href="@{|/san-pham?category=xi-mang|}">Xi m&#259;ng</a>
+            <a th:href="@{|/san-pham?category=cat-da|}">C&aacute;t - &#273;&aacute;</a>
+            <a th:href="@{|/san-pham?category=thep|}">Th&eacute;p</a>
+        </div>
+        <div class="footer-col">
+            <h4>D&#7883;ch v&#7909;</h4>
+            <a href="/dat-hang">&#272;&#7863;t h&agrave;ng online</a>
+            <a href="/bao-gia">B&aacute;o gi&aacute; s&#7881;</a>
+            <a href="/tra-cuu-don-hang">Tra c&#7913;u &#273;&#417;n h&agrave;ng</a>
+            <a href="/bao-gia">T&iacute;nh v&#7853;t li&#7879;u</a>
+            <a href="/gioi-thieu">Gi&#7899;i thi&#7879;u</a>
+        </div>
+        <div class="footer-col">
+            <h4>Li&ecirc;n h&#7879;</h4>
+            <span th:text="|Gmail: ${email}|">Gmail: xaydungvantaidaphuongthucanhvu@gmail.com</span>
+            <span th:if="${phone != null and !phone.isBlank()}" th:text="|S&#272;T: ${phone}|">S&#272;T: 0866785645</span>
+            <span>MST: 3901312239</span>
+            <span>617 Nguy&#7877;n Hu&#7879;, P. B&igrave;nh Long, TP. &#272;&#7891;ng Nai</span>
+        </div>
+    </div>
+    <div class="container footer-bottom">
+        <span>&#169; 2026 <b th:text="${companyName}">C&Ocirc;NG TY TNHH MTV TM DV XD ANH V&#360;</b>. M&#7885;i quy&#7873;n &#273;&#432;&#7907;c b&#7843;o l&#432;u.</span>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script th:src="@{/js/main.js(v=22)}"></script>
+
+<button id="scrollToTopBtn" title="L&ecirc;n &#273;&#7847;u trang" style="display: none; position: fixed; bottom: 85px; right: 20px; z-index: 98; border: none; outline: none; background-color: var(--primary); color: white; cursor: pointer; padding: 12px; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.3); transition: all 0.3s; width: 45px; height: 45px; align-items: center; justify-content: center;">&#8593;</button>
+
+<script>
+    let topBtn = document.getElementById("scrollToTopBtn");
+    window.onscroll = function() {
+        if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+            topBtn.style.display = "flex";
+        } else {
+            topBtn.style.display = "none";
+        }
+    };
+    topBtn.onclick = function() {
+        window.scrollTo({top: 0, behavior: "smooth"});
+    };
+
+    // ===== May tinh vat lieu: tinh ngay tai cho, khong reload trang =====
+    (function () {
+        const form = document.getElementById("quickCalcForm");
+        const material = document.getElementById("calcMaterial");
+        const areaInput = document.getElementById("calcArea");
+        const rateInput = document.getElementById("calcRate");
+        const areaLabel = document.getElementById("calcAreaLabel");
+        const rateUnit = document.getElementById("calcRateUnit");
+        const btn = document.getElementById("calcBtn");
+        const result = document.getElementById("calcResult");
+        const qtyEl = document.getElementById("calcQty");
+        const unitEl = document.getElementById("calcUnit");
+        const noteEl = document.getElementById("calcNote");
+        if (!form || !material || !areaInput || !rateInput || !btn || !result) return;
+
+        const decode = (v) => { const t = document.createElement("textarea"); t.innerHTML = v; return t.value; };
+
+        // Doc dinh muc + don vi tu option dang: "rate|unit|mo ta"
+        const applyMaterial = () => {
+            const opt = material.options[material.selectedIndex];
+            const parts = opt.value.split("|");
+            const isCustom = parts[0] === "custom";
+            const perUnit = opt.dataset.perunit || "m&sup2;";
+            areaLabel.innerHTML = decode(perUnit === "m&sup2;" ? "Di&#7879;n t&iacute;ch thi c&ocirc;ng (m&sup2;)" : "Kh&#7889;i l&#432;&#7907;ng b&ecirc; t&ocirc;ng (m&sup3;)");
+            rateUnit.innerHTML = decode(perUnit);
+            if (!isCustom) {
+                rateInput.value = parts[0];
+                rateInput.readOnly = true;
+                rateInput.style.background = "#f1f5f9";
+            } else {
+                rateInput.readOnly = false;
+                rateInput.style.background = "";
+                rateInput.value = "";
+                rateInput.focus();
+            }
+            result.hidden = true;
+        };
+
+        const calculate = () => {
+            const opt = material.options[material.selectedIndex];
+            const parts = opt.value.split("|");
+            const area = parseFloat(areaInput.value);
+            const rate = parseFloat(rateInput.value);
+            if (!(area > 0) || !(rate > 0)) {
+                result.hidden = false;
+                result.querySelector("span").textContent = decode("Vui l&ograve;ng nh&#7853;p s&#7889; h&#7907;p l&#7879;");
+                qtyEl.textContent = "0";
+                unitEl.innerHTML = "";
+                noteEl.textContent = "";
+                return;
+            }
+            const total = area * rate;
+            // Lam tron: don vi dem duoc (vien/bao) lam tron len, khoi/m3 giu 2 so le
+            const unit = parts[1] || decode("&#273;&#417;n v&#7883;");
+            const isCountable = unit.indexOf("vi") === 0 || unit.indexOf("bao") === 0;
+            const shown = isCountable ? Math.ceil(total).toLocaleString("vi-VN") : total.toFixed(2);
+            result.hidden = false;
+            result.querySelector("span").innerHTML = decode("K&#7871;t qu&#7843; t&#7841;m t&iacute;nh (c&#7847;n chu&#7849;n b&#7883;)");
+            qtyEl.textContent = shown;
+            unitEl.innerHTML = unit;
+            noteEl.innerHTML = decode("D&#7921; tr&ugrave; cho: ") + (parts[2] || "") + decode(". S&#7889; li&#7879;u tham kh&#7843;o, ch&#432;a t&iacute;nh hao h&#7909;t 5-10%. Anh/ch&#7883; g&#7917;i y&ecirc;u c&#7847;u b&aacute;o gi&aacute; b&ecirc;n d&#432;&#7899;i &#273;&#7875; ch&#7889;t gi&aacute; ch&iacute;nh x&aacute;c.");
+            result.classList.remove("is-updating");
+            requestAnimationFrame(() => result.classList.add("is-updating"));
+        };
+
+        material.addEventListener("change", applyMaterial);
+        btn.addEventListener("click", calculate);
+        form.addEventListener("submit", (e) => { e.preventDefault(); calculate(); });
+        applyMaterial();
+    })();
+</script>
+</body>
+</html>

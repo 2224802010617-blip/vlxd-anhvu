@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Không tìm thấy trang - VLXD Anh Vũ</title>
+    <link rel="icon" type="image/svg+xml" href="/images/anh-vu-logo.svg">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css(v=27)}">
+</head>
+<body>
+<main class="error-page">
+    <section class="error-card">
+        <a class="auth-logo" href="/">
+            <img src="/images/anh-vu-logo.svg" alt="Anh Vu logo" loading="eager" decoding="async">
+        </a>
+        <span th:text="${status ?: '404'}">404</span>
+        <h1>Trang này hiện không khả dụng</h1>
+        <p>Đường dẫn có thể đã thay đổi hoặc không tồn tại. Anh/chị quay lại trang chủ để xem sản phẩm, đặt hàng hoặc gửi yêu cầu báo giá.</p>
+        <div class="error-actions">
+            <a class="btn btn-danger" href="/">Về trang chủ</a>
+            <a class="btn btn-outline-danger" href="/dat-hang">Đặt hàng</a>
+        </div>
+    </section>
+</main>
+</body>
+</html>
