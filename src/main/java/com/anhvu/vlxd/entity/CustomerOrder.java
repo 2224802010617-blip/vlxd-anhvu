@@ -34,6 +34,14 @@ public class CustomerOrder {
     @Column(nullable = false, precision = 12, scale = 2)
     private BigDecimal quantity;
 
+    // Gia ban tai thoi diem dat (luu lai de doanh thu khong sai khi gia doi ve sau)
+    @Column(precision = 14, scale = 2)
+    private BigDecimal unitPrice;
+
+    // Thanh tien = don gia * so luong tai thoi diem dat
+    @Column(precision = 16, scale = 2)
+    private BigDecimal totalAmount;
+
     @Column(length = 40)
     private String paymentMethod;
 

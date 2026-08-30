@@ -3268,6 +3268,20 @@ main {
     box-shadow: 0 20px 42px rgba(2, 6, 23, .34);
 }
 
+/* O doanh thu noi bat */
+.metric-card--accent {
+    background: linear-gradient(135deg, rgba(239, 24, 40, .16), rgba(11, 78, 162, .1));
+    border-color: rgba(248, 113, 113, .3);
+}
+
+/* So tien co the dai -> giam co chu de khong tran o */
+.admin-hero__revenue strong,
+.metric-card--accent strong,
+.metric-card strong[data-suffix] {
+    font-size: 1.45rem;
+    word-break: break-word;
+}
+
 .admin-charts {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));

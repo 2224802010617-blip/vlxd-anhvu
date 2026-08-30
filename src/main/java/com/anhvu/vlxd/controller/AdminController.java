@@ -51,9 +51,38 @@ public class AdminController {
                 .mapToDouble(Double::doubleValue)
                 .sum();
 
-        Map<String, Double> salesByProduct = allOrders.stream()
+        // Doanh thu chi tinh don DA HOAN THANH (tien thuc thu ve). Don moi/huy khong tinh.
+        java.util.function.Predicate<CustomerOrder> isCompleted =
+                order -> "COMPLETED".equalsIgnoreCase(order.getStatus());
+        java.util.function.ToDoubleFunction<CustomerOrder> amountOf =
+                order -> order.getTotalAmount() == null ? 0d : order.getTotalAmount().doubleValue();
+
+        double totalRevenue = allOrders.stream().filter(isCompleted).mapToDouble(amountOf).sum();
+
+        // Doanh thu 30 ngay gan nhat
+        java.time.LocalDateTime last30 = java.time.LocalDateTime.now().minusDays(30);
+        double revenueLast30 = allOrders.stream()
+                .filter(isCompleted)
+                .filter(order -> order.getCreatedAt() != null && order.getCreatedAt().isAfter(last30))
+                .mapToDouble(amountOf)
+                .sum();
+
+        // Gia tri don dang cho xu ly (chua hoan thanh, chua huy) = doanh thu du kien
+        double pendingRevenue = allOrders.stream()
+                .filter(order -> !"COMPLETED".equalsIgnoreCase(order.getStatus())
+                        && !"CANCELED".equalsIgnoreCase(order.getStatus()))
+                .mapToDouble(amountOf)
+                .sum();
+
+        // Bieu do doanh thu theo san pham (don da hoan thanh), sap xep giam dan
+        Map<String, Double> revenueByProduct = allOrders.stream()
+                .filter(isCompleted)
                 .collect(Collectors.groupingBy(CustomerOrder::getProductName, LinkedHashMap::new,
-                        Collectors.summingDouble(order -> order.getQuantity() == null ? 0d : order.getQuantity().doubleValue())));
+                        Collectors.summingDouble(amountOf)))
+                .entrySet().stream()
+                .sorted(Map.Entry.<String, Double>comparingByValue().reversed())
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+                        (a, b) -> a, LinkedHashMap::new));
 
         Map<String, Integer> stockByCategory = products.stream()
                 .collect(Collectors.groupingBy(product -> product.getCategory().getName(), LinkedHashMap::new,
@@ -67,14 +96,18 @@ public class AdminController {
         model.addAttribute("pendingOrders", allOrders.stream().filter(order -> "NEW".equalsIgnoreCase(order.getStatus())).count());
         model.addAttribute("pendingQuotes", allQuotes.stream().filter(quote -> "NEW".equalsIgnoreCase(quote.getStatus())).count());
         model.addAttribute("totalUnitsSold", totalUnitsSold);
+        model.addAttribute("totalRevenue", totalRevenue);
+        model.addAttribute("revenueLast30", revenueLast30);
+        model.addAttribute("pendingRevenue", pendingRevenue);
+        model.addAttribute("completedOrders", allOrders.stream().filter(isCompleted).count());
         model.addAttribute("quotes", quotes);
         model.addAttribute("orders", orders);
         model.addAttribute("products", products);
         model.addAttribute("adminEmail", adminEmail(authentication));
         model.addAttribute("orderStatuses", List.of("NEW", "CONFIRMED", "SHIPPING", "COMPLETED", "CANCELED"));
         model.addAttribute("quoteStatuses", List.of("NEW", "CONTACTED", "QUOTED", "CLOSED"));
-        model.addAttribute("salesLabelsJson", objectMapper.writeValueAsString(salesByProduct.keySet()));
-        model.addAttribute("salesDataJson", objectMapper.writeValueAsString(salesByProduct.values()));
+        model.addAttribute("salesLabelsJson", objectMapper.writeValueAsString(revenueByProduct.keySet()));
+        model.addAttribute("salesDataJson", objectMapper.writeValueAsString(revenueByProduct.values()));
         model.addAttribute("stockLabelsJson", objectMapper.writeValueAsString(stockByCategory.keySet()));
         model.addAttribute("stockDataJson", objectMapper.writeValueAsString(stockByCategory.values()));
         return "admin/dashboard";

@@ -23,26 +23,25 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ----- Dem so -----
-    const formatAnimatedValue = (target, rawText, progress) => {
-        const hasDecimal = rawText.includes(".");
+    const formatAnimatedValue = (target, rawText, progress, suffix) => {
+        const hasDecimal = rawText.includes(".") && !rawText.includes(",");
         const value = target * progress;
-        if (hasDecimal) {
-            return value.toFixed(1);
-        }
-        return Math.round(value).toLocaleString("vi-VN");
+        const text = hasDecimal ? value.toFixed(1) : Math.round(value).toLocaleString("vi-VN");
+        return text + (suffix || "");
     };
 
     const countElements = Array.from(document.querySelectorAll("[data-countup]"));
     countElements.forEach((el, index) => {
         const rawText = (el.textContent || "0").trim();
-        // Server dinh dang nghin bang dau phay (5,834) -> bo phay, giu nguyen gia tri
-        const target = Number(String(rawText).replace(/,/g, "")) || 0;
+        const suffix = el.getAttribute("data-suffix") || "";
+        // Server co the dinh dang nghin bang dau cham hoac phay -> bo het de lay so goc
+        const target = Number(String(rawText).replace(/[.,]/g, "")) || 0;
 
-        el.textContent = "0";
+        el.textContent = "0" + suffix;
         el.style.setProperty("--count-delay", `${index * 90}ms`);
 
         if (prefersReducedMotion) {
-            el.textContent = formatAnimatedValue(target, rawText, 1);
+            el.textContent = formatAnimatedValue(target, rawText, 1, suffix);
             return;
         }
 
@@ -52,7 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const tick = (now) => {
             const progress = Math.min((now - start) / duration, 1);
             const eased = 1 - Math.pow(1 - progress, 3);
-            el.textContent = formatAnimatedValue(target, rawText, eased);
+            el.textContent = formatAnimatedValue(target, rawText, eased, suffix);
 
             if (progress < 1) {
                 requestAnimationFrame(tick);
@@ -72,6 +71,21 @@ document.addEventListener("DOMContentLoaded", () => {
         const ctx = canvas.getContext("2d");
         const baseColor = options.color || "#f43f5e";
         const accentColor = options.colorDark || "#0b4ea2";
+        const isMoney = options.money === true;
+
+        // Rut gon so lon: 1500000 -> "1,5M", 42000 -> "42K"
+        const shortNumber = (value) => {
+            if (value >= 1000000) {
+                return (value / 1000000).toFixed(value % 1000000 === 0 ? 0 : 1).replace(".", ",") + "M";
+            }
+            if (value >= 1000) {
+                return (value / 1000).toFixed(value % 1000 === 0 ? 0 : 1).replace(".", ",") + "K";
+            }
+            return Math.round(value).toString();
+        };
+        const formatBarValue = (value) => isMoney
+            ? shortNumber(value) + " ₫"
+            : Number(value).toLocaleString("vi-VN");
 
         const allLabels = labels.slice(0, 10);
         const allValues = values.slice(0, 10).map((value) => Number(value) || 0);
@@ -143,14 +157,7 @@ document.addEventListener("DOMContentLoaded", () => {
             ctx.textAlign = "right";
             for (let i = 0; i <= ySteps; i++) {
                 const value = (maxValue * i) / ySteps;
-                let displayValue;
-                if (value >= 1000000) {
-                    displayValue = (value / 1000000).toFixed(value % 1000000 === 0 ? 0 : 1) + "M";
-                } else if (value >= 1000) {
-                    displayValue = (value / 1000).toFixed(value % 1000 === 0 ? 0 : 1) + "K";
-                } else {
-                    displayValue = Math.round(value).toString();
-                }
+                const displayValue = shortNumber(value);
 
                 const y = padding.top + chartHeight - (chartHeight * i / ySteps);
                 ctx.fillStyle = "#94a3b8";
@@ -190,7 +197,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 ctx.fillStyle = "#e2e8f0";
                 ctx.font = "700 11px Inter, Segoe UI, Arial";
                 ctx.textAlign = "center";
-                ctx.fillText(Number(value).toLocaleString("vi-VN"), x + barWidth / 2, Math.max(y - 7, padding.top + 11));
+                ctx.fillText(formatBarValue(value), x + barWidth / 2, Math.max(y - 7, padding.top + 11));
 
                 // Nhan truc X (xuong dong toi da 2 dong)
                 ctx.fillStyle = "#94a3b8";
@@ -219,7 +226,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const charts = [
         createBarChart("salesChart", data.salesLabels || [], data.salesData || [], {
             color: "#f43f5e",
-            colorDark: "#7f1d2e"
+            colorDark: "#7f1d2e",
+            money: true
         }),
         createBarChart("stockChart", data.stockLabels || [], data.stockData || [], {
             color: "#38bdf8",

@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
-    <link rel="stylesheet" th:href="@{/css/style.css(v=28)}">
+    <link rel="stylesheet" th:href="@{/css/style.css(v=29)}">
 </head>
 <body class="admin-body">
 <header class="admin-topbar">
@@ -54,21 +54,21 @@
                 H&#7879; th&#7889;ng &#273;ang ho&#7841;t &#273;&#7897;ng
             </div>
             <div class="admin-hero__stack">
-                <article>
-                    <span>&#272;&#417;n ch&#7901;</span>
-                    <strong th:text="${pendingOrders}">0</strong>
+                <article class="admin-hero__revenue">
+                    <span>Doanh thu (&#273;&atilde; ho&agrave;n th&agrave;nh)</span>
+                    <strong th:text="${#numbers.formatDecimal(totalRevenue, 1, 'POINT', 0, 'POINT')} + ' &#8363;'">0 &#8363;</strong>
                 </article>
                 <article>
-                    <span>B&aacute;o gi&aacute; ch&#7901;</span>
-                    <strong th:text="${pendingQuotes}">0</strong>
+                    <span>Doanh thu 30 ng&agrave;y</span>
+                    <strong th:text="${#numbers.formatDecimal(revenueLast30, 1, 'POINT', 0, 'POINT')} + ' &#8363;'">0 &#8363;</strong>
+                </article>
+                <article>
+                    <span>&#272;&#417;n ch&#7901; x&#7917; l&yacute;</span>
+                    <strong th:text="${pendingOrders}">0</strong>
                 </article>
                 <article>
                     <span>S&#7855;p h&#7871;t h&agrave;ng</span>
                     <strong th:text="${lowStock}">0</strong>
-                </article>
-                <article>
-                    <span>&#272;&atilde; b&aacute;n</span>
-                    <strong th:text="${#numbers.formatDecimal(totalUnitsSold, 1, 'COMMA', 0, 'POINT')}">0</strong>
                 </article>
             </div>
         </div>
@@ -78,6 +78,22 @@
     <div class="admin-message error reveal-on-scroll" th:if="${adminError}" th:text="${adminError}">C&oacute; l&#7895;i.</div>
 
     <section class="admin-metrics reveal-on-scroll">
+        <article class="metric-card metric-card--accent">
+            <span>Doanh thu (&#273;&atilde; ho&agrave;n th&agrave;nh)</span>
+            <strong data-countup data-suffix=" &#8363;" th:text="${#numbers.formatDecimal(totalRevenue, 1, 'POINT', 0, 'POINT')}">0</strong>
+        </article>
+        <article class="metric-card">
+            <span>Gi&aacute; tr&#7883; &#273;&#417;n &#273;ang ch&#7901;</span>
+            <strong data-countup data-suffix=" &#8363;" th:text="${#numbers.formatDecimal(pendingRevenue, 1, 'POINT', 0, 'POINT')}">0</strong>
+        </article>
+        <article class="metric-card">
+            <span>&#272;&#417;n ho&agrave;n th&agrave;nh</span>
+            <strong data-countup th:text="${completedOrders}">0</strong>
+        </article>
+        <article class="metric-card">
+            <span>T&#7893;ng &#273;&#417;n h&agrave;ng</span>
+            <strong data-countup th:text="${orderCount}">0</strong>
+        </article>
         <article class="metric-card">
             <span>S&#7843;n ph&#7849;m</span>
             <strong data-countup th:text="${productCount}">0</strong>
@@ -87,24 +103,8 @@
             <strong data-countup th:text="${categoryCount}">0</strong>
         </article>
         <article class="metric-card">
-            <span>&#272;&#417;n h&agrave;ng</span>
-            <strong data-countup th:text="${orderCount}">0</strong>
-        </article>
-        <article class="metric-card">
-            <span>B&aacute;o gi&aacute;</span>
-            <strong data-countup th:text="${quoteCount}">0</strong>
-        </article>
-        <article class="metric-card">
             <span>S&#7855;p h&#7871;t h&agrave;ng</span>
             <strong data-countup th:text="${lowStock}">0</strong>
-        </article>
-        <article class="metric-card">
-            <span>SL &#273;&atilde; b&aacute;n</span>
-            <strong data-countup th:text="${#numbers.formatDecimal(totalUnitsSold, 1, 'COMMA', 0, 'POINT')}">0</strong>
-        </article>
-        <article class="metric-card">
-            <span>&#272;&#417;n ch&#7901;</span>
-            <strong data-countup th:text="${pendingOrders}">0</strong>
         </article>
         <article class="metric-card">
             <span>B&aacute;o gi&aacute; ch&#7901;</span>
@@ -115,8 +115,8 @@
     <section class="admin-charts reveal-on-scroll">
         <article class="admin-panel chart-card">
             <div class="panel-head">
-                <h2>Bi&#7875;u &#273;&#7891; s&#7889; l&#432;&#7907;ng b&aacute;n h&agrave;ng</h2>
-                <span>Top s&#7843;n ph&#7849;m theo s&#7889; l&#432;&#7907;ng</span>
+                <h2>Bi&#7875;u &#273;&#7891; doanh thu theo s&#7843;n ph&#7849;m</h2>
+                <span>Top s&#7843;n ph&#7849;m theo doanh thu (&#273;&#417;n &#273;&atilde; ho&agrave;n th&agrave;nh)</span>
             </div>
             <canvas id="salesChart" width="560" height="320"></canvas>
         </article>
@@ -281,6 +281,6 @@
         stockData: JSON.parse(/*[[${stockDataJson}]]*/ "[]")
     };
 </script>
-<script th:src="@{/js/admin.js(v=3)}"></script>
+<script th:src="@{/js/admin.js(v=4)}"></script>
 </body>
 </html>

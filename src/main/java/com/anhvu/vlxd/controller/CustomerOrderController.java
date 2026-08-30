@@ -81,6 +81,8 @@ public class CustomerOrderController {
                 .address(form.getAddress().trim())
                 .productName(form.getProductName().trim())
                 .quantity(quantity)
+                .unitPrice(product.getPrice())
+                .totalAmount(totalAmount)
                 .paymentMethod(form.getPaymentMethod().trim())
                 .note(finalNote)
                 .status("NEW")
