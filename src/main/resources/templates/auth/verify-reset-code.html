@@ -3,33 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>XÃ¡c nháº­n mÃ£ - VLXD Anh VÅ©</title>
+    <title>XÃƒÂ¡c nhÃ¡ÂºÂ­n mÃƒÂ£ - VLXD Anh VÃ…Â©</title>
     <link rel="icon" type="image/svg+xml" href="/images/anh-vu-logo.svg">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/css/style.css(v=31)}">
+    <link rel="stylesheet" th:href="@{/css/style.css(v=32)}">
 </head>
 <body>
 <main class="auth-page">
     <section class="auth-card">
         <a class="auth-logo" href="/"><img src="/images/anh-vu-logo.svg" alt="Anh Vu logo"></a>
-        <span>Báº£o máº­t tÃ i khoáº£n</span>
-        <h1>Nháº­p mÃ£ xÃ¡c nháº­n</h1>
-        <div class="form-success" th:if="${message}" th:text="${message}">ThÃ´ng bÃ¡o</div>
-        <div class="form-error auth-alert" th:if="${error}" th:text="${error}">Lá»—i</div>
+        <span>BÃ¡ÂºÂ£o mÃ¡ÂºÂ­t tÃƒÂ i khoÃ¡ÂºÂ£n</span>
+        <h1>NhÃ¡ÂºÂ­p mÃƒÂ£ xÃƒÂ¡c nhÃ¡ÂºÂ­n</h1>
+        <div class="form-success" th:if="${message}" th:text="${message}">ThÃƒÂ´ng bÃƒÂ¡o</div>
+        <div class="form-error auth-alert" th:if="${error}" th:text="${error}">LÃ¡Â»â€”i</div>
         <form class="auth-form" th:action="@{/xac-nhan-ma}" method="post">
             <label>Email<input type="email" name="email" th:value="${email}" autocomplete="email" required></label>
-            <label>MÃ£ xÃ¡c nháº­n
+            <label>MÃƒÂ£ xÃƒÂ¡c nhÃ¡ÂºÂ­n
                 <input class="otp-input" name="code" inputmode="numeric" autocomplete="one-time-code"
                        pattern="[0-9]{6}" maxlength="6" placeholder="000000" required>
             </label>
-            <button type="submit">XÃ¡c nháº­n mÃ£</button>
+            <button type="submit">XÃƒÂ¡c nhÃ¡ÂºÂ­n mÃƒÂ£</button>
         </form>
         <div class="auth-links">
-            <a href="/quen-mat-khau">Gá»­i láº¡i mÃ£</a>
-            <a href="/dang-nhap">Quay láº¡i Ä‘Äƒng nháº­p</a>
+            <a href="/quen-mat-khau">GÃ¡Â»Â­i lÃ¡ÂºÂ¡i mÃƒÂ£</a>
+            <a href="/dang-nhap">Quay lÃ¡ÂºÂ¡i Ã„â€˜Ã„Æ’ng nhÃ¡ÂºÂ­p</a>
         </div>
     </section>
 </main>

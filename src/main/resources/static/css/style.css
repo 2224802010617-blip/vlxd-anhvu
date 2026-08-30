@@ -5054,6 +5054,9 @@ a.showroom-card:hover b {
 /* --- Menu do full width --- */
 .qh-menu {
     background: #ed1b2f;
+    /* Nam tren hero de dropdown goi y khong bi anh hero de len */
+    position: relative;
+    z-index: 40;
 }
 .qh-menu-inner {
     display: flex;
