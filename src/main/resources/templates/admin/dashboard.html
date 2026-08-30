@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
-    <link rel="stylesheet" th:href="@{/css/style.css(v=29)}">
+    <link rel="stylesheet" th:href="@{/css/style.css(v=30)}">
 </head>
 <body class="admin-body">
 <header class="admin-topbar">
@@ -241,7 +241,7 @@
                     </thead>
                     <tbody>
                     <tr th:each="product : ${products}">
-                        <td>
+                        <td data-label="S&#7843;n ph&#7849;m">
                             <div class="inventory-product">
                                 <img th:src="${product.imagePath}" alt="Vat lieu xay dung">
                                 <div>
@@ -250,12 +250,18 @@
                                 </div>
                             </div>
                         </td>
-                        <td th:text="${product.category.name}">Nh&oacute;m</td>
-                        <td th:text="${product.unit}">&#272;&#417;n v&#7883;</td>
-                        <td>
+                        <td data-label="Nh&oacute;m" th:text="${product.category.name}">Nh&oacute;m</td>
+                        <td data-label="&#272;&#417;n v&#7883;" th:text="${product.unit}">&#272;&#417;n v&#7883;</td>
+                        <td data-label="Kho / gi&aacute; / tr&#7841;ng th&aacute;i">
                             <form class="inventory-form" th:action="@{|/admin/products/${product.id}/inventory|}" method="post">
-                                <input name="stockQuantity" type="number" min="0" th:value="${product.stockQuantity}" aria-label="Ton kho">
-                                <input name="price" type="number" min="0" step="100" th:value="${product.price}" aria-label="Gia">
+                                <label class="inventory-field">
+                                    <span class="inventory-field__label">T&#7891;n kho</span>
+                                    <input name="stockQuantity" type="number" min="0" th:value="${product.stockQuantity}" aria-label="Ton kho">
+                                </label>
+                                <label class="inventory-field">
+                                    <span class="inventory-field__label">Gi&aacute; b&aacute;n</span>
+                                    <input name="price" type="number" min="0" step="100" th:value="${product.price}" aria-label="Gia">
+                                </label>
                                 <label class="inventory-toggle">
                                     <input name="active" type="checkbox" value="true" th:checked="${product.active}">
                                     <span>&#272;ang b&aacute;n</span>

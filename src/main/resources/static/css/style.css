@@ -3347,7 +3347,9 @@ main {
 
 .admin-table-wrap {
     border-radius: 16px;
-    overflow: hidden;
+    /* Cho phep cuon ngang khi bang rong hon man hinh (khong chan bang overflow:hidden) */
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
     border: 1px solid rgba(148, 163, 184, .14);
 }
 
@@ -3479,6 +3481,15 @@ main {
     padding: 0 12px;
 }
 
+/* Boc o nhap; nhan chi hien tren dien thoai */
+.inventory-field {
+    display: contents;
+}
+
+.inventory-field__label {
+    display: none;
+}
+
 .inventory-toggle {
     display: inline-flex;
     align-items: center;
@@ -3608,6 +3619,107 @@ html.js-anim .reveal-on-scroll {
 
     .admin-action {
         width: 100%;
+    }
+
+    /* ===== Bang kho hang -> dang the tren dien thoai (khong bi cat cot phai) ===== */
+    .inventory-table,
+    .inventory-table thead,
+    .inventory-table tbody,
+    .inventory-table tr,
+    .inventory-table td {
+        display: block;
+        width: 100%;
+    }
+
+    /* An dong tieu de bang (dung nhan data-label thay the) */
+    .inventory-table thead {
+        display: none;
+    }
+
+    .inventory-table tbody,
+    .inventory-table tr {
+        border: 0;
+    }
+
+    /* Moi san pham la mot the rieng */
+    .inventory-table tr {
+        margin-bottom: 14px;
+        padding: 14px;
+        border-radius: 16px;
+        border: 1px solid rgba(148, 163, 184, .16);
+        background: rgba(15, 23, 42, .55);
+    }
+
+    .inventory-table td {
+        border: 0;
+        padding: 8px 0;
+        background: transparent !important;
+    }
+
+    /* Nhan cho tung o (Nhom / Don vi) */
+    .inventory-table td[data-label="Nh&oacute;m"]::before,
+    .inventory-table td[data-label]:not([data-label="S&#7843;n ph&#7849;m"]):not([data-label="Kho / gi&aacute; / tr&#7841;ng th&aacute;i"])::before {
+        content: attr(data-label) ": ";
+        color: #94a3b8;
+        font-weight: 800;
+        font-size: .82rem;
+    }
+
+    /* O nhom + don vi hien tren cung 1 dong cho gon */
+    .inventory-table td[data-label="Nh&oacute;m"],
+    .inventory-table td[data-label="&#272;&#417;n v&#7883;"] {
+        display: inline-block;
+        width: auto;
+        margin-right: 18px;
+        color: #cbd5e1;
+        font-weight: 700;
+    }
+
+    /* Tieu de o kho/gia/trang thai */
+    .inventory-table td[data-label="Kho / gi&aacute; / tr&#7841;ng th&aacute;i"]::before {
+        content: attr(data-label);
+        display: block;
+        margin-bottom: 8px;
+        color: #93c5fd;
+        font-weight: 900;
+        font-size: .8rem;
+        text-transform: uppercase;
+        letter-spacing: .04em;
+    }
+
+    /* Form kho: xep doc, o nhap to de bam */
+    .inventory-form {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    /* Hien nhan tren tung o nhap */
+    .inventory-field {
+        display: block;
+    }
+
+    .inventory-field__label {
+        display: block;
+        margin-bottom: 6px;
+        color: #94a3b8;
+        font-size: .84rem;
+        font-weight: 800;
+    }
+
+    .inventory-form input[type="number"],
+    .inventory-form button,
+    .inventory-toggle {
+        width: 100%;
+        min-height: 46px;
+    }
+
+    .inventory-toggle {
+        justify-content: flex-start;
+    }
+
+    /* ===== Bang don hang + bao gia van cuon ngang duoc ===== */
+    .admin-table-wrap {
+        border-radius: 14px;
     }
 }
 
