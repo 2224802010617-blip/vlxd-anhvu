@@ -70,7 +70,7 @@ public class AuthController {
     @PostMapping("/dang-ky")
     public String register(@RequestParam String fullName,
                            @RequestParam String email,
-                           @RequestParam String phone,
+                           @RequestParam(required = false, defaultValue = "") String phone,
                            @RequestParam String password,
                            @RequestParam String confirmPassword,
                            RedirectAttributes redirectAttributes) {
