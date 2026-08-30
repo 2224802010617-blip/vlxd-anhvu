@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const data = window.adminChartData || {};
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+    // ----- Hien dan khi cuon -----
     const revealItems = Array.from(document.querySelectorAll(".reveal-on-scroll"));
     if (revealItems.length) {
         if (prefersReducedMotion || typeof IntersectionObserver === "undefined") {
@@ -21,6 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    // ----- Dem so -----
     const formatAnimatedValue = (target, rawText, progress) => {
         const hasDecimal = rawText.includes(".");
         const value = target * progress;
@@ -33,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const countElements = Array.from(document.querySelectorAll("[data-countup]"));
     countElements.forEach((el, index) => {
         const rawText = (el.textContent || "0").trim();
-        // Server dinh dang nghin bang dau phay (5,834) -> bo phay, giu nguuyen gia tri
+        // Server dinh dang nghin bang dau phay (5,834) -> bo phay, giu nguyen gia tri
         const target = Number(String(rawText).replace(/,/g, "")) || 0;
 
         el.textContent = "0";
@@ -60,37 +62,22 @@ document.addEventListener("DOMContentLoaded", () => {
         requestAnimationFrame(tick);
     });
 
-    const drawBarChart = (canvasId, labels, values, options = {}) => {
+    // ----- Bieu do cot: responsive, sac net tren mobile (high-DPI), tong toi khop dashboard -----
+    const createBarChart = (canvasId, labels, values, options = {}) => {
         const canvas = document.getElementById(canvasId);
         if (!canvas) {
-            return;
+            return null;
         }
 
         const ctx = canvas.getContext("2d");
-        const width = canvas.width;
-        const height = canvas.height;
-        const padding = { top: 40, right: 30, bottom: 85, left: 65 };
-        const chartWidth = width - padding.left - padding.right;
-        const chartHeight = height - padding.top - padding.bottom;
-        const visibleLabels = labels.slice(0, 10);
-        const visibleValues = values.slice(0, 10).map((value) => Number(value) || 0);
-
-        // Find max and min properly
-        const maxDataValue = Math.max(...visibleValues, 1);
-        const maxRounded = Math.pow(10, Math.ceil(Math.log10(maxDataValue)));
-        const maxValue = maxRounded > maxDataValue * 1.5 ? maxRounded / 2 : maxRounded;
-
-        const slotWidth = chartWidth / Math.max(visibleValues.length, 1);
-        const barWidth = Math.max(24, Math.min(50, slotWidth * 0.45));
-        canvas.title = options.title || "";
-        canvas.style.cursor = "crosshair";
-        const baseColor = options.color || "#ed1b2f";
+        const baseColor = options.color || "#f43f5e";
         const accentColor = options.colorDark || "#0b4ea2";
-        const duration = 1300;
-        const start = performance.now();
+
+        const allLabels = labels.slice(0, 10);
+        const allValues = values.slice(0, 10).map((value) => Number(value) || 0);
 
         const roundedRect = (x, y, w, h, r) => {
-            const radius = Math.min(r, w / 2, h / 2);
+            const radius = Math.max(0, Math.min(r, w / 2, h / 2));
             ctx.beginPath();
             ctx.moveTo(x + radius, y);
             ctx.lineTo(x + w - radius, y);
@@ -105,15 +92,45 @@ document.addEventListener("DOMContentLoaded", () => {
         };
 
         const draw = (progress) => {
+            // Kich thuoc hien thi thuc te (CSS px) + he so man hinh retina
+            const dpr = window.devicePixelRatio || 1;
+            const cssWidth = Math.max(240, canvas.clientWidth || 560);
+            const cssHeight = Math.max(260, Math.round(cssWidth * 0.6));
+            const targetW = Math.round(cssWidth * dpr);
+            const targetH = Math.round(cssHeight * dpr);
+            if (canvas.width !== targetW) {
+                canvas.width = targetW;
+            }
+            if (canvas.height !== targetH) {
+                canvas.height = targetH;
+            }
+            canvas.style.height = cssHeight + "px";
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+            const width = cssWidth;
+            const height = cssHeight;
+
+            // Man hinh hep -> hien it cot hon cho de doc
+            const maxBars = width < 480 ? 6 : 10;
+            const visibleLabels = allLabels.slice(0, maxBars);
+            const visibleValues = allValues.slice(0, maxBars);
+
+            const padding = { top: 34, right: 18, bottom: 74, left: 54 };
+            const chartWidth = width - padding.left - padding.right;
+            const chartHeight = height - padding.top - padding.bottom;
+
+            const maxDataValue = Math.max(...visibleValues, 1);
+            const maxRounded = Math.pow(10, Math.ceil(Math.log10(maxDataValue)));
+            const maxValue = maxRounded > maxDataValue * 1.5 ? maxRounded / 2 : maxRounded;
+
+            const slotWidth = chartWidth / Math.max(visibleValues.length, 1);
+            const barWidth = Math.max(12, Math.min(46, slotWidth * 0.5));
+            const eased = prefersReducedMotion ? 1 : 1 - Math.pow(1 - progress, 3);
+
             ctx.clearRect(0, 0, width, height);
 
-            const bg = ctx.createLinearGradient(0, 0, 0, height);
-            bg.addColorStop(0, "#f8fafc");
-            bg.addColorStop(1, "#ffffff");
-            ctx.fillStyle = bg;
-            ctx.fillRect(0, 0, width, height);
-
-            ctx.strokeStyle = "#e4e7ec";
+            // Truc
+            ctx.strokeStyle = "rgba(148, 163, 184, .35)";
             ctx.lineWidth = 1;
             ctx.beginPath();
             ctx.moveTo(padding.left, padding.top);
@@ -121,18 +138,12 @@ document.addEventListener("DOMContentLoaded", () => {
             ctx.lineTo(padding.left + chartWidth, padding.top + chartHeight);
             ctx.stroke();
 
-            ctx.fillStyle = "#667085";
-            ctx.font = "12px Segoe UI, Arial";
-            ctx.textAlign = "right";
-
-            // Determine Y-axis labels and lines
+            // Vach + nhan truc Y (tuyen tinh - khop chieu cao cot)
             const ySteps = 4;
+            ctx.textAlign = "right";
             for (let i = 0; i <= ySteps; i++) {
-                // Calculate grid line value based on percentage of max
                 const value = (maxValue * i) / ySteps;
-                let displayValue = value;
-
-                // Format nicely for large numbers
+                let displayValue;
                 if (value >= 1000000) {
                     displayValue = (value / 1000000).toFixed(value % 1000000 === 0 ? 0 : 1) + "M";
                 } else if (value >= 1000) {
@@ -142,10 +153,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
 
                 const y = padding.top + chartHeight - (chartHeight * i / ySteps);
-                ctx.fillText(displayValue, padding.left - 10, y + 4);
+                ctx.fillStyle = "#94a3b8";
+                ctx.font = "12px Inter, Segoe UI, Arial";
+                ctx.fillText(displayValue, padding.left - 8, y + 4);
 
-                // Draw grid line
-                ctx.strokeStyle = i === 0 ? "#d0d5dd" : "#eef2f6";
+                ctx.strokeStyle = i === 0 ? "rgba(148, 163, 184, .35)" : "rgba(148, 163, 184, .14)";
                 ctx.beginPath();
                 ctx.moveTo(padding.left, y);
                 ctx.lineTo(padding.left + chartWidth, y);
@@ -155,33 +167,35 @@ document.addEventListener("DOMContentLoaded", () => {
             visibleValues.forEach((value, index) => {
                 const slotX = padding.left + index * slotWidth;
                 const x = slotX + (slotWidth - barWidth) / 2;
-                const eased = prefersReducedMotion ? 1 : 1 - Math.pow(1 - progress, 3);
 
-                // Use square root scale to soften extreme differences without breaking zero values
-                // log scale breaks at 0, sqrt is continuous and compresses large values
-                const barHeight = chartHeight * Math.sqrt(value / maxValue) * eased;
+                // Thang tuyen tinh: chieu cao cot dung ti le voi gia tri va khop vach truc
+                const barHeight = chartHeight * (value / maxValue) * eased;
                 const y = padding.top + chartHeight - barHeight;
-                const barGradient = ctx.createLinearGradient(0, y, 0, y + barHeight);
-                barGradient.addColorStop(0, baseColor);
-                barGradient.addColorStop(1, accentColor);
 
-                ctx.fillStyle = "rgba(15, 23, 42, .04)";
-                roundedRect(x + 5, padding.top + 8, barWidth - 10, chartHeight - 8, 12);
+                // Ranh mo phia sau cot
+                ctx.fillStyle = "rgba(148, 163, 184, .08)";
+                roundedRect(x, padding.top, barWidth, chartHeight, 10);
                 ctx.fill();
 
-                ctx.fillStyle = barGradient;
-                roundedRect(x, y, barWidth, barHeight, 12);
-                ctx.fill();
+                if (barHeight > 0) {
+                    const barGradient = ctx.createLinearGradient(0, y, 0, y + barHeight);
+                    barGradient.addColorStop(0, baseColor);
+                    barGradient.addColorStop(1, accentColor);
+                    ctx.fillStyle = barGradient;
+                    roundedRect(x, y, barWidth, Math.max(barHeight, 2), 10);
+                    ctx.fill();
+                }
 
-                ctx.fillStyle = "#0f172a";
-                ctx.font = "700 11px Segoe UI, Arial";
+                // Gia tri tren dinh cot
+                ctx.fillStyle = "#e2e8f0";
+                ctx.font = "700 11px Inter, Segoe UI, Arial";
                 ctx.textAlign = "center";
-                ctx.fillText(Number(value).toLocaleString("vi-VN"), x + barWidth / 2, Math.max(y - 8, padding.top + 12));
+                ctx.fillText(Number(value).toLocaleString("vi-VN"), x + barWidth / 2, Math.max(y - 7, padding.top + 11));
 
-                ctx.fillStyle = "#475467";
-                ctx.font = "11px Segoe UI, Arial";
-                ctx.textAlign = "center";
-                const label = String(visibleLabels[index] || "").slice(0, 20);
+                // Nhan truc X (xuong dong toi da 2 dong)
+                ctx.fillStyle = "#94a3b8";
+                ctx.font = "11px Inter, Segoe UI, Arial";
+                const label = String(visibleLabels[index] || "").slice(0, 22);
                 const words = label.split(/\s+/);
                 if (words.length > 2) {
                     ctx.fillText(words.slice(0, 2).join(" "), x + barWidth / 2, padding.top + chartHeight + 18);
@@ -191,38 +205,51 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             });
 
-            if (!visibleValues.length) {
-                ctx.fillStyle = "#667085";
-                ctx.font = "14px Segoe UI, Arial";
+            if (!visibleValues.length || visibleValues.every((value) => value === 0)) {
+                ctx.fillStyle = "#94a3b8";
+                ctx.font = "14px Inter, Segoe UI, Arial";
                 ctx.textAlign = "center";
                 ctx.fillText("Chưa có dữ liệu", width / 2, height / 2);
             }
         };
 
-        if (prefersReducedMotion) {
-            draw(1);
-            return;
-        }
-
-        const frame = (now) => {
-            const progress = Math.min((now - start) / duration, 1);
-            draw(progress);
-
-            if (progress < 1) {
-                requestAnimationFrame(frame);
-            }
-        };
-
-        requestAnimationFrame(frame);
+        return draw;
     };
 
-    drawBarChart("salesChart", data.salesLabels || [], data.salesData || [], {
-        color: "#ef1828",
-        colorDark: "#8d1020"
-    });
+    const charts = [
+        createBarChart("salesChart", data.salesLabels || [], data.salesData || [], {
+            color: "#f43f5e",
+            colorDark: "#7f1d2e"
+        }),
+        createBarChart("stockChart", data.stockLabels || [], data.stockData || [], {
+            color: "#38bdf8",
+            colorDark: "#0b4ea2"
+        })
+    ].filter(Boolean);
 
-    drawBarChart("stockChart", data.stockLabels || [], data.stockData || [], {
-        color: "#0b4ea2",
-        colorDark: "#09845f"
-    });
+    if (charts.length) {
+        if (prefersReducedMotion) {
+            charts.forEach((draw) => draw(1));
+        } else {
+            const duration = 1300;
+            const start = performance.now();
+            const frame = (now) => {
+                const progress = Math.min((now - start) / duration, 1);
+                charts.forEach((draw) => draw(progress));
+                if (progress < 1) {
+                    requestAnimationFrame(frame);
+                }
+            };
+            requestAnimationFrame(frame);
+        }
+
+        // Ve lai (tinh) khi doi kich thuoc/xoay man hinh -> luon sac net & vua khung
+        let resizeTimer = null;
+        window.addEventListener("resize", () => {
+            if (resizeTimer) {
+                clearTimeout(resizeTimer);
+            }
+            resizeTimer = setTimeout(() => charts.forEach((draw) => draw(1)), 150);
+        });
+    }
 });
