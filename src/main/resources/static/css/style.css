@@ -5085,13 +5085,17 @@ a.showroom-card:hover b {
     align-items: center;
     background: #fff;
     border-radius: 4px;
-    overflow: hidden;
     margin: 8px 0;
     min-width: 210px;
     border: 2px solid transparent;
     box-shadow: 0 0 0 0 rgba(255,255,255,0);
     transition: box-shadow .3s ease, transform .3s ease, border-color .3s ease;
     animation: searchGlow 2.6s ease-in-out infinite;
+    position: relative;
+}
+/* Bo bo goc cho khung goi y khi dang hien */
+.qh-search:not(.is-suggesting) {
+    overflow: hidden;
 }
 .qh-search:focus-within {
     transform: scale(1.03);
@@ -5123,6 +5127,56 @@ a.showroom-card:hover b {
 }
 .qh-search:focus-within button {
     animation: searchIconWiggle .6s ease-in-out;
+}
+
+/* ===== Khung goi y tim kiem (autocomplete) ===== */
+.search-suggest {
+    display: none;
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    z-index: 60;
+    background: #fff;
+    border-radius: 10px;
+    border: 1px solid rgba(15, 23, 42, .1);
+    box-shadow: 0 18px 40px rgba(2, 6, 23, .22);
+    overflow: hidden;
+    max-height: 340px;
+    overflow-y: auto;
+}
+.qh-search.is-suggesting .search-suggest {
+    display: block;
+}
+.search-suggest__item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    width: 100%;
+    text-align: left;
+    padding: 10px 14px;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    border-bottom: 1px solid rgba(15, 23, 42, .06);
+    transition: background .15s ease;
+}
+.search-suggest__item:last-child {
+    border-bottom: 0;
+}
+.search-suggest__item:hover,
+.search-suggest__item.is-active {
+    background: #fef2f2;
+}
+.search-suggest__name {
+    color: #0f172a;
+    font-size: 14px;
+    font-weight: 700;
+}
+.search-suggest__meta {
+    color: #64748b;
+    font-size: 12px;
+    font-weight: 600;
 }
 
 /* O tim kiem: vien sang nhe nhang de hut mat (giong web tham khao) */

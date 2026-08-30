@@ -83,47 +83,129 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const searchForm = document.querySelector(".global-search");
     const searchInput = document.querySelector("#productSearchInput");
-    const suggestions = Array.from(document.querySelectorAll(".suggestion-item"));
 
-    if (searchForm && searchInput && suggestions.length) {
+    if (searchForm && searchInput) {
         const normalize = (value) => value.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
-        const updateSuggestions = () => {
-            const keyword = normalize(searchInput.value.trim());
-            let visibleCount = 0;
+        // Khung goi y (tao dong, khong can server render)
+        const box = document.createElement("div");
+        box.className = "search-suggest";
+        box.setAttribute("role", "listbox");
+        searchForm.appendChild(box);
 
-            suggestions.forEach((item) => {
-                const haystack = normalize(`${item.dataset.name || item.textContent} ${item.dataset.category || ""}`);
-                const isVisible = !keyword || haystack.includes(keyword);
-                item.hidden = !isVisible || visibleCount >= 7;
-                if (isVisible && visibleCount < 7) {
-                    visibleCount += 1;
-                }
-            });
+        let products = [];
+        let currentMatches = [];
+        let items = [];
+        let activeIndex = -1;
+        let loaded = false;
 
-            searchForm.classList.toggle("is-suggesting", document.activeElement === searchInput && visibleCount > 0);
+        const loadProducts = () => {
+            if (loaded) {
+                return Promise.resolve();
+            }
+            loaded = true;
+            return fetch("/api/chat/products")
+                .then((res) => (res.ok ? res.json() : []))
+                .then((data) => { products = Array.isArray(data) ? data : []; })
+                .catch(() => { products = []; });
         };
 
-        searchInput.addEventListener("input", updateSuggestions);
-        searchInput.addEventListener("focus", updateSuggestions);
+        const money = (value) => {
+            const n = Number(value);
+            return n ? n.toLocaleString("vi-VN") + " \u20ab" : "";
+        };
+
+        const closeBox = () => {
+            searchForm.classList.remove("is-suggesting");
+            box.innerHTML = "";
+            items = [];
+            currentMatches = [];
+            activeIndex = -1;
+        };
+
+        const choose = (product) => {
+            if (!product) {
+                return;
+            }
+            searchInput.value = product.name;
+            closeBox();
+            searchForm.submit();
+        };
+
+        const render = () => {
+            const keyword = normalize(searchInput.value.trim());
+            currentMatches = products.filter((p) => {
+                const hay = normalize(`${p.name || ""} ${p.category || ""}`);
+                return !keyword || hay.includes(keyword);
+            }).slice(0, 7);
+
+            box.innerHTML = "";
+            items = [];
+            activeIndex = -1;
+
+            if (!currentMatches.length || document.activeElement !== searchInput) {
+                searchForm.classList.remove("is-suggesting");
+                return;
+            }
+
+            currentMatches.forEach((p) => {
+                const el = document.createElement("button");
+                el.type = "button";
+                el.className = "search-suggest__item";
+                el.setAttribute("role", "option");
+                const name = document.createElement("span");
+                name.className = "search-suggest__name";
+                name.textContent = p.name;
+                const meta = document.createElement("span");
+                meta.className = "search-suggest__meta";
+                meta.textContent = [p.category, money(p.price)].filter(Boolean).join(" \u00b7 ");
+                el.appendChild(name);
+                el.appendChild(meta);
+                el.addEventListener("mousedown", (event) => {
+                    event.preventDefault();
+                    choose(p);
+                });
+                box.appendChild(el);
+                items.push(el);
+            });
+            searchForm.classList.add("is-suggesting");
+        };
+
+        const setActive = (idx) => {
+            if (!items.length) {
+                return;
+            }
+            activeIndex = (idx + items.length) % items.length;
+            items.forEach((el, i) => el.classList.toggle("is-active", i === activeIndex));
+            items[activeIndex].scrollIntoView({ block: "nearest" });
+        };
+
+        searchInput.addEventListener("focus", () => { loadProducts().then(render); });
+        searchInput.addEventListener("input", () => { loadProducts().then(render); });
         searchInput.addEventListener("keydown", (event) => {
             if (event.key === "Escape") {
-                searchForm.classList.remove("is-suggesting");
+                closeBox();
                 searchInput.blur();
+                return;
             }
-        });
-
-        suggestions.forEach((item) => {
-            item.addEventListener("mousedown", (event) => {
+            if (!items.length) {
+                return;
+            }
+            if (event.key === "ArrowDown") {
                 event.preventDefault();
-                searchInput.value = item.dataset.name || item.textContent.trim();
-                searchForm.submit();
-            });
+                setActive(activeIndex + 1);
+            } else if (event.key === "ArrowUp") {
+                event.preventDefault();
+                setActive(activeIndex - 1);
+            } else if (event.key === "Enter" && activeIndex >= 0) {
+                event.preventDefault();
+                choose(currentMatches[activeIndex]);
+            }
         });
 
         document.addEventListener("click", (event) => {
             if (!searchForm.contains(event.target)) {
-                searchForm.classList.remove("is-suggesting");
+                closeBox();
             }
         });
     }
