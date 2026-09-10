@@ -23,11 +23,15 @@ import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
 public class AdminController {
+
+    private static final Set<String> ORDER_STATUSES = Set.of("NEW", "CONFIRMED", "SHIPPING", "COMPLETED", "CANCELED");
+    private static final Set<String> QUOTE_STATUSES = Set.of("NEW", "CONTACTED", "QUOTED", "CLOSED");
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
@@ -116,20 +120,24 @@ public class AdminController {
     @PostMapping("/admin/orders/{id}/status")
     public String updateOrderStatus(@PathVariable Long id,
                                     @RequestParam String status) {
-        customerOrderRepository.findById(id).ifPresent(order -> {
-            order.setStatus(status);
-            customerOrderRepository.save(order);
-        });
+        if (ORDER_STATUSES.contains(status)) {
+            customerOrderRepository.findById(id).ifPresent(order -> {
+                order.setStatus(status);
+                customerOrderRepository.save(order);
+            });
+        }
         return "redirect:/admin#orders";
     }
 
     @PostMapping("/admin/quotes/{id}/status")
     public String updateQuoteStatus(@PathVariable Long id,
                                     @RequestParam String status) {
-        quoteRequestRepository.findById(id).ifPresent(quote -> {
-            quote.setStatus(status);
-            quoteRequestRepository.save(quote);
-        });
+        if (QUOTE_STATUSES.contains(status)) {
+            quoteRequestRepository.findById(id).ifPresent(quote -> {
+                quote.setStatus(status);
+                quoteRequestRepository.save(quote);
+            });
+        }
         return "redirect:/admin#quotes";
     }
 

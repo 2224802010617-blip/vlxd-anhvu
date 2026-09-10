@@ -5366,3 +5366,344 @@ a.showroom-card:hover b {
 @media (max-width: 560px) {
     .commit-grid { grid-template-columns: 1fr; }
 }
+
+/* Final product polish: quiet surfaces, consistent controls, and mobile-first spacing. */
+:root {
+    --surface: #ffffff;
+    --surface-muted: #f8fafc;
+    --ink: #101828;
+    --muted: #667085;
+    --focus: rgba(11, 78, 162, .2);
+}
+
+html {
+    scroll-padding-top: 96px;
+}
+
+body {
+    color: var(--ink);
+    background: #f6f8fb;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+button,
+a,
+input,
+select,
+textarea {
+    -webkit-tap-highlight-color: transparent;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 3px solid var(--focus);
+    outline-offset: 2px;
+}
+
+.qh-topbar {
+    background: #0b1220;
+    border-bottom: 1px solid rgba(255, 255, 255, .1);
+}
+
+.qh-main {
+    background: #ffffff;
+    border-bottom: 1px solid #e4e7ec;
+}
+
+.qh-brand h1,
+.qh-brand p {
+    color: var(--ink);
+}
+
+.qh-menu {
+    background: #101828;
+    box-shadow: 0 8px 20px rgba(16, 24, 40, .12);
+}
+
+.qh-menu-links a {
+    position: relative;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+}
+
+.qh-menu-links a::after {
+    content: "";
+    position: absolute;
+    right: 12px;
+    bottom: 6px;
+    left: 12px;
+    height: 2px;
+    background: var(--red);
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform .2s ease;
+}
+
+.qh-menu-links a:hover::after,
+.qh-menu-links a.is-active::after {
+    transform: scaleX(1);
+}
+
+.qh-search {
+    box-shadow: 0 6px 18px rgba(16, 24, 40, .1);
+}
+
+.section-heading {
+    max-width: 780px;
+    margin-bottom: 28px;
+}
+
+.section-heading h2 {
+    color: var(--ink);
+    line-height: 1.12;
+}
+
+.section-heading p {
+    max-width: 720px;
+    margin: 10px 0 0;
+    color: var(--muted);
+    line-height: 1.65;
+}
+
+.products-section::before,
+.smart-section::before {
+    background: rgba(255, 255, 255, .86);
+    box-shadow: 0 14px 36px rgba(16, 24, 40, .05);
+}
+
+.product-grid {
+    align-items: stretch;
+    gap: 18px;
+}
+
+.product-card {
+    overflow: hidden;
+    border: 1px solid #e4e7ec;
+    border-radius: 12px;
+    box-shadow: 0 8px 22px rgba(16, 24, 40, .06);
+}
+
+.product-image {
+    aspect-ratio: 4 / 3;
+    height: auto;
+    min-height: 0;
+    background: #eef2f6;
+}
+
+.product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.product-body {
+    display: flex;
+    min-height: 248px;
+    flex-direction: column;
+    padding: 18px;
+}
+
+.product-body h3 {
+    min-height: 2.7em;
+    margin-bottom: 8px;
+    line-height: 1.35;
+}
+
+.product-body p {
+    display: -webkit-box;
+    min-height: 3.1em;
+    overflow: hidden;
+    margin-bottom: 10px;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
+
+.detail-link {
+    margin-bottom: auto;
+    font-weight: 800;
+}
+
+.product-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 14px;
+}
+
+.product-actions .btn {
+    min-height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: normal;
+}
+
+.smart-toolbar {
+    gap: 14px;
+    padding: 16px;
+    border: 1px solid #e4e7ec;
+    border-radius: 12px;
+    background: var(--surface);
+    box-shadow: 0 8px 22px rgba(16, 24, 40, .05);
+}
+
+.smart-filter input,
+.smart-filter select,
+.quote-form input,
+.quote-form textarea,
+.order-form input,
+.order-form select,
+.order-form textarea {
+    min-height: 48px;
+    border-color: #d0d5dd;
+    border-radius: 8px;
+    background: #fff;
+}
+
+.smart-filter input:focus,
+.smart-filter select:focus,
+.quote-form input:focus,
+.quote-form textarea:focus,
+.order-form input:focus,
+.order-form select:focus,
+.order-form textarea:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 4px var(--focus);
+}
+
+.order-section,
+.payment-section,
+.business-card,
+.calculator-panel,
+.quote-band {
+    border-radius: 14px;
+}
+
+.order-section,
+.calculator-panel,
+.business-card {
+    border: 1px solid #e4e7ec;
+    box-shadow: 0 12px 30px rgba(16, 24, 40, .06);
+}
+
+.order-form-v9 button,
+.quote-form button,
+.calc-form button {
+    min-height: 48px;
+    border-radius: 8px;
+    font-weight: 850;
+}
+
+.field-error,
+.form-error {
+    color: #b42318;
+    font-weight: 700;
+}
+
+.floating-contact {
+    z-index: 80;
+}
+
+.chat-panel {
+    max-width: calc(100vw - 28px);
+    border: 1px solid #d0d5dd;
+    box-shadow: 0 24px 54px rgba(16, 24, 40, .2);
+}
+
+.footer {
+    border-top: 1px solid rgba(255, 255, 255, .1);
+}
+
+@media (max-width: 900px) {
+    .qh-main-inner {
+        gap: 12px;
+    }
+
+    .qh-menu-links {
+        justify-content: flex-start;
+        overflow-x: auto;
+        padding: 0 8px;
+        scrollbar-width: thin;
+    }
+
+    .qh-menu-links a {
+        flex: 0 0 auto;
+    }
+
+    .product-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 640px) {
+    .qh-topbar-item:first-child {
+        display: none;
+    }
+
+    .qh-topbar-inner {
+        min-height: 38px;
+    }
+
+    .qh-brand h1 {
+        font-size: 1.35rem;
+    }
+
+    .qh-hotline a {
+        font-size: 1.15rem;
+    }
+
+    .qh-menu-links a {
+        padding: 10px 11px;
+        font-size: .78rem;
+    }
+
+    .product-grid,
+    .product-actions {
+        grid-template-columns: 1fr;
+    }
+
+    .product-body {
+        min-height: 0;
+    }
+
+    .product-body h3,
+    .product-body p {
+        min-height: 0;
+    }
+
+    .smart-toolbar {
+        padding: 12px;
+    }
+
+    .floating-contact {
+        right: 10px;
+        bottom: 12px;
+        gap: 8px;
+    }
+
+    .float-item.location {
+        max-width: calc(100vw - 28px);
+        padding: 0 14px !important;
+        font-size: .82rem;
+    }
+
+    .auth-card {
+        padding: 20px 16px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+    }
+}

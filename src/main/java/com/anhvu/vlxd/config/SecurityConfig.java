@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -37,12 +38,7 @@ public class SecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity http,
                                             OAuth2UserService<OidcUserRequest, OidcUser> oidcUserService) throws Exception {
         http
-                .csrf(csrf -> csrf
-                        .requireCsrfProtectionMatcher(request ->
-                                request.getServletPath().startsWith("/admin")
-                                        && !"GET".equalsIgnoreCase(request.getMethod())
-                                        && !"HEAD".equalsIgnoreCase(request.getMethod()))
-                )
+                .csrf(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/", "/calculate", "/quote-request", "/order-request", "/dat-hang",
