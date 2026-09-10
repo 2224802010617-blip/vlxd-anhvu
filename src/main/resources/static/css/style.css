@@ -5641,7 +5641,48 @@ textarea:focus-visible {
 }
 
 @media (max-width: 640px) {
+    .hero-showcase,
+    .hero-slide {
+        min-height: 0;
+    }
+
+    .hero-slide {
+        display: block;
+        padding: 42px 18px 58px;
+    }
+
+    .hero-text {
+        max-width: 100%;
+    }
+
+    .hero-text h1 {
+        max-width: 100%;
+        font-size: 2.15rem;
+        line-height: 1.08;
+        overflow-wrap: anywhere;
+    }
+
+    .hero-text p {
+        max-width: 100%;
+        font-size: .95rem;
+        line-height: 1.55;
+    }
+
+    .hero-buttons {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .hero-buttons .btn {
+        width: 100%;
+    }
+
     .qh-topbar-item:first-child {
+        display: none;
+    }
+
+    .qh-topbar-item:nth-child(2) {
         display: none;
     }
 
@@ -5653,6 +5694,12 @@ textarea:focus-visible {
         font-size: 1.35rem;
     }
 
+    .qh-brand p {
+        max-width: 100%;
+        overflow-wrap: anywhere;
+        line-height: 1.35;
+    }
+
     .qh-hotline a {
         font-size: 1.15rem;
     }
@@ -5660,6 +5707,17 @@ textarea:focus-visible {
     .qh-menu-links a {
         padding: 10px 11px;
         font-size: .78rem;
+    }
+
+    .qh-menu-links {
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        width: 100%;
+    }
+
+    .qh-search {
+        width: 100%;
+        margin: 8px 0 12px;
     }
 
     .product-grid,
@@ -5688,8 +5746,10 @@ textarea:focus-visible {
 
     .float-item.location {
         max-width: calc(100vw - 28px);
+        width: auto !important;
         padding: 0 14px !important;
         font-size: .82rem;
+        white-space: nowrap;
     }
 
     .auth-card {
