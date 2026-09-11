@@ -81,7 +81,9 @@ public class PasswordResetService {
         appUserRepository.save(user);
 
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom(mailFrom == null || mailFrom.isBlank() ? mailUsername : mailFrom);
+        String fromAddress = mailFrom == null || mailFrom.isBlank() ? mailUsername : mailFrom;
+        // Hien ten cua hang thay vi dia chi Gmail tran trong hop thu cua khach
+        message.setFrom(fromAddress.contains("<") ? fromAddress : "VLXD Anh Vu <" + fromAddress + ">");
         message.setTo(normalizedEmail);
         message.setSubject("Mã xác nhận đặt lại mật khẩu Anh Vũ");
         message.setText("Mã xác nhận của bạn là: " + code + "\n\n"

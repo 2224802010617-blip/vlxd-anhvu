@@ -136,6 +136,7 @@
             <span>S&#7843;n ph&#7849;m</span>
             <h2>B&#7843;ng h&agrave;ng v&#7853;t li&#7879;u x&acirc;y d&#7921;ng</h2>
             <p th:text="|&#272;ang hi&#7875;n th&#7883; ${#lists.size(products)} s&#7843;n ph&#7849;m|">&#272;ang hi&#7875;n th&#7883; 40 s&#7843;n ph&#7849;m</p>
+            <p th:if="${priceUpdatedAt != null}" style="color:#475467; font-size:.9rem;" th:text="|Gi&#225; c&#7853;p nh&#7853;t ng&#224;y ${#temporals.format(priceUpdatedAt, 'dd/MM/yyyy')} &#8212; gi&#225; c&#243; th&#7875; thay &#273;&#7893;i theo th&#7883; tr&#432;&#7901;ng, g&#7885;i hotline &#273;&#7875; ch&#7889;t gi&#225; cu&#7889;i.|">Gi&#225; c&#7853;p nh&#7853;t</p>
         </div>
 
         <div class="smart-toolbar">
@@ -224,6 +225,7 @@
             <a href="/dat-hang">&#272;&#7863;t h&agrave;ng online</a>
             <a href="/bao-gia">B&aacute;o gi&aacute; s&#7881;</a>
             <a href="/tra-cuu-don-hang">Tra c&#7913;u &#273;&#417;n h&agrave;ng</a>
+            <a href="/chinh-sach">Ch&#237;nh s&#225;ch c&#7917;a h&#224;ng</a>
             <a href="/bao-gia">T&iacute;nh v&#7853;t li&#7879;u</a>
             <a href="/gioi-thieu">Gi&#7899;i thi&#7879;u</a>
         </div>

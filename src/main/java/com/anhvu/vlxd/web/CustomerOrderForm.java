@@ -1,13 +1,17 @@
 package com.anhvu.vlxd.web;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -25,13 +29,11 @@ public class CustomerOrderForm {
     @Size(max = 255, message = "Địa chỉ không được vượt quá 255 ký tự.")
     private String address = "";
 
-    @NotBlank(message = "Vui lòng chọn sản phẩm.")
-    @Size(max = 180, message = "Tên sản phẩm không hợp lệ.")
-    private String productName = "";
-
-    @NotNull(message = "Vui lòng nhập số lượng.")
-    @DecimalMin(value = "0.01", message = "Số lượng phải lớn hơn 0.")
-    private BigDecimal quantity;
+    // Mot don co the gom nhieu mat hang (cat + xi mang + da... trong cung mot lan giao)
+    @Valid
+    @NotEmpty(message = "Vui lòng chọn ít nhất một sản phẩm.")
+    @Size(max = 10, message = "Mỗi đơn tối đa 10 mặt hàng, vui lòng tách đơn hoặc gọi hotline.")
+    private List<OrderItem> items = new ArrayList<>(List.of(new OrderItem()));
 
     @NotBlank(message = "Vui lòng chọn phương thức thanh toán.")
     @Size(max = 40, message = "Phương thức thanh toán không hợp lệ.")
@@ -39,4 +41,17 @@ public class CustomerOrderForm {
 
     @Size(max = 2000, message = "Ghi chú không được vượt quá 2000 ký tự.")
     private String note = "";
+
+    @Getter
+    @Setter
+    public static class OrderItem {
+
+        @NotBlank(message = "Vui lòng chọn sản phẩm.")
+        @Size(max = 180, message = "Tên sản phẩm không hợp lệ.")
+        private String productName = "";
+
+        @NotNull(message = "Vui lòng nhập số lượng.")
+        @DecimalMin(value = "0.01", message = "Số lượng phải lớn hơn 0.")
+        private BigDecimal quantity;
+    }
 }

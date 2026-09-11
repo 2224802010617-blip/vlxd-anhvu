@@ -5625,10 +5625,9 @@ textarea:focus-visible {
     }
 
     .qh-menu-links {
-        justify-content: flex-start;
-        overflow-x: auto;
+        justify-content: center;
+        flex-wrap: wrap;
         padding: 0 8px;
-        scrollbar-width: thin;
     }
 
     .qh-menu-links a {
@@ -5730,8 +5729,8 @@ textarea:focus-visible {
     }
 
     .qh-menu-links {
-        flex-wrap: nowrap;
-        justify-content: flex-start;
+        flex-wrap: wrap;
+        justify-content: center;
         width: 100%;
     }
 

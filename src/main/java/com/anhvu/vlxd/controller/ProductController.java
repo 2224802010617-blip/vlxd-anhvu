@@ -79,6 +79,12 @@ public class ProductController {
         List<Product> products = sortProducts(productService.searchProducts(keyword, category), sort);
         addCommonAttributes(model);
         model.addAttribute("products", products);
+        // Ngay cap nhat bang gia = lan sua san pham gan nhat (du lieu cu chua co updatedAt thi lay createdAt)
+        model.addAttribute("priceUpdatedAt", products.stream()
+                .map(product -> product.getUpdatedAt() != null ? product.getUpdatedAt() : product.getCreatedAt())
+                .filter(Objects::nonNull)
+                .max(Comparator.naturalOrder())
+                .orElse(null));
         model.addAttribute("keyword", keyword == null ? "" : keyword);
         model.addAttribute("category", category == null ? "" : category);
         model.addAttribute("sort", sort == null ? "relevance" : sort);
@@ -90,6 +96,12 @@ public class ProductController {
     public String aboutPage(Model model) {
         addCommonAttributes(model);
         return "about";
+    }
+
+    @GetMapping(value = "/chinh-sach", produces = "text/html;charset=UTF-8")
+    public String policiesPage(Model model) {
+        addCommonAttributes(model);
+        return "policies";
     }
 
     @GetMapping(value = "/dat-hang", produces = "text/html;charset=UTF-8")
@@ -207,8 +219,8 @@ public class ProductController {
 
     private CustomerOrderForm prefillOrderForm(String selectedProduct) {
         CustomerOrderForm form = new CustomerOrderForm();
-        if (selectedProduct != null) {
-            form.setProductName(selectedProduct);
+        if (selectedProduct != null && !form.getItems().isEmpty()) {
+            form.getItems().get(0).setProductName(selectedProduct);
         }
         return form;
     }

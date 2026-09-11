@@ -24,8 +24,11 @@ import java.math.RoundingMode;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -47,12 +50,26 @@ public class CustomerOrderController {
                         BindingResult bindingResult,
                         String shippingOptions,
                         Model model) {
-        Optional<Product> selectedProduct = productRepository.findByActiveTrueOrderByCreatedAtDesc().stream()
-                .filter(product -> product.getName() != null && product.getName().equalsIgnoreCase(form.getProductName().trim()))
-                .findFirst();
+        List<Product> activeProducts = productRepository.findByActiveTrueOrderByCreatedAtDesc();
 
-        if (!bindingResult.hasErrors() && selectedProduct.isEmpty()) {
-            bindingResult.rejectValue("productName", "product.not_found", "S\u1EA3n ph\u1EA9m kh\u00F4ng h\u1EE3p l\u1EC7.");
+        // Doi chieu tung dong hang voi danh muc san pham dang ban
+        List<Product> resolvedProducts = new ArrayList<>();
+        List<CustomerOrderForm.OrderItem> items = form.getItems() == null ? List.of() : form.getItems();
+        for (int i = 0; i < items.size(); i++) {
+            CustomerOrderForm.OrderItem item = items.get(i);
+            String name = item.getProductName() == null ? "" : item.getProductName().trim();
+            Optional<Product> match = activeProducts.stream()
+                    .filter(product -> product.getName() != null && product.getName().equalsIgnoreCase(name))
+                    .findFirst();
+            if (match.isEmpty()) {
+                if (!name.isBlank()) {
+                    bindingResult.rejectValue("items[" + i + "].productName", "product.not_found",
+                            "S\u1EA3n ph\u1EA9m kh\u00F4ng h\u1EE3p l\u1EC7.");
+                }
+                resolvedProducts.add(null);
+            } else {
+                resolvedProducts.add(match.get());
+            }
         }
 
         if (bindingResult.hasErrors()) {
@@ -61,10 +78,6 @@ public class CustomerOrderController {
             model.addAttribute("smartRecommendations", productService.getAllActiveProducts().stream().limit(6).toList());
             return "order";
         }
-
-        Product product = selectedProduct.get();
-        BigDecimal quantity = form.getQuantity().setScale(2, RoundingMode.UP);
-        BigDecimal totalAmount = product.getPrice().multiply(quantity).setScale(0, RoundingMode.UP);
 
         // Process shipping notes
         String shippingNote = "";
@@ -75,21 +88,28 @@ public class CustomerOrderController {
         String finalNote = form.getNote() == null ? "" : form.getNote().trim();
         finalNote = shippingNote + finalNote;
 
-        CustomerOrder savedOrder = customerOrderRepository.save(CustomerOrder.builder()
-                .customerName(form.getCustomerName().trim())
-                .phone(form.getPhone().trim())
-                .address(form.getAddress().trim())
-                .productName(form.getProductName().trim())
-                .quantity(quantity)
-                .unitPrice(product.getPrice())
-                .totalAmount(totalAmount)
-                .paymentMethod(form.getPaymentMethod().trim())
-                .note(finalNote)
-                .status("NEW")
-                .build());
+        // Luu moi mat hang thanh mot dong don (admin va tra cuu hien tai deu theo dong)
+        List<CustomerOrder> savedOrders = new ArrayList<>();
+        for (int i = 0; i < items.size(); i++) {
+            Product product = resolvedProducts.get(i);
+            BigDecimal quantity = items.get(i).getQuantity().setScale(2, RoundingMode.UP);
+            BigDecimal lineTotal = product.getPrice().multiply(quantity).setScale(0, RoundingMode.UP);
+            savedOrders.add(customerOrderRepository.save(CustomerOrder.builder()
+                    .customerName(form.getCustomerName().trim())
+                    .phone(form.getPhone().trim())
+                    .address(form.getAddress().trim())
+                    .productName(product.getName())
+                    .quantity(quantity)
+                    .unitPrice(product.getPrice())
+                    .totalAmount(lineTotal)
+                    .paymentMethod(form.getPaymentMethod().trim())
+                    .note(finalNote)
+                    .status("NEW")
+                    .build()));
+        }
 
         addOrderPageAttributes(model, prefillNextOrderForm(), true);
-        addPaymentResult(model, savedOrder, product, totalAmount);
+        addPaymentResult(model, savedOrders, resolvedProducts);
         return "order";
     }
 
@@ -102,24 +122,45 @@ public class CustomerOrderController {
     private void addOrderPageAttributes(Model model, CustomerOrderForm form, boolean orderSuccess) {
         addCommonAttributes(model);
         model.addAttribute("products", productService.getAllActiveProducts());
-        model.addAttribute("selectedProduct", form.getProductName());
+        model.addAttribute("selectedProduct",
+                form.getItems() == null || form.getItems().isEmpty() ? "" : form.getItems().get(0).getProductName());
         model.addAttribute("orderForm", form);
         model.addAttribute("quoteForm", new QuoteRequestForm());
         model.addAttribute("orderSuccess", orderSuccess);
         model.addAttribute("quoteSuccess", false);
     }
 
-    private void addPaymentResult(Model model, CustomerOrder order, Product product, BigDecimal totalAmount) {
-        boolean bankTransfer = "BANK_TRANSFER".equalsIgnoreCase(order.getPaymentMethod());
+    private void addPaymentResult(Model model, List<CustomerOrder> orders, List<Product> products) {
+        CustomerOrder first = orders.get(0);
+        BigDecimal totalAmount = orders.stream()
+                .map(CustomerOrder::getTotalAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        boolean bankTransfer = "BANK_TRANSFER".equalsIgnoreCase(first.getPaymentMethod());
         boolean pricedOrder = totalAmount.compareTo(BigDecimal.ZERO) > 0;
         boolean onlinePaymentAllowed = pricedOrder && totalAmount.compareTo(ONLINE_PAYMENT_LIMIT) < 0;
-        String paymentCode = "ANHVU-DH" + order.getId() + "-" + onlyDigits(order.getPhone());
-        String paymentContent = paymentCode + " " + order.getProductName();
+        String paymentCode = "ANHVU-DH" + first.getId()
+                + (orders.size() > 1 ? "x" + orders.size() : "")
+                + "-" + onlyDigits(first.getPhone());
+        String paymentContent = orders.size() > 1
+                ? paymentCode + " " + orders.size() + " mat hang"
+                : paymentCode + " " + first.getProductName();
 
-        model.addAttribute("orderedProductName", order.getProductName());
-        model.addAttribute("orderedQuantity", order.getQuantity());
-        model.addAttribute("orderedUnit", product.getUnit());
-        model.addAttribute("unitPriceDisplay", money(product.getPrice()));
+        // Danh sach dong hang cho bang tom tat thanh toan
+        List<Map<String, Object>> lines = new ArrayList<>();
+        for (int i = 0; i < orders.size(); i++) {
+            CustomerOrder order = orders.get(i);
+            Map<String, Object> line = new LinkedHashMap<>();
+            line.put("name", order.getProductName());
+            line.put("quantity", order.getQuantity());
+            line.put("unit", products.get(i).getUnit());
+            line.put("unitPriceDisplay", money(order.getUnitPrice()));
+            line.put("lineTotalDisplay", money(order.getTotalAmount()));
+            lines.add(line);
+        }
+
+        model.addAttribute("orderedLines", lines);
+        model.addAttribute("orderedLineCount", orders.size());
         model.addAttribute("orderTotal", totalAmount);
         model.addAttribute("orderTotalDisplay", money(totalAmount));
         model.addAttribute("paymentCode", paymentCode);
