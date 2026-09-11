@@ -63,7 +63,11 @@ public class ProductController {
         List<Product> products = sortProducts(productService.searchProducts(null, null), "relevance");
         addCommonAttributes(model);
         model.addAttribute("products", products);
-        model.addAttribute("featuredProducts", products.stream().limit(8).toList());
+        // "Ban chay nhat": chi lay hang co gia thuc, khong lay dich vu bao gia 0d
+        model.addAttribute("featuredProducts", products.stream()
+                .filter(product -> product.getPrice() != null && product.getPrice().signum() > 0)
+                .limit(8)
+                .toList());
         return "index";
     }
 
@@ -132,8 +136,11 @@ public class ProductController {
     }
 
     private List<Product> sortProducts(List<Product> products, String sort) {
+        // Hang co gia dung truoc, dich vu "lien he bao gia" (gia 0) xep cuoi
         Comparator<Product> relevance = Comparator
-                .comparing((Product product) -> product.getStockQuantity() == null ? Integer.MAX_VALUE : product.getStockQuantity())
+                .comparing((Product product) -> product.getPrice() == null || product.getPrice().signum() <= 0)
+                .thenComparing(product -> product.getStockQuantity() == null ? 0 : product.getStockQuantity(),
+                        Comparator.reverseOrder())
                 .thenComparing(Product::getCreatedAt, Comparator.nullsLast(Comparator.reverseOrder()));
 
         Comparator<Product> comparator = switch (sort == null ? "" : sort.toLowerCase(Locale.ROOT)) {

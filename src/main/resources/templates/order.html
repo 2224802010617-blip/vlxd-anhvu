@@ -56,7 +56,7 @@
                 <a th:if="${isAdmin}" href="/admin">ADMIN</a>
             </div>
             <form class="qh-search global-search" method="get" action="/san-pham" autocomplete="off">
-                <input id="productSearchInput" name="keyword" placeholder="Nh&#7853;p t&#7915; kh&oacute;a">
+                <input id="productSearchInput" name="keyword" aria-label="T&#236;m ki&#7871;m s&#7843;n ph&#7849;m" placeholder="Nh&#7853;p t&#7915; kh&oacute;a">
                 <button type="submit" aria-label="Tim kiem">&#128269;</button>
             </form>
         </div>
@@ -186,6 +186,40 @@
         </div>
     </section>
 </main>
+
+<footer class="footer">
+    <div class="container footer-grid">
+        <div class="footer-col footer-brand">
+            <img src="/images/anh-vu-logo.svg" alt="Anh Vu logo" loading="lazy" decoding="async">
+            <strong th:text="${companyName}">C&Ocirc;NG TY TNHH MTV TM DV XD ANH V&#360;</strong>
+            <p>Chuy&ecirc;n cung c&#7845;p g&#7841;ch, xi m&#259;ng, c&aacute;t &#273;&aacute;, th&eacute;p v&agrave; v&#7853;n t&#7843;i thi c&ocirc;ng cho nh&agrave; d&acirc;n v&agrave; nh&agrave; th&#7847;u t&#7841;i B&igrave;nh Long - &#272;&#7891;ng Nai.</p>
+        </div>
+        <div class="footer-col">
+            <h4>Danh m&#7909;c</h4>
+            <a th:href="@{|/san-pham?category=gach|}">G&#7841;ch x&acirc;y d&#7921;ng</a>
+            <a th:href="@{|/san-pham?category=xi-mang|}">Xi m&#259;ng</a>
+            <a th:href="@{|/san-pham?category=cat-da|}">C&aacute;t - &#273;&aacute;</a>
+            <a th:href="@{|/san-pham?category=thep|}">Th&eacute;p</a>
+        </div>
+        <div class="footer-col">
+            <h4>D&#7883;ch v&#7909;</h4>
+            <a href="/dat-hang">&#272;&#7863;t h&agrave;ng online</a>
+            <a href="/bao-gia">B&aacute;o gi&aacute; s&#7881;</a>
+            <a href="/tra-cuu-don-hang">Tra c&#7913;u &#273;&#417;n h&agrave;ng</a>
+            <a href="/gioi-thieu">Gi&#7899;i thi&#7879;u</a>
+        </div>
+        <div class="footer-col">
+            <h4>Li&ecirc;n h&#7879;</h4>
+            <span th:text="|Gmail: ${email}|">Gmail: xaydungvantaidaphuongthucanhvu@gmail.com</span>
+            <span th:if="${phone != null and !phone.isBlank()}" th:text="|S&#272;T: ${phone}|">S&#272;T: 0866785645</span>
+            <span>MST: 3901312239</span>
+            <span>617 Nguy&#7877;n Hu&#7879;, P. B&igrave;nh Long, TP. &#272;&#7891;ng Nai</span>
+        </div>
+    </div>
+    <div class="container footer-bottom">
+        <span>&#169; 2026 <b th:text="${companyName}">C&Ocirc;NG TY TNHH MTV TM DV XD ANH V&#360;</b>. M&#7885;i quy&#7873;n &#273;&#432;&#7907;c b&#7843;o l&#432;u.</span>
+    </div>
+</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
 <script th:src="@{/js/main.js(v=24)}"></script>

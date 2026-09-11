@@ -21,6 +21,7 @@ import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.csrf.XorCsrfTokenRequestAttributeHandler;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -37,8 +38,12 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http,
                                             OAuth2UserService<OidcUserRequest, OidcUser> oidcUserService) throws Exception {
+        // Nap CSRF token ngay tu dau request: token duoc render o cuoi trang (sau 8KB buffer
+        // cua Tomcat), neu de mac dinh (deferred) thi session tao qua muon -> trang bi cat cut
+        XorCsrfTokenRequestAttributeHandler csrfTokenHandler = new XorCsrfTokenRequestAttributeHandler();
+        csrfTokenHandler.setCsrfRequestAttributeName(null);
         http
-                .csrf(Customizer.withDefaults())
+                .csrf(csrf -> csrf.csrfTokenRequestHandler(csrfTokenHandler))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/", "/calculate", "/quote-request", "/order-request", "/dat-hang",

@@ -61,7 +61,7 @@
                 <a th:if="${isAdmin}" href="/admin">ADMIN</a>
             </div>
             <form class="qh-search global-search" method="get" action="/san-pham" autocomplete="off">
-                <input id="productSearchInput" name="keyword" placeholder="Nh&#7853;p t&#7915; kh&oacute;a">
+                <input id="productSearchInput" name="keyword" aria-label="T&#236;m ki&#7871;m s&#7843;n ph&#7849;m" placeholder="Nh&#7853;p t&#7915; kh&oacute;a">
                 <button type="submit" aria-label="Tim kiem">&#128269;</button>
             </form>
         </div>
@@ -140,7 +140,7 @@
 
         <div class="smart-toolbar">
             <form class="smart-filter" method="get" action="/san-pham">
-                <input name="keyword" th:value="${keyword}" placeholder="T&igrave;m nhanh theo t&ecirc;n h&agrave;ng, c&ocirc;ng tr&igrave;nh, nhu c&#7847;u">
+                <input name="keyword" th:value="${keyword}" aria-label="T&#236;m nhanh s&#7843;n ph&#7849;m" placeholder="T&igrave;m nhanh theo t&ecirc;n h&agrave;ng, c&ocirc;ng tr&igrave;nh, nhu c&#7847;u">
                 <select name="category">
                     <option value="" th:selected="${category == ''}">T&#7845;t c&#7843; nh&oacute;m</option>
                     <option value="gach" th:selected="${category == 'gach'}">G&#7841;ch</option>

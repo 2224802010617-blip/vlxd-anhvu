@@ -61,7 +61,7 @@
                 <a th:if="${isAdmin}" href="/admin">ADMIN</a>
             </div>
             <form class="qh-search global-search" method="get" action="/san-pham" autocomplete="off">
-                <input id="productSearchInput" name="keyword" placeholder="Nh&#7853;p t&#7915; kh&oacute;a">
+                <input id="productSearchInput" name="keyword" aria-label="T&#236;m ki&#7871;m s&#7843;n ph&#7849;m" placeholder="Nh&#7853;p t&#7915; kh&oacute;a">
                 <button type="submit" aria-label="Tim kiem">&#128269;</button>
             </form>
         </div>
@@ -226,13 +226,13 @@
             <form class="quote-form" th:action="@{/quote-request}" th:object="${quoteForm}" method="post">
                 <div class="quote-success" th:if="${quoteSuccess}">Y&ecirc;u c&#7847;u b&aacute;o gi&aacute; &#273;&atilde; &#273;&#432;&#7907;c ghi nh&#7853;n.</div>
                 <div class="form-error" th:if="${quoteForm != null and #fields.hasErrors('*')}">Vui l&ograve;ng ki&#7875;m tra l&#7841;i th&ocirc;ng tin.</div>
-                <input th:field="*{customerName}" placeholder="T&ecirc;n kh&aacute;ch h&agrave;ng">
+                <input th:field="*{customerName}" aria-label="T&#234;n kh&#225;ch h&#224;ng" placeholder="T&ecirc;n kh&aacute;ch h&agrave;ng">
                 <div class="field-error" th:if="${#fields.hasErrors('customerName')}" th:errors="*{customerName}"></div>
-                <input th:field="*{phone}" placeholder="S&#7889; &#273;i&#7879;n tho&#7841;i">
+                <input th:field="*{phone}" aria-label="S&#7889; &#273;i&#7879;n tho&#7841;i" placeholder="S&#7889; &#273;i&#7879;n tho&#7841;i">
                 <div class="field-error" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></div>
-                <input th:field="*{address}" placeholder="&#272;&#7883;a ch&#7881; giao h&agrave;ng">
+                <input th:field="*{address}" aria-label="&#272;&#7883;a ch&#7881; giao h&#224;ng" placeholder="&#272;&#7883;a ch&#7881; giao h&agrave;ng">
                 <div class="field-error" th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></div>
-                <textarea th:field="*{content}" rows="4" placeholder="Danh s&aacute;ch v&#7853;t t&#432;, s&#7889; l&#432;&#7907;ng, ghi ch&uacute;..."></textarea>
+                <textarea th:field="*{content}" rows="4" aria-label="Danh s&#225;ch v&#7853;t t&#432; c&#7847;n b&#225;o gi&#225;" placeholder="Danh s&aacute;ch v&#7853;t t&#432;, s&#7889; l&#432;&#7907;ng, ghi ch&uacute;..."></textarea>
                 <div class="field-error" th:if="${#fields.hasErrors('content')}" th:errors="*{content}"></div>
                 <button class="btn btn-light w-100" type="submit">G&#7917;i y&ecirc;u c&#7847;u</button>
             </form>
