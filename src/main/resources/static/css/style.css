@@ -1120,6 +1120,117 @@ html.js-anim .animate-in.is-visible {
     }
 }
 
+.customer-reviews-section {
+    margin-top: 32px;
+    padding: 30px 0 34px;
+}
+
+.reviews-intro {
+    max-width: 650px;
+    margin: 8px 0 0;
+    color: #667085;
+    line-height: 1.6;
+}
+
+.customer-review-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.customer-review-card {
+    display: flex;
+    min-height: 236px;
+    flex-direction: column;
+    padding: 22px;
+    border: 1px solid #e4e7ec;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 10px 28px rgba(15,23,42,.07);
+    transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+
+.customer-review-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(237,27,47,.24);
+    box-shadow: 0 16px 34px rgba(15,23,42,.12);
+}
+
+.review-topline {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.review-avatar {
+    display: grid;
+    width: 40px;
+    height: 40px;
+    place-items: center;
+    border-radius: 50%;
+    color: #fff;
+    background: #0f172a;
+    font-weight: 900;
+}
+
+.review-stars {
+    color: #f59e0b;
+    letter-spacing: 2px;
+    font-size: .9rem;
+}
+
+.customer-review-card blockquote {
+    flex: 1;
+    margin: 18px 0 18px;
+    color: #344054;
+    font-size: .98rem;
+    line-height: 1.65;
+}
+
+.customer-review-card strong,
+.customer-review-card > span:last-child {
+    display: block;
+}
+
+.customer-review-card strong {
+    color: #101828;
+}
+
+.customer-review-card > span:last-child {
+    margin-top: 3px;
+    color: #667085;
+    font-size: .84rem;
+}
+
+.reviews-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+    color: var(--red-dark);
+    font-weight: 850;
+}
+
+.reviews-cta span {
+    transition: transform .2s ease;
+}
+
+.reviews-cta:hover span {
+    transform: translateX(4px);
+}
+
+@media (max-width: 900px) {
+    .customer-review-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .customer-review-card {
+        min-height: 0;
+    }
+}
+
 :root {
     --red: #ed1b2f;
     --red-dark: #b90f1f;
