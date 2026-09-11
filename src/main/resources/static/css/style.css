@@ -5822,6 +5822,14 @@ textarea:focus-visible {
     .floating-contact .location {
         display: none !important;
     }
+
+    .mobile-break {
+        display: block;
+    }
+}
+
+.mobile-break {
+    display: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
