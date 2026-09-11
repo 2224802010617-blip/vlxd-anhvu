@@ -5763,6 +5763,7 @@ textarea:focus-visible {
         bottom: 12px;
         gap: 8px;
         max-width: calc(100vw - 20px);
+        transform: none !important;
     }
 
     .float-item.location {
