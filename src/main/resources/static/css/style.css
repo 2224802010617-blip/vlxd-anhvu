@@ -4262,6 +4262,61 @@ body:not(.admin-body) .animate-in {
     }
 }
 
+/* Subtle ambient motion behind hero content. */
+.qh-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    opacity: .24;
+    background-image: linear-gradient(rgba(255,255,255,.13) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.13) 1px, transparent 1px);
+    background-size: 76px 76px;
+    mask-image: linear-gradient(90deg, transparent, #000 20%, #000 80%, transparent);
+    animation: heroGridDrift 18s linear infinite;
+}
+
+.qh-hero::after {
+    content: "";
+    position: absolute;
+    top: -30%;
+    left: -25%;
+    width: 42%;
+    height: 170%;
+    z-index: 1;
+    pointer-events: none;
+    opacity: .18;
+    background: linear-gradient(105deg, transparent 0 38%, rgba(255,255,255,.8) 50%, transparent 62%);
+    filter: blur(18px);
+    transform: rotate(12deg);
+    animation: heroLightSweep 11s ease-in-out infinite;
+}
+
+.qh-hero-overlay {
+    z-index: 2;
+}
+
+@keyframes heroGridDrift {
+    from { background-position: 0 0; }
+    to { background-position: 76px 76px; }
+}
+
+@keyframes heroLightSweep {
+    0%, 24% { transform: translateX(-20%) rotate(12deg); opacity: 0; }
+    48% { opacity: .22; }
+    72%, 100% { transform: translateX(360%) rotate(12deg); opacity: 0; }
+}
+
+@media (max-width: 640px) {
+    .qh-hero::before { opacity: .14; background-size: 52px 52px; }
+    .qh-hero::after { opacity: .1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .qh-hero::before,
+    .qh-hero::after { animation: none; }
+}
+
 /* Hero material motion: useful visual depth without a heavy 3D library. */
 .hero-material-visual {
     position: relative;
