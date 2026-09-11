@@ -92,6 +92,10 @@ public class AdminController {
                 .collect(Collectors.groupingBy(product -> product.getCategory().getName(), LinkedHashMap::new,
                         Collectors.summingInt(product -> product.getStockQuantity() == null ? 0 : product.getStockQuantity())));
 
+        Map<String, Long> orderStatusCounts = allOrders.stream()
+                .collect(Collectors.groupingBy(order -> order.getStatus() == null ? "NEW" : order.getStatus(),
+                        LinkedHashMap::new, Collectors.counting()));
+
         model.addAttribute("productCount", products.size());
         model.addAttribute("categoryCount", categoryRepository.count());
         model.addAttribute("lowStock", lowStock);
@@ -114,6 +118,13 @@ public class AdminController {
         model.addAttribute("salesDataJson", objectMapper.writeValueAsString(revenueByProduct.values()));
         model.addAttribute("stockLabelsJson", objectMapper.writeValueAsString(stockByCategory.keySet()));
         model.addAttribute("stockDataJson", objectMapper.writeValueAsString(stockByCategory.values()));
+        model.addAttribute("orderStatusLabelsJson", objectMapper.writeValueAsString(List.of("NEW", "CONFIRMED", "SHIPPING", "COMPLETED", "CANCELED")));
+        model.addAttribute("orderStatusDataJson", objectMapper.writeValueAsString(List.of(
+                orderStatusCounts.getOrDefault("NEW", 0L),
+                orderStatusCounts.getOrDefault("CONFIRMED", 0L),
+                orderStatusCounts.getOrDefault("SHIPPING", 0L),
+                orderStatusCounts.getOrDefault("COMPLETED", 0L),
+                orderStatusCounts.getOrDefault("CANCELED", 0L))));
         return "admin/dashboard";
     }
 

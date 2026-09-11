@@ -2846,6 +2846,34 @@ main {
     color: #f8fafc;
 }
 
+.admin-charts {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.chart-card--donut canvas {
+    min-height: 280px;
+}
+
+@media (max-width: 1200px) {
+    .admin-charts {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .chart-card--donut {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 760px) {
+    .admin-charts {
+        grid-template-columns: 1fr;
+    }
+
+    .chart-card--donut {
+        grid-column: auto;
+    }
+}
+
 .admin-surface,
 .admin-panel,
 .metric-card {

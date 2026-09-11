@@ -223,6 +223,70 @@ document.addEventListener("DOMContentLoaded", () => {
         return draw;
     };
 
+    const createDonutChart = (canvasId, labels, values) => {
+        const canvas = document.getElementById(canvasId);
+        if (!canvas) return null;
+        const ctx = canvas.getContext("2d");
+        const colors = ["#f43f5e", "#f59e0b", "#38bdf8", "#22c55e", "#94a3b8"];
+        const statusNames = { NEW: "Mới", CONFIRMED: "Đã xác nhận", SHIPPING: "Đang giao", COMPLETED: "Hoàn thành", CANCELED: "Đã hủy" };
+        const draw = (progress) => {
+            const dpr = window.devicePixelRatio || 1;
+            const width = Math.max(240, canvas.clientWidth || 560);
+            const height = Math.max(280, Math.round(width * .6));
+            canvas.width = Math.round(width * dpr);
+            canvas.height = Math.round(height * dpr);
+            canvas.style.height = height + "px";
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+            ctx.clearRect(0, 0, width, height);
+            const total = values.reduce((sum, value) => sum + (Number(value) || 0), 0);
+            const centerX = width * .35;
+            const centerY = height * .48;
+            const radius = Math.min(width * .25, height * .34);
+            let angle = -Math.PI / 2;
+            values.forEach((value, index) => {
+                const amount = Number(value) || 0;
+                const slice = total ? amount / total * Math.PI * 2 * progress : 0;
+                ctx.beginPath();
+                ctx.moveTo(centerX, centerY);
+                ctx.arc(centerX, centerY, radius, angle, angle + slice);
+                ctx.closePath();
+                ctx.fillStyle = colors[index % colors.length];
+                ctx.fill();
+                angle += slice;
+            });
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius * .56, 0, Math.PI * 2);
+            ctx.fillStyle = "#151f31";
+            ctx.fill();
+            ctx.fillStyle = "#f8fafc";
+            ctx.font = "800 22px Inter, Segoe UI, Arial";
+            ctx.textAlign = "center";
+            ctx.fillText(String(total), centerX, centerY + 7);
+            ctx.fillStyle = "#cbd5e1";
+            ctx.font = "12px Inter, Segoe UI, Arial";
+            ctx.fillText("đơn hàng", centerX, centerY + 26);
+            ctx.textAlign = "left";
+            labels.forEach((label, index) => {
+                const y = 34 + index * 32;
+                ctx.fillStyle = colors[index % colors.length];
+                ctx.fillRect(width * .62, y - 9, 12, 12);
+                ctx.fillStyle = "#cbd5e1";
+                ctx.font = "12px Inter, Segoe UI, Arial";
+                ctx.fillText(statusNames[label] || label, width * .62 + 20, y);
+                ctx.fillStyle = "#f8fafc";
+                ctx.font = "700 12px Inter, Segoe UI, Arial";
+                ctx.fillText(String(values[index] || 0), width * .88, y);
+            });
+            if (!total) {
+                ctx.fillStyle = "#94a3b8";
+                ctx.textAlign = "center";
+                ctx.font = "13px Inter, Segoe UI, Arial";
+                ctx.fillText("Chưa có đơn hàng", centerX, centerY + 58);
+            }
+        };
+        return draw;
+    };
+
     const charts = [
         createBarChart("salesChart", data.salesLabels || [], data.salesData || [], {
             color: "#f43f5e",
@@ -232,7 +296,8 @@ document.addEventListener("DOMContentLoaded", () => {
         createBarChart("stockChart", data.stockLabels || [], data.stockData || [], {
             color: "#38bdf8",
             colorDark: "#0b4ea2"
-        })
+        }),
+        createDonutChart("orderStatusChart", data.orderStatusLabels || [], data.orderStatusData || [])
     ].filter(Boolean);
 
     if (charts.length) {

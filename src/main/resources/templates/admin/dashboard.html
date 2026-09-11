@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
-    <link rel="stylesheet" th:href="@{/css/style.css(v=47)}">
+    <link rel="stylesheet" th:href="@{/css/style.css(v=48)}">
 </head>
 <body class="admin-body">
 <header class="admin-topbar">
@@ -126,6 +126,13 @@
                 <span>T&#7893;ng t&#7891;n kho theo danh m&#7909;c</span>
             </div>
             <canvas id="stockChart" width="560" height="320"></canvas>
+        </article>
+        <article class="admin-panel chart-card chart-card--donut">
+            <div class="panel-head">
+                <h2>Trạng thái đơn hàng</h2>
+                <span>Tỷ lệ đơn theo quy trình xử lý</span>
+            </div>
+            <canvas id="orderStatusChart" width="560" height="320"></canvas>
         </article>
     </section>
 
@@ -284,9 +291,11 @@
         salesLabels: JSON.parse(/*[[${salesLabelsJson}]]*/ "[]"),
         salesData: JSON.parse(/*[[${salesDataJson}]]*/ "[]"),
         stockLabels: JSON.parse(/*[[${stockLabelsJson}]]*/ "[]"),
-        stockData: JSON.parse(/*[[${stockDataJson}]]*/ "[]")
+        stockData: JSON.parse(/*[[${stockDataJson}]]*/ "[]"),
+        orderStatusLabels: JSON.parse(/*[[${orderStatusLabelsJson}]]*/ "[]"),
+        orderStatusData: JSON.parse(/*[[${orderStatusDataJson}]]*/ "[]")
     };
 </script>
-<script th:src="@{/js/admin.js(v=5)}"></script>
+<script th:src="@{/js/admin.js(v=6)}"></script>
 </body>
 </html>
