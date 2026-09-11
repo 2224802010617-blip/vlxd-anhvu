@@ -5791,8 +5791,11 @@ textarea:focus-visible {
     }
 
     .hero-showcase .hero-text h1 {
+        display: block !important;
         font-size: 1.72rem;
         line-height: 1.12;
+        width: calc(100vw - 36px) !important;
+        max-width: calc(100vw - 36px) !important;
         white-space: normal !important;
         overflow-wrap: anywhere !important;
         word-break: normal !important;
@@ -5801,6 +5804,8 @@ textarea:focus-visible {
     .hero-showcase .hero-text p {
         font-size: .9rem;
         line-height: 1.5;
+        width: calc(100vw - 36px) !important;
+        max-width: calc(100vw - 36px) !important;
     }
 
     .floating-contact {
@@ -5813,6 +5818,10 @@ textarea:focus-visible {
         max-width: calc(100vw - 24px) !important;
         transform: none !important;
         align-items: flex-end !important;
+    }
+
+    .floating-contact .location {
+        display: none !important;
     }
 }
 
