@@ -5832,6 +5832,12 @@ textarea:focus-visible {
     display: none;
 }
 
+@media (max-width: 640px) {
+    .mobile-break {
+        display: block !important;
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
