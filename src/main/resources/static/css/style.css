@@ -4254,6 +4254,157 @@ body:not(.admin-body) .animate-in {
         animation: none !important;
     }
 }
+
+/* Final visual system: softer navigation, cards and actions. */
+:root {
+    --ui-radius: 8px;
+    --ui-shadow: 0 10px 28px rgba(15, 23, 42, .08);
+    --ui-shadow-hover: 0 16px 34px rgba(15, 23, 42, .13);
+}
+
+.qh-menu {
+    background: #0f172a;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+.qh-menu-links {
+    gap: 4px;
+    padding: 6px 0;
+}
+
+.qh-menu-links a {
+    position: relative;
+    min-height: 42px;
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 15px;
+    border-radius: 7px;
+    color: rgba(255,255,255,.82);
+    font-size: .86rem;
+    transition: color .2s ease, background .2s ease, transform .2s ease;
+}
+
+.qh-menu-links a::after {
+    content: "";
+    position: absolute;
+    left: 14px;
+    right: 14px;
+    bottom: 5px;
+    height: 2px;
+    border-radius: 999px;
+    background: var(--red);
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform .2s ease;
+}
+
+.qh-menu-links a:hover,
+.qh-menu-links a:focus-visible,
+.qh-menu-links a.is-active {
+    color: #fff;
+    background: rgba(255,255,255,.1);
+    transform: translateY(-1px);
+}
+
+.qh-menu-links a:hover::after,
+.qh-menu-links a:focus-visible::after,
+.qh-menu-links a.is-active::after {
+    transform: scaleX(1);
+}
+
+.qh-search {
+    border-radius: var(--ui-radius);
+    box-shadow: 0 5px 16px rgba(2, 6, 23, .12);
+}
+
+.qh-search:focus-within {
+    transform: none;
+    box-shadow: 0 0 0 3px rgba(237,27,47,.18), 0 8px 22px rgba(0,0,0,.15);
+}
+
+.btn,
+.btn-lg,
+.btn-sm,
+.hero-buttons .btn,
+.qh-hero-buttons .btn {
+    border-radius: var(--ui-radius);
+    box-shadow: none;
+    transition: transform .2s ease, box-shadow .2s ease, background .2s ease, border-color .2s ease;
+}
+
+.btn:hover,
+.btn:focus-visible,
+.hero-buttons .btn:hover,
+.qh-hero-buttons .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(15,23,42,.14);
+}
+
+.product-card,
+.showroom-card,
+.smart-recommend-grid article,
+.smart-hint-grid article,
+.criteria-grid article,
+.testimonial-grid article,
+.business-card,
+.calculator-panel,
+.order-section,
+.quote-band,
+.payment-section {
+    border-radius: var(--ui-radius);
+    box-shadow: var(--ui-shadow);
+}
+
+.product-card:hover,
+.showroom-card:hover,
+.smart-recommend-grid article:hover,
+.smart-hint-grid article:hover,
+.criteria-grid article:hover,
+.testimonial-grid article:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--ui-shadow-hover);
+}
+
+.product-image {
+    border-radius: var(--ui-radius) var(--ui-radius) 0 0;
+}
+
+.section-heading {
+    border-left-width: 3px;
+    padding-left: 12px;
+}
+
+.sale-badge,
+.find-store,
+.stock-pill,
+.hero-badges b {
+    border-radius: 999px;
+}
+
+@media (max-width: 640px) {
+    .qh-menu-links {
+        gap: 2px;
+        padding: 5px 0;
+    }
+
+    .qh-menu-links a {
+        min-height: 38px;
+        padding: 8px 12px;
+        border-radius: 6px;
+        font-size: .76rem;
+    }
+
+    .qh-menu-links a::after {
+        left: 10px;
+        right: 10px;
+        bottom: 4px;
+    }
+
+    .product-card,
+    .showroom-card {
+        box-shadow: 0 7px 20px rgba(15,23,42,.08);
+    }
+}
 /* ============ Smart estimator v6 ============ */
 .smart-estimator-section {
     margin-top: 32px;
