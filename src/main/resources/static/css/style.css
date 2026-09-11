@@ -4150,6 +4150,110 @@ body:not(.admin-body) .animate-in {
         transform: none;
     }
 }
+
+/* Hero material motion: useful visual depth without a heavy 3D library. */
+.hero-material-visual {
+    position: relative;
+    min-height: 360px;
+    display: grid;
+    place-items: center;
+    align-content: center;
+    gap: 12px;
+    perspective: 1100px;
+}
+
+.material-stage-hero {
+    transform: scale(1.28);
+    transform-origin: center;
+    filter: drop-shadow(0 28px 30px rgba(0, 0, 0, .26));
+}
+
+.hero-material-caption {
+    display: grid;
+    gap: 4px;
+    position: relative;
+    z-index: 2;
+    padding: 10px 14px;
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: 10px;
+    color: #fff;
+    background: rgba(8, 13, 21, .54);
+    backdrop-filter: blur(10px);
+    text-align: center;
+}
+
+.hero-material-caption strong {
+    font-size: .9rem;
+}
+
+.hero-material-caption span {
+    color: rgba(255,255,255,.76);
+    font-size: .78rem;
+}
+
+.hero-material-orbit {
+    position: absolute;
+    right: -4px;
+    top: 24px;
+    z-index: 3;
+    pointer-events: none;
+}
+
+.hero-material-orbit .material-stage {
+    transform: scale(.72);
+    transform-origin: top right;
+}
+
+@media (max-width: 900px) {
+    .hero-material-visual {
+        min-height: 230px;
+        margin-top: 8px;
+    }
+
+    .material-stage-hero {
+        transform: scale(.92);
+    }
+
+    .hero-material-orbit {
+        right: 8px;
+        top: 12px;
+        opacity: .82;
+    }
+}
+
+@media (max-width: 640px) {
+    .hero-material-visual {
+        min-height: 176px;
+        margin-top: 2px;
+    }
+
+    .material-stage-hero {
+        transform: scale(.72);
+    }
+
+    .hero-material-caption {
+        padding: 8px 10px;
+    }
+
+    .hero-material-caption strong {
+        font-size: .78rem;
+    }
+
+    .hero-material-caption span {
+        font-size: .68rem;
+    }
+
+    .hero-material-orbit {
+        display: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hero-material-visual .material-stage,
+    .hero-material-orbit .material-stage {
+        animation: none !important;
+    }
+}
 /* ============ Smart estimator v6 ============ */
 .smart-estimator-section {
     margin-top: 32px;
