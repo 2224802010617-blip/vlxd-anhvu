@@ -16,6 +16,7 @@ public class OrderGroupView {
     private final String customerName;
     private final String phone;
     private final String address;
+    private final String email;
     private final String paymentMethod;
     private final String note;
     private final String status;

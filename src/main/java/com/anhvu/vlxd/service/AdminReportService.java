@@ -68,6 +68,7 @@ public class AdminReportService {
                     .customerName(first.getCustomerName())
                     .phone(first.getPhone())
                     .address(first.getAddress())
+                    .email(first.getEmail())
                     .paymentMethod(first.getPaymentMethod())
                     .note(first.getNote())
                     .status(first.getStatus() == null ? "NEW" : first.getStatus())

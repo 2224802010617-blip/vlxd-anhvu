@@ -2,6 +2,7 @@ package com.anhvu.vlxd.web;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -28,6 +29,11 @@ public class CustomerOrderForm {
     @NotBlank(message = "Vui lòng nhập địa chỉ giao hàng.")
     @Size(max = 255, message = "Địa chỉ không được vượt quá 255 ký tự.")
     private String address = "";
+
+    // Khong bat buoc: co email thi gui xac nhan don cho khach
+    @Email(message = "Email chưa đúng định dạng.")
+    @Size(max = 160, message = "Email không được vượt quá 160 ký tự.")
+    private String email = "";
 
     // Mot don co the gom nhieu mat hang (cat + xi mang + da... trong cung mot lan giao)
     @Valid

@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
-    <link rel="stylesheet" th:href="@{/css/style.css(v=48)}">
+    <link rel="stylesheet" th:href="@{/css/style.css(v=61)}">
 </head>
 <body>
 <header class="qh-header-wrap">
@@ -97,6 +97,12 @@
                 <span>&#272;&#7883;a ch&#7881; giao h&agrave;ng</span>
                 <input th:field="*{address}" placeholder="S&#7889; nh&agrave;, ph&#432;&#7901;ng/x&atilde;, khu v&#7921;c giao">
                 <small class="field-error" th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></small>
+            </label>
+            <label class="order-field order-field-wide">
+                <span>Email nh&#7853;n x&aacute;c nh&#7853;n <em style="font-weight:400;color:#667085;">(kh&ocirc;ng b&#7855;t bu&#7897;c)</em></span>
+                <input th:field="*{email}" type="email" inputmode="email" autocomplete="email"
+                       placeholder="VD: tencuaban@gmail.com &#8212; để nhận mã đơn và thông tin chuyển khoản">
+                <small class="field-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></small>
             </label>
             <div id="orderItems" style="grid-column: 1 / -1; display: grid; gap: 12px;">
                 <small class="field-error" th:if="${#fields.hasErrors('items')}" th:errors="*{items}"></small>

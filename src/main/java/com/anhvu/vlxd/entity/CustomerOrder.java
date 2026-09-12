@@ -28,6 +28,10 @@ public class CustomerOrder {
     @Column(nullable = false, length = 255)
     private String address;
 
+    // Email khach (tuy chon) de gui xac nhan don hang
+    @Column(length = 160)
+    private String email;
+
     @Column(nullable = false, length = 180)
     private String productName;
 

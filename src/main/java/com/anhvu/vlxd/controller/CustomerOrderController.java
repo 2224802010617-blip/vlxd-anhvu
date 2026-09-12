@@ -99,6 +99,7 @@ public class CustomerOrderController {
                     .customerName(form.getCustomerName().trim())
                     .phone(form.getPhone().trim())
                     .address(form.getAddress().trim())
+                    .email(form.getEmail() == null ? "" : form.getEmail().trim())
                     .productName(product.getName())
                     .quantity(quantity)
                     .unitPrice(product.getPrice())
@@ -115,9 +116,19 @@ public class CustomerOrderController {
             order.setOrderCode(orderCode);
         }
         customerOrderRepository.saveAll(savedOrders);
-        notificationService.newOrder(orderCode, savedOrders, savedOrders.stream()
+
+        BigDecimal orderTotal = savedOrders.stream()
                 .map(CustomerOrder::getTotalAmount)
-                .reduce(BigDecimal.ZERO, BigDecimal::add));
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        notificationService.newOrder(orderCode, savedOrders, orderTotal);
+        notificationService.orderConfirmationToCustomer(
+                orderCode,
+                form.getEmail(),
+                savedOrders,
+                resolvedProducts.stream().map(Product::getUnit).toList(),
+                orderTotal,
+                "BANK_TRANSFER".equalsIgnoreCase(form.getPaymentMethod()),
+                paymentContent(savedOrders));
 
         addOrderPageAttributes(model, prefillNextOrderForm(), true);
         addPaymentResult(model, savedOrders, resolvedProducts);
@@ -151,9 +162,7 @@ public class CustomerOrderController {
         boolean pricedOrder = totalAmount.compareTo(BigDecimal.ZERO) > 0;
         boolean onlinePaymentAllowed = pricedOrder && totalAmount.compareTo(ONLINE_PAYMENT_LIMIT) < 0;
         String paymentCode = "ANHVU-" + first.displayCode() + "-" + onlyDigits(first.getPhone());
-        String paymentContent = orders.size() > 1
-                ? paymentCode + " " + orders.size() + " mat hang"
-                : paymentCode + " " + first.getProductName();
+        String paymentContent = paymentContent(orders);
 
         // Danh sach dong hang cho bang tom tat thanh toan
         List<Map<String, Object>> lines = new ArrayList<>();
@@ -185,6 +194,15 @@ public class CustomerOrderController {
         }
     }
 
+    /** Noi dung chuyen khoan: ANHVU-<ma don>-<so dien thoai> + mo ta hang. */
+    private static String paymentContent(List<CustomerOrder> orders) {
+        CustomerOrder first = orders.get(0);
+        String paymentCode = "ANHVU-" + first.displayCode() + "-" + onlyDigits(first.getPhone());
+        return orders.size() > 1
+                ? paymentCode + " " + orders.size() + " mat hang"
+                : paymentCode + " " + first.getProductName();
+    }
+
     private String buildVietQrUrl(BigDecimal totalAmount, String paymentContent) {
         String amount = totalAmount.setScale(0, RoundingMode.UP).toPlainString();
         String accountName = encode("CONG TY TNHH MTV TM DV XD ANH VU");
@@ -199,7 +217,7 @@ public class CustomerOrderController {
         return URLEncoder.encode(value, StandardCharsets.UTF_8);
     }
 
-    private String onlyDigits(String value) {
+    private static String onlyDigits(String value) {
         return value == null ? "" : value.replaceAll("\\D+", "");
     }
 

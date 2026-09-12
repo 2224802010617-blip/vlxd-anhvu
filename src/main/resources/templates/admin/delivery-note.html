@@ -75,6 +75,7 @@
     <div class="meta">
         <div><span>Khách hàng</span><b th:text="${order.customerName}">Khách</b></div>
         <div><span>Điện thoại</span><b th:text="${order.phone}">0900</b></div>
+        <div th:if="${order.email != null and !order.email.isBlank()}"><span>Email</span><b th:text="${order.email}">email</b></div>
         <div style="grid-column: 1 / -1;"><span>Giao đến</span><b th:text="${order.address}">Địa chỉ</b></div>
         <div><span>Thanh toán</span><b th:text="${order.paymentMethod == 'BANK_TRANSFER' ? 'Chuyển khoản MB Bank' : 'Tiền mặt khi nhận hàng'}">COD</b></div>
         <div><span>Nội dung CK</span><b th:text="|ANHVU-${order.code}|">ANHVU-DH1</b></div>

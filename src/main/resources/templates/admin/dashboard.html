@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/css/style.css(v=60)}">
+    <link rel="stylesheet" th:href="@{/css/style.css(v=61)}">
 </head>
 <body class="admin-body">
 <header class="admin-topbar">
@@ -240,6 +240,9 @@
                         <td data-label="Khách">
                             <b th:text="${order.customerName}">Khách</b>
                             <small><a th:href="|tel:${order.phone}|" th:text="${order.phone}">0900</a></small>
+                            <small th:if="${order.email != null and !order.email.isBlank()}">
+                                <a th:href="|mailto:${order.email}|" th:text="${order.email}">email</a>
+                            </small>
                             <small th:text="${order.address}">Địa chỉ</small>
                         </td>
                         <td data-label="Hàng đặt">
