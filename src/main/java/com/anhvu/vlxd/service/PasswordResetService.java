@@ -3,9 +3,6 @@ package com.anhvu.vlxd.service;
 import com.anhvu.vlxd.entity.AppUser;
 import com.anhvu.vlxd.repository.AppUserRepository;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.MailException;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +23,7 @@ public class PasswordResetService {
 
     private final AppUserRepository appUserRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JavaMailSender mailSender;
+    private final MailGateway mailGateway;
     private final String mailUsername;
     private final String mailPassword;
     private final String mailFrom;
@@ -37,7 +34,7 @@ public class PasswordResetService {
 
     public PasswordResetService(AppUserRepository appUserRepository,
                                 PasswordEncoder passwordEncoder,
-                                JavaMailSender mailSender,
+                                MailGateway mailGateway,
                                 @Value("${spring.mail.username:}") String mailUsername,
                                 @Value("${spring.mail.password:}") String mailPassword,
                                 @Value("${app.mail.from:}") String mailFrom,
@@ -46,7 +43,7 @@ public class PasswordResetService {
                                 @Value("${app.password-reset.max-attempts:5}") int maxAttempts) {
         this.appUserRepository = appUserRepository;
         this.passwordEncoder = passwordEncoder;
-        this.mailSender = mailSender;
+        this.mailGateway = mailGateway;
         this.mailUsername = mailUsername;
         this.mailPassword = mailPassword;
         this.mailFrom = mailFrom;
@@ -80,21 +77,15 @@ public class PasswordResetService {
         user.setResetAttempts(0);
         appUserRepository.save(user);
 
-        SimpleMailMessage message = new SimpleMailMessage();
-        String fromAddress = mailFrom == null || mailFrom.isBlank() ? mailUsername : mailFrom;
-        // Hien ten cua hang thay vi dia chi Gmail tran trong hop thu cua khach
-        message.setFrom(fromAddress.contains("<") ? fromAddress : "VLXD Anh Vu <" + fromAddress + ">");
-        message.setTo(normalizedEmail);
-        message.setSubject("Mã xác nhận đặt lại mật khẩu Anh Vũ");
-        message.setText("Mã xác nhận của bạn là: " + code + "\n\n"
+        String text = "Mã xác nhận của bạn là: " + code + "\n\n"
                 + "Mã có hiệu lực trong " + codeExpirationMinutes + " phút. "
-                + "Nếu bạn không yêu cầu, hãy bỏ qua email này.");
+                + "Nếu bạn không yêu cầu, hãy bỏ qua email này.";
 
         try {
-            mailSender.send(message);
+            mailGateway.send(normalizedEmail, "Mã xác nhận đặt lại mật khẩu Anh Vũ", text);
             return RequestStatus.ACCEPTED;
         }
-        catch (MailException exception) {
+        catch (IllegalStateException exception) {
             clearResetState(user);
             appUserRepository.save(user);
             return RequestStatus.DELIVERY_FAILED;
@@ -173,8 +164,7 @@ public class PasswordResetService {
     }
 
     private boolean mailConfigured() {
-        return mailUsername != null && !mailUsername.isBlank()
-                && mailPassword != null && !mailPassword.isBlank();
+        return mailGateway.isConfigured();
     }
 
     private String normalizeEmail(String email) {

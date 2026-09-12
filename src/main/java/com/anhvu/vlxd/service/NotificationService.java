@@ -5,8 +5,6 @@ import com.anhvu.vlxd.entity.QuoteRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -24,24 +22,15 @@ public class NotificationService {
 
     private static final Logger log = LoggerFactory.getLogger(NotificationService.class);
 
-    private final JavaMailSender mailSender;
+    private final MailGateway mailGateway;
     private final String adminEmail;
-    private final String mailUsername;
-    private final String mailPassword;
-    private final String mailFrom;
     private final String siteUrl;
 
-    public NotificationService(JavaMailSender mailSender,
+    public NotificationService(MailGateway mailGateway,
                                @Value("${app.security.admin-email:}") String adminEmail,
-                               @Value("${spring.mail.username:}") String mailUsername,
-                               @Value("${spring.mail.password:}") String mailPassword,
-                               @Value("${app.mail.from:}") String mailFrom,
                                @Value("${app.site-url:https://vlxd-app-production.up.railway.app}") String siteUrl) {
-        this.mailSender = mailSender;
+        this.mailGateway = mailGateway;
         this.adminEmail = adminEmail;
-        this.mailUsername = mailUsername;
-        this.mailPassword = mailPassword;
-        this.mailFrom = mailFrom;
         this.siteUrl = siteUrl;
     }
 
@@ -80,19 +69,13 @@ public class NotificationService {
     }
 
     private void send(String subject, String body) {
-        if (adminEmail == null || adminEmail.isBlank() || mailUsername.isBlank() || mailPassword.isBlank()) {
+        if (adminEmail == null || adminEmail.isBlank() || !mailGateway.isConfigured()) {
             log.info("Bo qua email thong bao (chua cau hinh mail): {}", subject);
             return;
         }
         CompletableFuture.runAsync(() -> {
             try {
-                SimpleMailMessage message = new SimpleMailMessage();
-                String from = mailFrom == null || mailFrom.isBlank() ? mailUsername : mailFrom;
-                message.setFrom(from.contains("<") ? from : "VLXD Anh Vu <" + from + ">");
-                message.setTo(adminEmail);
-                message.setSubject(subject);
-                message.setText(body);
-                mailSender.send(message);
+                mailGateway.send(adminEmail, subject, body);
             } catch (Exception e) {
                 log.warn("Khong gui duoc email thong bao '{}': {}", subject, e.getMessage());
             }
