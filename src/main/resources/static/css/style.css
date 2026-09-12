@@ -6768,3 +6768,9 @@ textarea:focus-visible {
     .admin-table:not(.inventory-table) .status-form { display: flex; gap: 8px; margin-top: 8px; }
     .admin-table:not(.inventory-table) .status-form select { flex: 1; }
 }
+
+/* Admin v2: 3 bieu do tren mot hang o man hinh rong */
+@media (min-width: 1200px) {
+    .admin-charts--three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .admin-charts--three .chart-card--donut { grid-column: auto; }
+}
