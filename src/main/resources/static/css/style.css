@@ -7118,3 +7118,43 @@ textarea:focus-visible {
     cursor: pointer;
 }
 .bulk-form button:disabled { background: #475569; color: #94a3b8; cursor: not-allowed; }
+
+/* O tich: quy tac chung cua form ep input cao 48px lam o tich bi keo doc */
+.order-form .consent-check input[type="checkbox"],
+.quote-form .consent-check input[type="checkbox"],
+.bulk-form .consent-check input[type="checkbox"],
+.notify-check input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    min-height: 0;
+    flex: 0 0 auto;
+    margin-top: 2px;
+    padding: 0;
+}
+
+/* Admin tren dien thoai: nhung cho bam deu it nhat 36px cho de cham */
+@media (max-width: 760px) {
+    .admin-body summary,
+    .admin-body .btn-delete,
+    .admin-body .admin-link,
+    .admin-table td small a {
+        display: inline-flex;
+        align-items: center;
+        min-height: 36px;
+    }
+    .notify-check {
+        min-height: 40px;
+        font-size: .82rem;
+    }
+    .admin-body .inventory-toggle input[type="checkbox"],
+    .admin-body .admin-filter__check input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+        min-height: 0;
+    }
+    .admin-body .inventory-toggle,
+    .admin-body .admin-filter__check { min-height: 40px; }
+    .mail-form button,
+    .pay-form button,
+    .receive-form button { min-height: 40px; }
+}
