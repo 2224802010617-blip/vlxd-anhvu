@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
-    <link rel="stylesheet" th:href="@{/css/style.css(v=61)}">
+    <link rel="stylesheet" th:href="@{/css/style.css(v=62)}">
 </head>
 <body>
 <header class="qh-header-wrap">
@@ -101,7 +101,8 @@
             <label class="order-field order-field-wide">
                 <span>Email nh&#7853;n x&aacute;c nh&#7853;n <em style="font-weight:400;color:#667085;">(kh&ocirc;ng b&#7855;t bu&#7897;c)</em></span>
                 <input th:field="*{email}" type="email" inputmode="email" autocomplete="email"
-                       placeholder="VD: tencuaban@gmail.com &#8212; để nhận mã đơn và thông tin chuyển khoản">
+                       placeholder="VD: tencuaban@gmail.com">
+                <small class="field-hint">&#272;&#7875; nh&#7853;n m&#227; &#273;&#417;n v&#224; th&#244;ng tin chuy&#7875;n kho&#7843;n. B&#7887; tr&#7889;ng c&#361;ng &#273;&#7863;t h&#224;ng b&#236;nh th&#432;&#7901;ng.</small>
                 <small class="field-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></small>
             </label>
             <div id="orderItems" style="grid-column: 1 / -1; display: grid; gap: 12px;">
@@ -251,8 +252,9 @@
             });
             var label = row.querySelector('label span');
             if (label) label.textContent = 'Sản phẩm ' + (index + 1);
+            // Dung display de o luoi tu thu lai, tranh de lai khoang trong khi chi co mot dong
             var removeBtn = row.querySelector('.order-item-remove');
-            if (removeBtn) removeBtn.style.visibility = rows.length > 1 ? 'visible' : 'hidden';
+            if (removeBtn) removeBtn.style.display = rows.length > 1 ? '' : 'none';
         });
     }
     function addOrderItem() {

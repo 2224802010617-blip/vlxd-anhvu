@@ -6993,3 +6993,18 @@ textarea:focus-visible {
 .inventory-more small { display: block; margin-top: 6px; color: #94a3b8; }
 .inventory-more .inventory-field--file { display: flex; gap: 8px; align-items: center; margin-top: 6px; }
 .inventory-more .inventory-field--file .inventory-field__label { display: inline; color: #94a3b8; font-size: .78rem; font-weight: 700; }
+
+/* Form dat hang: dong san pham nhieu mat hang */
+.order-item-row button { grid-column: auto; }
+.order-form .field-hint {
+    display: block;
+    margin-top: 4px;
+    color: #667085;
+    font-size: .82rem;
+    line-height: 1.4;
+}
+@media (max-width: 620px) {
+    /* Man hinh hep: ten san pham chiem tron mot dong, so luong va nut xoa xuong hang duoi */
+    .order-item-row { grid-template-columns: 1fr 46px !important; }
+    .order-item-row > label:first-of-type { grid-column: 1 / -1; }
+}
