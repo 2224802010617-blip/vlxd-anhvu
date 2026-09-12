@@ -44,6 +44,7 @@ public class CustomerOrderController {
     private final CustomerOrderRepository customerOrderRepository;
     private final ProductRepository productRepository;
     private final ProductService productService;
+    private final com.anhvu.vlxd.service.NotificationService notificationService;
 
     @PostMapping("/order-request")
     public String store(@Valid @ModelAttribute("orderForm") CustomerOrderForm form,
@@ -114,6 +115,9 @@ public class CustomerOrderController {
             order.setOrderCode(orderCode);
         }
         customerOrderRepository.saveAll(savedOrders);
+        notificationService.newOrder(orderCode, savedOrders, savedOrders.stream()
+                .map(CustomerOrder::getTotalAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add));
 
         addOrderPageAttributes(model, prefillNextOrderForm(), true);
         addPaymentResult(model, savedOrders, resolvedProducts);

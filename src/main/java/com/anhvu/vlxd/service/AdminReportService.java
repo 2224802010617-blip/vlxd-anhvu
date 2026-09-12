@@ -1,6 +1,7 @@
 package com.anhvu.vlxd.service;
 
 import com.anhvu.vlxd.entity.CustomerOrder;
+import com.anhvu.vlxd.entity.Payment;
 import com.anhvu.vlxd.entity.Product;
 import com.anhvu.vlxd.entity.QuoteRequest;
 import com.anhvu.vlxd.web.OrderGroupView;
@@ -98,6 +99,10 @@ public class AdminReportService {
         long pendingQuotes;
         long lowStockCount;
         double averageOrderValue;
+        double totalDebt;               // tong con no cua don chua huy
+        long debtOrders;
+        double grossProfitThisMonth;    // uoc tinh: (gia ban - gia von hien tai) x SL, don hoan thanh thang nay
+        boolean hasCostData;
     }
 
     public Kpi computeKpi(List<OrderGroupView> groups, List<QuoteRequest> quotes, List<Product> products) {
@@ -126,6 +131,30 @@ public class AdminReportService {
         kpi.lowStockCount = products.stream().filter(inventoryPolicy::isLowStock).count();
         long completedCount = groups.stream().filter(completed).count();
         kpi.averageOrderValue = completedCount == 0 ? 0 : sum(groups, completed) / completedCount;
+        kpi.totalDebt = groups.stream().mapToDouble(group -> group.getReceivable().doubleValue()).sum();
+        kpi.debtOrders = groups.stream().filter(group -> group.getReceivable().signum() > 0).count();
+
+        Map<String, BigDecimal> costOf = new LinkedHashMap<>();
+        for (Product product : products) {
+            if (product.getName() != null && product.getCostPrice() != null && product.getCostPrice().signum() > 0) {
+                costOf.put(product.getName().toLowerCase(Locale.ROOT), product.getCostPrice());
+            }
+        }
+        kpi.hasCostData = !costOf.isEmpty();
+        double profit = 0;
+        for (OrderGroupView group : groups) {
+            if (!completed.test(group) || !isInMonth(group.getCreatedAt(), thisMonth)) {
+                continue;
+            }
+            for (CustomerOrder line : group.getLines()) {
+                BigDecimal cost = costOf.get(line.getProductName() == null ? "" : line.getProductName().toLowerCase(Locale.ROOT));
+                if (cost == null || line.getUnitPrice() == null || line.getQuantity() == null) {
+                    continue;
+                }
+                profit += line.getUnitPrice().subtract(cost).multiply(line.getQuantity()).doubleValue();
+            }
+        }
+        kpi.grossProfitThisMonth = profit;
         return kpi;
     }
 
@@ -201,6 +230,19 @@ public class AdminReportService {
         return counts;
     }
 
+    // ---------- Cong no ----------
+
+    /** Gan so da thu cho tung don tu bang payments. */
+    public void attachPayments(List<OrderGroupView> groups, List<Payment> payments) {
+        Map<String, BigDecimal> paidByCode = new LinkedHashMap<>();
+        for (Payment payment : payments) {
+            paidByCode.merge(payment.getOrderCode(), payment.getAmount() == null ? BigDecimal.ZERO : payment.getAmount(), BigDecimal::add);
+        }
+        for (OrderGroupView group : groups) {
+            group.setPaid(paidByCode.getOrDefault(group.getCode(), BigDecimal.ZERO));
+        }
+    }
+
     // ---------- Khach hang ----------
 
     @Getter
@@ -211,6 +253,7 @@ public class AdminReportService {
         long orders;
         long pendingOrders;
         double totalSpent;
+        double debt;
         LocalDateTime lastOrderAt;
     }
 
@@ -232,6 +275,7 @@ public class AdminReportService {
             if ("COMPLETED".equalsIgnoreCase(group.getStatus())) {
                 summary.totalSpent += group.getTotal().doubleValue();
             }
+            summary.debt += group.getReceivable().doubleValue();
         }
         return byPhone.values().stream()
                 .sorted(Comparator.comparingDouble(CustomerSummary::getTotalSpent).reversed()

@@ -34,6 +34,10 @@ public class Product {
     @Column(length = 50)
     private String unit;
 
+    // Gia von moi don vi (cap nhat khi nhap kho) -> tinh lai gop uoc tinh
+    @Column(precision = 18, scale = 2)
+    private BigDecimal costPrice;
+
     @Column(length = 255)
     private String imagePath;
 

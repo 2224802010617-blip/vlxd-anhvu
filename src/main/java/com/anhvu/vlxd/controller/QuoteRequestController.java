@@ -29,6 +29,7 @@ public class QuoteRequestController {
     private static final String EMAIL = "xaydungvantaidaphuongthucanhvu@gmail.com";
 
     private final QuoteRequestRepository quoteRequestRepository;
+    private final com.anhvu.vlxd.service.NotificationService notificationService;
 
     @PostMapping("/quote-request")
     public String store(@Valid @ModelAttribute("quoteForm") QuoteRequestForm form,
@@ -41,13 +42,14 @@ public class QuoteRequestController {
             return "quote";
         }
 
-        quoteRequestRepository.save(QuoteRequest.builder()
+        QuoteRequest saved = quoteRequestRepository.save(QuoteRequest.builder()
                 .customerName(form.getCustomerName().trim())
                 .phone(form.getPhone().trim())
                 .address(form.getAddress() == null ? "" : form.getAddress().trim())
                 .content(form.getContent().trim())
                 .status("NEW")
                 .build());
+        notificationService.newQuote(saved);
 
         return "redirect:/bao-gia?quoteSuccess=true#quote-form";
     }

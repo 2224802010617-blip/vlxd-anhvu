@@ -6874,3 +6874,122 @@ textarea:focus-visible {
     gap: 8px;
     grid-column: 1 / -1;
 }
+
+/* Admin v3: cong no, thu tien, nhap kho, sua ten */
+.kpi-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.metric-card--debt { border-color: rgba(251, 113, 133, .6) !important; }
+.metric-card--debt strong { color: #fb7185; }
+.metric-card small a { color: inherit; text-decoration: underline; }
+.pay-ok { color: #4ade80 !important; font-weight: 700; }
+.pay-debt { color: #fb7185 !important; font-weight: 700; }
+.pay-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    justify-content: flex-end;
+    margin-top: 8px;
+}
+.pay-form input, .pay-form select {
+    min-height: 34px;
+    padding: 0 8px;
+    border-radius: 8px;
+    border: 1px solid rgba(148, 163, 184, .3);
+    background: #0f172a;
+    color: #f8fafc;
+    font-size: .82rem;
+}
+.pay-form input { width: 150px; }
+.pay-form button {
+    min-height: 34px;
+    padding: 0 12px;
+    border: 0;
+    border-radius: 8px;
+    background: #22c55e;
+    color: #04130a;
+    font-weight: 800;
+    font-size: .82rem;
+    cursor: pointer;
+}
+.inventory-more { grid-column: 1 / -1; font-size: .82rem; }
+.inventory-more summary { cursor: pointer; color: #7dd3fc; font-weight: 700; }
+.inventory-more input {
+    display: block;
+    width: 100%;
+    margin-top: 6px;
+    min-height: 36px;
+    padding: 0 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(148, 163, 184, .3);
+    background: #0f172a;
+    color: #f8fafc;
+}
+.receive-form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed rgba(148, 163, 184, .25);
+}
+.receive-form__label { color: #94a3b8; font-size: .78rem; font-weight: 700; text-transform: uppercase; }
+.receive-form input {
+    min-height: 36px;
+    padding: 0 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(148, 163, 184, .3);
+    background: #0f172a;
+    color: #f8fafc;
+    font-size: .84rem;
+}
+.receive-form input[name="quantity"] { width: 110px; }
+.receive-form input[name="unitCost"] { width: 130px; }
+.receive-form input[name="note"] { width: 150px; }
+.receive-form button {
+    min-height: 36px;
+    padding: 0 12px;
+    border: 0;
+    border-radius: 8px;
+    background: #38bdf8;
+    color: #04121a;
+    font-weight: 800;
+    cursor: pointer;
+}
+@media (max-width: 1200px) { .kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 760px) {
+    .pay-form { justify-content: flex-start; }
+    .pay-form input { width: 100%; }
+    .receive-form input { width: 100% !important; }
+}
+
+/* Ra soat mobile 12/09: khoi thong tin doanh nghiep, form kho, menu admin */
+@media (max-width: 900px) {
+    .business-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 640px) {
+    .business-grid { grid-template-columns: 1fr; }
+    .business-grid article { min-width: 0; }
+    .business-grid strong { overflow-wrap: anywhere; }
+}
+@media (max-width: 760px) {
+    .inventory-form { grid-template-columns: 1fr 1fr; width: 100%; }
+    .inventory-form .inventory-toggle,
+    .inventory-form button,
+    .inventory-form .inventory-field--file,
+    .inventory-form .inventory-more { grid-column: 1 / -1; }
+    .inventory-form .inventory-field--file { flex-wrap: wrap; }
+    .inventory-form .inventory-field--file input[type="file"] { max-width: 100%; }
+    .admin-nav__inner { flex-wrap: wrap; overflow: visible; }
+    .admin-nav a { padding: 8px 12px; font-size: .85rem; }
+}
+
+/* Admin v3: gap form thu tien / nhap kho / sua ten vao details */
+.pay-details, .receive-details { margin-top: 8px; font-size: .82rem; }
+.pay-details summary, .receive-details summary { cursor: pointer; color: #7dd3fc; font-weight: 700; list-style: none; }
+.pay-details summary::-webkit-details-marker, .receive-details summary::-webkit-details-marker { display: none; }
+.pay-details[open] summary, .receive-details[open] summary { color: #e2e8f0; margin-bottom: 6px; }
+.receive-details .receive-form { margin-top: 0; padding-top: 0; border-top: 0; }
+.receive-details { grid-column: 1 / -1; }
+.inventory-more small { display: block; margin-top: 6px; color: #94a3b8; }
+.inventory-more .inventory-field--file { display: flex; gap: 8px; align-items: center; margin-top: 6px; }
+.inventory-more .inventory-field--file .inventory-field__label { display: inline; color: #94a3b8; font-size: .78rem; font-weight: 700; }

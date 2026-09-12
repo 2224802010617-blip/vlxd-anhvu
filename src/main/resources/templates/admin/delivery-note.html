@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="|Phiếu giao hàng ${order.code} - VLXD Anh Vũ|">Phiếu giao hàng</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" type="image/svg+xml" href="/images/anh-vu-logo.svg">
+    <style>
+        * { box-sizing: border-box; }
+        body { margin: 0; padding: 24px; font: 13px/1.5 "Segoe UI", Arial, sans-serif; color: #111; background: #e5e7eb; }
+        .sheet { max-width: 800px; margin: 0 auto; background: #fff; padding: 28px 32px; box-shadow: 0 4px 20px rgba(0,0,0,.12); }
+        .toolbar { max-width: 800px; margin: 0 auto 14px; display: flex; gap: 10px; justify-content: flex-end; }
+        .toolbar button, .toolbar a { padding: 9px 18px; border-radius: 8px; border: 1px solid #cbd5e1; background: #fff; font-weight: 700; cursor: pointer; text-decoration: none; color: #111; }
+        .toolbar button.primary { background: #d11828; color: #fff; border-color: #d11828; }
+        .head { display: flex; justify-content: space-between; gap: 20px; border-bottom: 2px solid #111; padding-bottom: 12px; }
+        .head img { height: 52px; }
+        .company b { font-size: 15px; display: block; }
+        .company span { display: block; color: #444; font-size: 12px; }
+        .title { text-align: center; margin: 18px 0 4px; }
+        .title h1 { margin: 0; font-size: 22px; letter-spacing: .5px; }
+        .title p { margin: 4px 0 0; color: #444; }
+        .meta { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 24px; margin: 16px 0; }
+        .meta div { display: flex; gap: 8px; }
+        .meta span { color: #555; min-width: 110px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 8px; }
+        th, td { border: 1px solid #333; padding: 7px 8px; }
+        th { background: #f1f5f9; text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: .3px; }
+        td.num, th.num { text-align: right; white-space: nowrap; }
+        tfoot td { font-weight: 700; }
+        tfoot tr.debt td { color: #b91c1c; }
+        .note { margin-top: 12px; padding: 10px 12px; background: #fffbeb; border: 1px dashed #d97706; }
+        .pay { margin-top: 12px; font-size: 12px; color: #444; }
+        .pay b { color: #111; }
+        .sign { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-top: 36px; text-align: center; }
+        .sign b { display: block; margin-bottom: 64px; }
+        .sign i { color: #666; font-size: 11px; }
+        .foot { margin-top: 24px; font-size: 11px; color: #666; text-align: center; border-top: 1px solid #ccc; padding-top: 8px; }
+        @media print {
+            body { background: #fff; padding: 0; }
+            .sheet { box-shadow: none; padding: 10mm 12mm; max-width: none; }
+            .toolbar { display: none; }
+            @page { size: A4; margin: 8mm; }
+        }
+    </style>
+</head>
+<body>
+<div class="toolbar">
+    <a th:href="@{/admin(q=${order.code})} + '#orders'">← Về quản trị</a>
+    <button type="button" onclick="window.print()" class="primary">🖨 In phiếu</button>
+</div>
+<div class="sheet">
+    <div class="head">
+        <div style="display:flex; gap:14px; align-items:center;">
+            <img src="/images/anh-vu-logo.svg" alt="VLXD Anh Vũ">
+            <div class="company">
+                <b>CÔNG TY TNHH MTV TM DV XD ANH VŨ</b>
+                <span>617 Nguyễn Huệ, Tổ 8 KP Phú Cường, P. Bình Long, TP. Đồng Nai</span>
+                <span>ĐT: 0866 785 645 · MST: 3901312239</span>
+                <span>MB Bank 1991777790 · CÔNG TY TNHH MTV TM DV XD ANH VŨ</span>
+            </div>
+        </div>
+        <div style="text-align:right;">
+            <div style="font-size:12px;color:#555;">Số phiếu</div>
+            <div style="font-size:20px;font-weight:800;" th:text="${order.code}">DH1</div>
+            <div style="font-size:12px;color:#555;" th:text="|Ngày đặt: ${#temporals.format(order.createdAt, 'dd/MM/yyyy HH:mm')}|">Ngày đặt</div>
+        </div>
+    </div>
+
+    <div class="title">
+        <h1>PHIẾU GIAO HÀNG KIÊM PHIẾU THU</h1>
+        <p th:text="|Trạng thái đơn: ${statusLabel}|">Trạng thái</p>
+    </div>
+
+    <div class="meta">
+        <div><span>Khách hàng</span><b th:text="${order.customerName}">Khách</b></div>
+        <div><span>Điện thoại</span><b th:text="${order.phone}">0900</b></div>
+        <div style="grid-column: 1 / -1;"><span>Giao đến</span><b th:text="${order.address}">Địa chỉ</b></div>
+        <div><span>Thanh toán</span><b th:text="${order.paymentMethod == 'BANK_TRANSFER' ? 'Chuyển khoản MB Bank' : 'Tiền mặt khi nhận hàng'}">COD</b></div>
+        <div><span>Nội dung CK</span><b th:text="|ANHVU-${order.code}|">ANHVU-DH1</b></div>
+    </div>
+
+    <table>
+        <thead>
+        <tr>
+            <th style="width:36px;">STT</th>
+            <th>Mặt hàng</th>
+            <th class="num">Số lượng</th>
+            <th>ĐVT</th>
+            <th class="num">Đơn giá</th>
+            <th class="num">Thành tiền</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="line, st : ${order.lines}">
+            <td th:text="${st.count}">1</td>
+            <td th:text="${line.productName}">Sản phẩm</td>
+            <td class="num" th:text="${#numbers.formatDecimal(line.quantity, 0, 'POINT', 2, 'COMMA')}">1</td>
+            <td th:text="${unitOf.get(#strings.toLowerCase(line.productName))}">bao</td>
+            <td class="num" th:text="${#numbers.formatDecimal(line.unitPrice, 0, 'POINT', 0, 'COMMA')}">0</td>
+            <td class="num" th:text="${#numbers.formatDecimal(line.totalAmount, 0, 'POINT', 0, 'COMMA')}">0</td>
+        </tr>
+        </tbody>
+        <tfoot>
+        <tr><td colspan="5" class="num">Tổng tiền hàng</td><td class="num" th:text="|${#numbers.formatDecimal(order.total, 0, 'POINT', 0, 'COMMA')} ₫|">0</td></tr>
+        <tr><td colspan="5" class="num">Đã thanh toán</td><td class="num" th:text="|${#numbers.formatDecimal(order.paid, 0, 'POINT', 0, 'COMMA')} ₫|">0</td></tr>
+        <tr class="debt"><td colspan="5" class="num">Còn phải thu</td><td class="num" th:text="|${#numbers.formatDecimal(order.debt, 0, 'POINT', 0, 'COMMA')} ₫|">0</td></tr>
+        </tfoot>
+    </table>
+
+    <div class="note" th:if="${order.note != null and !order.note.isBlank()}">
+        <b>Ghi chú:</b> <span th:text="${order.note}">ghi chú</span>
+    </div>
+
+    <div class="pay" th:if="${!payments.isEmpty()}">
+        <b>Lịch sử thu tiền:</b>
+        <span th:each="p, st : ${payments}"
+              th:text="|${st.index > 0 ? ' · ' : ''}${#temporals.format(p.paidAt, 'dd/MM/yyyy')} ${#numbers.formatDecimal(p.amount, 0, 'POINT', 0, 'COMMA')} ₫ (${p.method == 'BANK_TRANSFER' ? 'CK' : 'TM'})|">..</span>
+    </div>
+    <div class="pay">Tiền hàng chưa gồm phí vận chuyển, bốc xếp (nếu có). Khách vui lòng kiểm tra chủng loại, số lượng trước khi ký nhận.</div>
+
+    <div class="sign">
+        <div><b>Người lập phiếu</b><i>(Ký, ghi rõ họ tên)</i></div>
+        <div><b>Người giao hàng</b><i>(Ký, ghi rõ họ tên)</i></div>
+        <div><b>Khách hàng</b><i>(Ký xác nhận đã nhận đủ hàng)</i></div>
+    </div>
+
+    <div class="foot" th:text="|In lúc ${#temporals.format(printedAt, 'HH:mm dd/MM/yyyy')} · vlxd-app-production.up.railway.app|">In lúc</div>
+</div>
+</body>
+</html>

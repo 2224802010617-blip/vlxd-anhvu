@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/css/style.css(v=56)}">
+    <link rel="stylesheet" th:href="@{/css/style.css(v=60)}">
 </head>
 <body class="admin-body">
 <header class="admin-topbar">
@@ -40,6 +40,7 @@
         <a href="#quotes">Báo giá <b th:if="${kpi.pendingQuotes > 0}" th:text="${kpi.pendingQuotes}">0</b></a>
         <a href="#inventory">Kho hàng <b th:if="${kpi.lowStockCount > 0}" th:text="${kpi.lowStockCount}">0</b></a>
         <a href="#add-product">+ Thêm SP</a>
+        <a href="#stock-log">Lịch sử kho</a>
         <a href="#customers">Khách hàng</a>
     </div>
 </nav>
@@ -94,6 +95,20 @@
                 <strong data-countup th:data-value="${#numbers.formatDecimal(kpi.lowStockCount, 0, 'NONE', 0, 'NONE')}" th:text="${kpi.lowStockCount}">0</strong>
                 <small th:text="|trên ${productCount} mặt hàng|">trên 0 mặt hàng</small>
             </article>
+            <article class="metric-card" th:classappend="${kpi.totalDebt > 0} ? ' metric-card--debt'">
+                <span>Công nợ phải thu (đã giao)</span>
+                <strong data-countup th:data-value="${#numbers.formatDecimal(kpi.totalDebt, 0, 'NONE', 0, 'NONE')}" data-suffix=" ₫"
+                        th:text="${#numbers.formatDecimal(kpi.totalDebt, 0, 'POINT', 0, 'COMMA')} + ' ₫'">0 ₫</strong>
+                <small><a href="/admin?debt=1#orders" th:text="|${kpi.debtOrders} đơn chưa thu đủ|">0 đơn chưa thu đủ</a></small>
+            </article>
+            <article class="metric-card">
+                <span>Lãi gộp tháng này</span>
+                <strong th:if="${kpi.hasCostData}" data-countup th:data-value="${#numbers.formatDecimal(kpi.grossProfitThisMonth, 0, 'NONE', 0, 'NONE')}" data-suffix=" ₫"
+                        th:text="${#numbers.formatDecimal(kpi.grossProfitThisMonth, 0, 'POINT', 0, 'COMMA')} + ' ₫'">0 ₫</strong>
+                <strong th:if="${!kpi.hasCostData}">—</strong>
+                <small th:if="${kpi.hasCostData}">ước tính theo giá vốn nhập gần nhất</small>
+                <small th:if="${!kpi.hasCostData}">nhập kho kèm giá vốn để tính</small>
+            </article>
         </div>
 
         <div class="admin-overview-grid">
@@ -125,6 +140,12 @@
                         <a href="/admin?status=SHIPPING#orders">
                             <b th:text="${kpi.shippingOrders}">0</b>
                             <span>đơn đang giao, chờ chốt hoàn thành</span>
+                        </a>
+                    </li>
+                    <li th:classappend="${kpi.debtOrders > 0} ? ' is-warn'">
+                        <a href="/admin?debt=1#orders">
+                            <b th:text="${kpi.debtOrders}">0</b>
+                            <span th:text="|đơn đã giao còn nợ, tổng ${#numbers.formatDecimal(kpi.totalDebt, 0, 'POINT', 0, 'COMMA')} ₫|">đơn còn nợ</span>
                         </a>
                     </li>
                     <li th:classappend="${kpi.lowStockCount > 0} ? ' is-warn'">
@@ -180,7 +201,7 @@
         <article class="admin-panel">
             <div class="panel-head">
                 <h2>Đơn hàng</h2>
-                <span th:text="|${orderTotalFiltered} đơn${status != '' or q != '' ? ' (đang lọc)' : ''}|">0 đơn</span>
+                <span th:text="|${orderTotalFiltered} đơn${status != '' or q != '' or debt != '' ? ' (đang lọc)' : ''}|">0 đơn</span>
             </div>
 
             <form class="admin-filter" method="get" action="/admin#orders">
@@ -189,8 +210,11 @@
                     <option value="">Tất cả trạng thái</option>
                     <option th:each="s : ${orderStatuses}" th:value="${s}" th:text="${orderStatusLabels.get(s)}" th:selected="${s == status}">Mới</option>
                 </select>
+                <label class="admin-filter__check">
+                    <input type="checkbox" name="debt" value="1" th:checked="${debt == '1'}"> Chỉ đơn đã giao còn nợ
+                </label>
                 <button type="submit">Lọc</button>
-                <a th:if="${status != '' or q != ''}" href="/admin#orders" class="admin-filter__clear">Bỏ lọc</a>
+                <a th:if="${status != '' or q != '' or debt != ''}" href="/admin#orders" class="admin-filter__clear">Bỏ lọc</a>
                 <a class="admin-filter__export" th:href="@{/admin/orders/export.csv(status=${status}, q=${q})}">⬇ Xuất Excel danh sách này</a>
             </form>
 
@@ -211,6 +235,7 @@
                         <td data-label="Mã đơn">
                             <b th:text="${order.code}">DH1</b>
                             <small th:text="${#temporals.format(order.createdAt, 'HH:mm dd/MM/yyyy')}">--</small>
+                            <small><a class="admin-link" th:href="@{|/admin/orders/${order.code}/phieu|}" target="_blank" rel="noopener">🖨 In phiếu giao</a></small>
                         </td>
                         <td data-label="Khách">
                             <b th:text="${order.customerName}">Khách</b>
@@ -229,6 +254,21 @@
                         <td data-label="Thành tiền" class="text-end">
                             <b th:text="|${#numbers.formatDecimal(order.total, 0, 'POINT', 0, 'COMMA')} ₫|">0 ₫</b>
                             <small th:if="${order.total == 0}">Cần báo giá</small>
+                            <small th:if="${order.status != 'CANCELED' and order.total > 0 and order.paidInFull}" class="pay-ok">✓ Đã thu đủ</small>
+                            <small th:if="${order.status != 'CANCELED' and order.paid > 0 and !order.paidInFull}" th:text="|Đã thu ${#numbers.formatDecimal(order.paid, 0, 'POINT', 0, 'COMMA')} ₫|">Đã thu</small>
+                            <small th:if="${order.status == 'COMPLETED' and order.debt > 0}" class="pay-debt" th:text="|Còn nợ ${#numbers.formatDecimal(order.debt, 0, 'POINT', 0, 'COMMA')} ₫|">Còn nợ</small>
+                            <small th:if="${order.status != 'COMPLETED' and order.status != 'CANCELED' and order.debt > 0}" th:text="|Chưa thu ${#numbers.formatDecimal(order.debt, 0, 'POINT', 0, 'COMMA')} ₫|">Chưa thu</small>
+                            <details th:if="${order.status != 'CANCELED' and order.debt > 0}" class="pay-details">
+                            <summary>💵 Ghi thu tiền</summary>
+                            <form class="pay-form" th:action="@{|/admin/orders/${order.code}/payments|}" method="post">
+                                <input name="amount" type="number" min="1000" step="1000" placeholder="Số tiền (trống = thu đủ)" aria-label="Số tiền thu">
+                                <select name="method" aria-label="Hình thức thu">
+                                    <option value="CASH">Tiền mặt</option>
+                                    <option value="BANK_TRANSFER" th:selected="${order.paymentMethod == 'BANK_TRANSFER'}">Chuyển khoản</option>
+                                </select>
+                                <button type="submit">Ghi thu</button>
+                            </form>
+                            </details>
                         </td>
                         <td data-label="Thanh toán" th:text="${order.paymentMethod == 'BANK_TRANSFER' ? 'Chuyển khoản' : (order.paymentMethod == 'COD' ? 'Khi nhận hàng' : order.paymentMethod)}">COD</td>
                         <td data-label="Trạng thái">
@@ -375,7 +415,7 @@
         <article class="admin-panel">
             <div class="panel-head">
                 <h2>Kho hàng &amp; giá bán</h2>
-                <span th:text="|${inventory.size()} / ${productCount} mặt hàng · ngưỡng sắp hết tính theo đơn vị|">0 mặt hàng</span>
+                <span th:text="|${inventoryTotal} / ${productCount} mặt hàng · ngưỡng sắp hết tính theo đơn vị|">0 mặt hàng</span>
             </div>
             <form class="admin-filter" method="get" action="/admin#inventory">
                 <input type="search" name="pq" th:value="${pq}" placeholder="Tìm tên hàng" aria-label="Tìm sản phẩm">
@@ -407,6 +447,7 @@
                                 <div>
                                     <b th:text="${row.product.name}">Sản phẩm</b>
                                     <small th:text="|${#numbers.formatDecimal(row.product.price, 0, 'POINT', 0, 'COMMA')} ₫/${row.product.unit}|">0 ₫</small>
+                                    <small th:if="${row.product.costPrice != null and row.product.costPrice > 0}" th:text="|Giá vốn ${#numbers.formatDecimal(row.product.costPrice, 0, 'POINT', 0, 'COMMA')} ₫ · lãi ${#numbers.formatDecimal((row.product.price - row.product.costPrice) * 100 / row.product.costPrice, 0, 'POINT', 0, 'COMMA')}%|">Giá vốn</small>
                                 </div>
                             </div>
                         </td>
@@ -431,12 +472,27 @@
                                     <input name="active" type="checkbox" value="true" th:checked="${row.product.active}">
                                     <span>Đang bán</span>
                                 </label>
-                                <label class="inventory-field inventory-field--file">
-                                    <span class="inventory-field__label">Đổi ảnh</span>
-                                    <input name="image" type="file" accept="image/jpeg,image/png,image/webp" aria-label="Đổi ảnh">
-                                </label>
                                 <button type="submit">Lưu</button>
+                                <details class="inventory-more">
+                                    <summary>Sửa tên, mô tả, ảnh</summary>
+                                    <input name="name" th:value="${row.product.name}" maxlength="120" aria-label="Tên sản phẩm">
+                                    <input name="description" th:value="${row.product.description}" maxlength="255" placeholder="Mô tả ngắn" aria-label="Mô tả">
+                                    <label class="inventory-field inventory-field--file">
+                                        <span class="inventory-field__label">Đổi ảnh</span>
+                                        <input name="image" type="file" accept="image/jpeg,image/png,image/webp" aria-label="Đổi ảnh">
+                                    </label>
+                                    <small>Nhớ bấm Lưu sau khi sửa.</small>
+                                </details>
                             </form>
+                            <details class="receive-details" th:if="${!row.service}">
+                            <summary>📦 Nhập kho</summary>
+                            <form class="receive-form" th:action="@{|/admin/products/${row.product.id}/receive|}" method="post">
+                                <input name="quantity" type="number" min="1" required th:placeholder="|SL (${row.product.unit})|" aria-label="Số lượng nhập">
+                                <input name="unitCost" type="number" min="0" step="100" th:placeholder="|Giá vốn/${row.product.unit}|" aria-label="Giá vốn">
+                                <input name="note" maxlength="120" placeholder="NCC / số hóa đơn" aria-label="Ghi chú nhập">
+                                <button type="submit">+ Nhập</button>
+                            </form>
+                            </details>
                             <form class="delete-form" th:action="@{|/admin/products/${row.product.id}/delete|}" method="post"
                                   th:attr="onsubmit=|return confirm('Xóa sản phẩm ${row.product.name} khỏi kho? Đơn hàng cũ vẫn giữ nguyên.')|">
                                 <button type="submit" class="btn-delete">Xóa sản phẩm</button>
@@ -445,6 +501,53 @@
                     </tr>
                     <tr th:if="${#lists.isEmpty(inventory)}">
                         <td colspan="4">Không có mặt hàng nào khớp.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <nav class="admin-pagination" th:if="${inventoryPages > 1}">
+                <a th:if="${inventoryPage > 0}" th:href="@{/admin(cat=${cat}, pq=${pq}, stock=${stock}, ppage=${inventoryPage - 1})} + '#inventory'">‹ Trước</a>
+                <span th:text="|Trang ${inventoryPage + 1} / ${inventoryPages}|">Trang 1 / 1</span>
+                <a th:if="${inventoryPage + 1 < inventoryPages}" th:href="@{/admin(cat=${cat}, pq=${pq}, stock=${stock}, ppage=${inventoryPage + 1})} + '#inventory'">Sau ›</a>
+            </nav>
+        </article>
+    </section>
+
+    <!-- ===== LỊCH SỬ KHO ===== -->
+    <section id="stock-log" class="admin-section">
+        <article class="admin-panel">
+            <div class="panel-head">
+                <h2>Lịch sử nhập / xuất kho</h2>
+                <span>30 giao dịch gần nhất · xuất kho tự động khi đơn chuyển sang Hoàn thành</span>
+            </div>
+            <div class="table-responsive admin-table-wrap">
+                <table class="table align-middle admin-table">
+                    <thead>
+                    <tr>
+                        <th>Thời gian</th>
+                        <th>Loại</th>
+                        <th>Sản phẩm</th>
+                        <th class="text-end">Số lượng</th>
+                        <th class="text-end">Tồn sau</th>
+                        <th class="text-end">Giá vốn</th>
+                        <th>Tham chiếu</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="m : ${movements}">
+                        <td data-label="Thời gian" th:text="${#temporals.format(m.createdAt, 'HH:mm dd/MM/yyyy')}">--</td>
+                        <td data-label="Loại">
+                            <span class="status-pill" th:classappend="${m.type == 'IN' ? ' status-done' : (m.type == 'OUT' ? ' status-new' : ' status-progress')}"
+                                  th:text="${m.type == 'IN' ? 'Nhập' : (m.type == 'OUT' ? 'Xuất' : 'Điều chỉnh')}">Nhập</span>
+                        </td>
+                        <td data-label="Sản phẩm" th:text="${m.productName}">SP</td>
+                        <td data-label="Số lượng" class="text-end"><b th:classappend="${m.quantity < 0} ? ' pay-debt' : ' pay-ok'" th:text="${(m.quantity > 0 ? '+' : '') + #numbers.formatDecimal(m.quantity, 0, 'POINT', 0, 'COMMA')}">0</b></td>
+                        <td data-label="Tồn sau" class="text-end" th:text="${m.stockAfter != null ? #numbers.formatDecimal(m.stockAfter, 0, 'POINT', 0, 'COMMA') : '--'}">0</td>
+                        <td data-label="Giá vốn" class="text-end" th:text="${m.unitCost != null ? #numbers.formatDecimal(m.unitCost, 0, 'POINT', 0, 'COMMA') + ' ₫' : '--'}">--</td>
+                        <td data-label="Tham chiếu" th:text="${m.reference}">--</td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(movements)}">
+                        <td colspan="7">Chưa có giao dịch kho. Nhập kho ở bảng trên hoặc chuyển đơn sang Hoàn thành để hệ thống tự trừ tồn.</td>
                     </tr>
                     </tbody>
                 </table>
@@ -467,6 +570,7 @@
                         <th>Địa chỉ gần nhất</th>
                         <th class="text-end">Số đơn</th>
                         <th class="text-end">Tổng chi</th>
+                        <th class="text-end">Còn nợ</th>
                         <th>Lần đặt gần nhất</th>
                         <th></th>
                     </tr>
@@ -483,11 +587,15 @@
                             <small th:if="${c.pendingOrders > 0}" th:text="|${c.pendingOrders} đang xử lý|">0 đang xử lý</small>
                         </td>
                         <td data-label="Tổng chi" class="text-end"><b th:text="|${#numbers.formatDecimal(c.totalSpent, 0, 'POINT', 0, 'COMMA')} ₫|">0 ₫</b></td>
+                        <td data-label="Còn nợ" class="text-end">
+                            <b th:if="${c.debt > 0}" class="pay-debt" th:text="|${#numbers.formatDecimal(c.debt, 0, 'POINT', 0, 'COMMA')} ₫|">0 ₫</b>
+                            <span th:if="${c.debt <= 0}" class="pay-ok">0 ₫</span>
+                        </td>
                         <td data-label="Gần nhất" th:text="${c.lastOrderAt != null ? #temporals.format(c.lastOrderAt, 'dd/MM/yyyy') : '--'}">--</td>
                         <td><a class="admin-link" th:href="@{/admin(q=${c.phone})} + '#orders'">Xem đơn</a></td>
                     </tr>
                     <tr th:if="${#lists.isEmpty(customers)}">
-                        <td colspan="6">Chưa có khách đặt hàng.</td>
+                        <td colspan="7">Chưa có khách đặt hàng.</td>
                     </tr>
                     </tbody>
                 </table>
