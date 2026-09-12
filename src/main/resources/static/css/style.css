@@ -6774,3 +6774,35 @@ textarea:focus-visible {
     .admin-charts--three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .admin-charts--three .chart-card--donut { grid-column: auto; }
 }
+
+/* Admin v2: tooltip bieu do + nut xoa don */
+.chart-tip {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    max-width: 260px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: #0b1220;
+    border: 1px solid rgba(148, 163, 184, .35);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .45);
+    color: #e2e8f0;
+    font-size: .84rem;
+    line-height: 1.45;
+    pointer-events: none;
+}
+.chart-tip strong { display: block; color: #fff; font-size: .9rem; margin-bottom: 2px; }
+.chart-tip span { display: block; }
+.delete-form { margin-top: 8px; }
+.btn-delete {
+    background: none;
+    border: 0;
+    padding: 0;
+    color: #fb7185;
+    font-size: .78rem;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: underline;
+    opacity: .8;
+}
+.btn-delete:hover { opacity: 1; }

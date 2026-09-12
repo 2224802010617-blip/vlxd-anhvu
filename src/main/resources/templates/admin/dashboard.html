@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/css/style.css(v=52)}">
+    <link rel="stylesheet" th:href="@{/css/style.css(v=53)}">
 </head>
 <body class="admin-body">
 <header class="admin-topbar">
@@ -240,6 +240,10 @@
                                 </select>
                                 <button type="submit">Lưu</button>
                             </form>
+                            <form class="delete-form" th:action="@{|/admin/orders/${order.code}/delete|}" method="post"
+                                  th:attr="onsubmit=|return confirm('Xóa hẳn đơn ${order.code} của ${order.customerName}? Không khôi phục được.')|">
+                                <button type="submit" class="btn-delete" th:text="|Xóa đơn ${order.code}|">Xóa đơn</button>
+                            </form>
                         </td>
                     </tr>
                     <tr th:if="${#lists.isEmpty(orders)}">
@@ -443,6 +447,6 @@
         orderStatusData: JSON.parse(/*[[${orderStatusDataJson}]]*/ "[]")
     };
 </script>
-<script th:src="@{/js/admin.js(v=10)}"></script>
+<script th:src="@{/js/admin.js(v=11)}"></script>
 </body>
 </html>

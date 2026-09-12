@@ -20,6 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return Math.round(value).toString();
     };
     const fullNumber = (value) => Math.round(value).toLocaleString("vi-VN");
+    const money = (value) => fullNumber(value) + " ₫";
 
     // ----- Dem so: doc gia tri goc tu data-value (server da dinh dang san text neu JS khong chay) -----
     const countElements = Array.from(document.querySelectorAll("[data-countup]"));
@@ -44,6 +45,70 @@ document.addEventListener("DOMContentLoaded", () => {
         requestAnimationFrame(tick);
     });
 
+    // ----- Tooltip dung chung cho moi bieu do -----
+    const tip = document.createElement("div");
+    tip.className = "chart-tip";
+    tip.setAttribute("role", "tooltip");
+    document.body.appendChild(tip);
+
+    const showTip = (clientX, clientY, lines) => {
+        tip.innerHTML = lines.map((line, index) => index === 0
+            ? "<strong>" + line + "</strong>"
+            : "<span>" + line + "</span>").join("");
+        tip.style.display = "block";
+        const width = tip.offsetWidth;
+        const height = tip.offsetHeight;
+        let left = clientX + 14;
+        let top = clientY + 14;
+        if (left + width > window.innerWidth - 8) left = clientX - width - 14;
+        if (top + height > window.innerHeight - 8) top = clientY - height - 14;
+        tip.style.left = Math.max(8, left) + "px";
+        tip.style.top = Math.max(8, top) + "px";
+    };
+    const hideTip = () => { tip.style.display = "none"; };
+
+    // Vung "cham" cua tung bieu do: rect {x,y,w,h} hoac arc {cx,cy,r,rIn,a0,a1}
+    const findHit = (canvas, x, y) => {
+        const hits = canvas._hits || [];
+        for (const hit of hits) {
+            if (hit.type === "rect") {
+                if (x >= hit.x && x <= hit.x + hit.w && y >= hit.y && y <= hit.y + hit.h) return hit;
+            } else if (hit.type === "arc") {
+                const dx = x - hit.cx;
+                const dy = y - hit.cy;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < hit.rIn || dist > hit.r) continue;
+                let angle = Math.atan2(dy, dx);
+                if (angle < -Math.PI / 2) angle += Math.PI * 2;      // dua ve [-PI/2, 3PI/2) nhu luc ve
+                if (angle >= hit.a0 && angle < hit.a1) return hit;
+            }
+        }
+        return null;
+    };
+
+    const attachHover = (canvas) => {
+        if (canvas._hoverBound) return;
+        canvas._hoverBound = true;
+        const onMove = (clientX, clientY) => {
+            const rect = canvas.getBoundingClientRect();
+            const hit = findHit(canvas, clientX - rect.left, clientY - rect.top);
+            if (hit) {
+                canvas.style.cursor = "pointer";
+                showTip(clientX, clientY, hit.lines);
+            } else {
+                canvas.style.cursor = "default";
+                hideTip();
+            }
+        };
+        canvas.addEventListener("mousemove", (event) => onMove(event.clientX, event.clientY));
+        canvas.addEventListener("mouseleave", hideTip);
+        canvas.addEventListener("touchstart", (event) => {
+            const touch = event.touches[0];
+            if (touch) onMove(touch.clientX, touch.clientY);
+        }, { passive: true });
+        canvas.addEventListener("touchend", () => setTimeout(hideTip, 1800));
+    };
+
     // ----- Chuan bi canvas theo kich thuoc CSS + retina -----
     const prepare = (canvas, ratio) => {
         const ctx = canvas.getContext("2d");
@@ -55,6 +120,8 @@ document.addEventListener("DOMContentLoaded", () => {
         canvas.style.height = height + "px";
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         ctx.clearRect(0, 0, width, height);
+        canvas._hits = [];
+        attachHover(canvas);
         return { ctx, width, height };
     };
 
@@ -96,6 +163,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const isMoney = options.money === true;
         const allLabels = labels.slice(0, 10);
         const allValues = values.slice(0, 10).map((value) => Number(value) || 0);
+        const total = allValues.reduce((sum, value) => sum + value, 0);
 
         return (progress) => {
             const { ctx, width, height } = prepare(canvas, 0.6);
@@ -129,7 +197,8 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             visibleValues.forEach((value, index) => {
-                const x = padding.left + index * slotWidth + (slotWidth - barWidth) / 2;
+                const slotX = padding.left + index * slotWidth;
+                const x = slotX + (slotWidth - barWidth) / 2;
                 const barHeight = chartHeight * (value / maxValue) * eased;
                 const y = padding.top + chartHeight - barHeight;
                 if (barHeight > 0) {
@@ -154,6 +223,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 } else {
                     ctx.fillText(words.join(" "), x + barWidth / 2, baseY);
                 }
+                const share = total ? Math.round(value / total * 100) : 0;
+                canvas._hits.push({
+                    type: "rect", x: slotX, y: padding.top, w: slotWidth, h: chartHeight + 30,
+                    lines: [String(visibleLabels[index] || ""), (isMoney ? money(value) : fullNumber(value)), share + "% của top " + visibleValues.length]
+                });
             });
         };
     };
@@ -165,6 +239,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const names = options.names || {};
         const colorOf = (label, index) => (options.colors && options.colors[label]) || COLORS[index % COLORS.length];
         const isMoney = options.money === true;
+        const unit = options.unit || "";
 
         return (progress) => {
             const { ctx, width, height } = prepare(canvas, 0.62);
@@ -185,6 +260,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 ctx.closePath();
                 ctx.fillStyle = colorOf(labels[index], index);
                 ctx.fill();
+                const pct = total ? Math.round(amount / total * 100) : 0;
+                canvas._hits.push({
+                    type: "arc", cx: centerX, cy: centerY, r: radius, rIn: radius * 0.6, a0: angle, a1: angle + slice,
+                    lines: [String(names[labels[index]] || labels[index]), (isMoney ? money(amount) : amount + " " + unit).trim(), pct + "% tổng"]
+                });
                 angle += slice;
             });
             ctx.beginPath();
@@ -223,6 +303,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 ctx.font = "700 12px Inter, Segoe UI, Arial";
                 const pct = total ? Math.round(amount / total * 100) : 0;
                 ctx.fillText((isMoney ? shortNumber(amount) + " ₫" : String(amount)) + " · " + pct + "%", width - 14, y + 1);
+                canvas._hits.push({
+                    type: "rect", x: legendX - 4, y: y - 14, w: width - legendX - 6, h: rowGap - 2,
+                    lines: [String(names[label] || label), (isMoney ? money(amount) : amount + " " + unit).trim(), pct + "% tổng"]
+                });
             });
         };
     };
@@ -247,7 +331,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const slot = chartWidth / n;
             const eased = prefersReducedMotion ? 1 : 1 - Math.pow(1 - progress, 3);
 
-            // Luoi + truc trai (tien)
+            // Luoi + truc trai (tien) + truc phai (so don)
             for (let i = 0; i <= 4; i++) {
                 const y = padding.top + chartHeight - (chartHeight * i / 4);
                 ctx.strokeStyle = i === 0 ? "rgba(148,163,184,.35)" : "rgba(148,163,184,.12)";
@@ -274,6 +358,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     roundedRect(ctx, x, padding.top + chartHeight - h, barWidth, Math.max(h, 2), 3);
                     ctx.fill();
                 }
+                canvas._hits.push({
+                    type: "rect", x: padding.left + index * slot, y: padding.top, w: slot, h: chartHeight + 20,
+                    lines: ["Ngày " + labels[index], "Doanh thu: " + money(value), "Số đơn đặt: " + cnt[index]]
+                });
             });
 
             // Duong so don
@@ -317,7 +405,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const charts = [
         createDailyChart("dailyChart", data.dailyLabels || [], data.dailyRevenue || [], data.dailyOrders || []),
         createDonutChart("orderStatusChart", data.orderStatusLabels || [], data.orderStatusData || [], {
-            names: STATUS_NAMES, colors: STATUS_COLORS, centerLabel: "đơn hàng", emptyText: "Chưa có đơn hàng"
+            names: STATUS_NAMES, colors: STATUS_COLORS, centerLabel: "đơn hàng", unit: "đơn", emptyText: "Chưa có đơn hàng"
         }),
         createDonutChart("categoryChart", data.categoryLabels || [], data.categoryData || [], {
             money: true, centerLabel: "đã thu", emptyText: "Chưa có đơn hoàn thành"

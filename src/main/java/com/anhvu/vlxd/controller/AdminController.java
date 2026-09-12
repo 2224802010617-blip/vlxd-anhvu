@@ -191,6 +191,26 @@ public class AdminController {
         return "redirect:/admin#orders";
     }
 
+    /** Xoa ca don (moi dong hang cung ma). Dung de don don test / don nhap nham. */
+    @PostMapping("/admin/orders/{code}/delete")
+    public String deleteOrder(@PathVariable String code, RedirectAttributes redirectAttributes) {
+        List<CustomerOrder> lines = customerOrderRepository.findByOrderCodeOrderByIdAsc(code);
+        if (lines.isEmpty() && code.startsWith("DH")) {
+            try {
+                customerOrderRepository.findById(Long.parseLong(code.substring(2))).ifPresent(lines::add);
+            } catch (NumberFormatException ignored) {
+                // ma khong hop le -> khong xoa
+            }
+        }
+        if (lines.isEmpty()) {
+            redirectAttributes.addFlashAttribute("adminError", "Không tìm thấy đơn " + code + ".");
+        } else {
+            customerOrderRepository.deleteAll(lines);
+            redirectAttributes.addFlashAttribute("adminSuccess", "Đã xóa đơn " + code + " (" + lines.size() + " dòng hàng).");
+        }
+        return "redirect:/admin#orders";
+    }
+
     @PostMapping("/admin/quotes/{id}/status")
     public String updateQuoteStatus(@PathVariable Long id,
                                     @RequestParam String status) {
