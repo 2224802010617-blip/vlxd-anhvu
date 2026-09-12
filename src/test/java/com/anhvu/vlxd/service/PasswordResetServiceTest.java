@@ -8,8 +8,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -19,6 +17,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -30,27 +30,30 @@ class PasswordResetServiceTest {
     private AppUserRepository appUserRepository;
 
     @Mock
-    private JavaMailSender mailSender;
+    private MailGateway mailGateway;
 
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private PasswordResetService passwordResetService;
 
     @BeforeEach
     void setUp() {
-        passwordResetService = serviceWithMailPassword("app-password");
+        passwordResetService = newService();
     }
 
     @Test
     void sendsHashedCodeAndAcceptsTheCodeFromEmail() {
         AppUser user = user("customer@example.com");
+        when(mailGateway.isConfigured()).thenReturn(true);
         when(appUserRepository.findByEmailIgnoreCase(user.getEmail())).thenReturn(Optional.of(user));
 
         PasswordResetService.RequestStatus status = passwordResetService.requestResetCode(user.getEmail());
 
         assertThat(status).isEqualTo(PasswordResetService.RequestStatus.ACCEPTED);
-        ArgumentCaptor<SimpleMailMessage> messageCaptor = ArgumentCaptor.forClass(SimpleMailMessage.class);
-        verify(mailSender).send(messageCaptor.capture());
-        String code = extractCode(messageCaptor.getValue().getText());
+        ArgumentCaptor<String> toCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<String> bodyCaptor = ArgumentCaptor.forClass(String.class);
+        verify(mailGateway).send(toCaptor.capture(), anyString(), bodyCaptor.capture());
+        assertThat(toCaptor.getValue()).isEqualTo(user.getEmail());
+        String code = extractCode(bodyCaptor.getValue());
         assertThat(user.getResetToken()).isNotEqualTo(code).startsWith("$2");
         assertThat(passwordEncoder.matches(code, user.getResetToken())).isTrue();
 
@@ -60,6 +63,21 @@ class PasswordResetServiceTest {
         assertThat(user.getResetToken()).isEqualTo(resetToken.orElseThrow());
         when(appUserRepository.findByResetToken(resetToken.orElseThrow())).thenReturn(Optional.of(user));
         assertThat(passwordResetService.isResetTokenValid(resetToken.orElseThrow())).isTrue();
+    }
+
+    @Test
+    void clearsResetStateWhenMailDeliveryFails() {
+        AppUser user = user("customer@example.com");
+        when(mailGateway.isConfigured()).thenReturn(true);
+        when(appUserRepository.findByEmailIgnoreCase(user.getEmail())).thenReturn(Optional.of(user));
+        doThrow(new IllegalStateException("Brevo tra ve HTTP 401"))
+                .when(mailGateway).send(anyString(), anyString(), anyString());
+
+        PasswordResetService.RequestStatus status = passwordResetService.requestResetCode(user.getEmail());
+
+        assertThat(status).isEqualTo(PasswordResetService.RequestStatus.DELIVERY_FAILED);
+        assertThat(user.getResetToken()).isNull();
+        assertThat(user.getResetTokenExpiresAt()).isNull();
     }
 
     @Test
@@ -79,21 +97,21 @@ class PasswordResetServiceTest {
 
     @Test
     void doesNotQueryAccountsWhenMailIsNotConfigured() {
-        PasswordResetService service = serviceWithMailPassword("");
+        when(mailGateway.isConfigured()).thenReturn(false);
 
-        PasswordResetService.RequestStatus status = service.requestResetCode("customer@example.com");
+        PasswordResetService.RequestStatus status = passwordResetService.requestResetCode("customer@example.com");
 
         assertThat(status).isEqualTo(PasswordResetService.RequestStatus.MAIL_NOT_CONFIGURED);
         verify(appUserRepository, never()).findByEmailIgnoreCase("customer@example.com");
     }
 
-    private PasswordResetService serviceWithMailPassword(String mailPassword) {
+    private PasswordResetService newService() {
         return new PasswordResetService(
                 appUserRepository,
                 passwordEncoder,
-                mailSender,
+                mailGateway,
                 "sender@gmail.com",
-                mailPassword,
+                "app-password",
                 "sender@gmail.com",
                 10,
                 60,
