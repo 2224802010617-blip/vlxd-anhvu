@@ -4,278 +4,424 @@
     <meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Admin - VLXD Anh Vu</title>
+    <title>Quản trị - VLXD Anh Vũ</title>
+    <meta name="robots" content="noindex, nofollow">
     <link rel="icon" type="image/svg+xml" href="/images/anh-vu-logo.svg">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
-    <link rel="stylesheet" th:href="@{/css/style.css(v=48)}">
+    <link rel="stylesheet" th:href="@{/css/style.css(v=51)}">
 </head>
 <body class="admin-body">
 <header class="admin-topbar">
     <div class="container admin-topbar__inner">
-        <a class="admin-brand" href="/">
+        <a class="admin-brand" href="/admin">
             <img src="/images/anh-vu-logo.svg" alt="Anh Vu logo">
             <span>
-                <strong>Dashboard qu&#7843;n tr&#7883;</strong>
-                <small th:text="${adminEmail}">admin@anhvu.vn</small>
+                <strong>Quản trị VLXD Anh Vũ</strong>
+                <small th:text="|${adminEmail} · ${todayLabel}|">admin · hôm nay</small>
             </span>
         </a>
         <div class="admin-topbar__actions">
-            <a class="admin-action admin-action--ghost" href="/">Trang ch&#7911;</a>
+            <a class="admin-action admin-action--ghost" th:href="@{/admin/orders/export.csv(status=${status}, q=${q})}">⬇ Xuất Excel</a>
+            <a class="admin-action admin-action--ghost" href="/" target="_blank" rel="noopener">Xem web</a>
             <form th:action="@{/logout}" method="post">
-                <button class="admin-action admin-action--solid" type="submit">&#272;&#259;ng xu&#7845;t</button>
+                <button class="admin-action admin-action--solid" type="submit">Đăng xuất</button>
             </form>
         </div>
     </div>
 </header>
 
+<nav class="admin-nav">
+    <div class="container admin-nav__inner">
+        <a href="#overview">Tổng quan</a>
+        <a href="#orders">Đơn hàng <b th:if="${kpi.newOrders > 0}" th:text="${kpi.newOrders}">0</b></a>
+        <a href="#quotes">Báo giá <b th:if="${kpi.pendingQuotes > 0}" th:text="${kpi.pendingQuotes}">0</b></a>
+        <a href="#inventory">Kho hàng <b th:if="${kpi.lowStockCount > 0}" th:text="${kpi.lowStockCount}">0</b></a>
+        <a href="#customers">Khách hàng</a>
+    </div>
+</nav>
+
 <main class="admin-page container">
-    <section class="admin-hero admin-surface reveal-on-scroll">
-        <div class="admin-hero__content">
-            <p class="admin-kicker">C&Ocirc;NG TY TNHH MTV TM DV XD ANH V&#360;</p>
-            <h1>Kh&ocirc;ng gian &#273;i&#7873;u h&agrave;nh g&#7885;n h&#417;n, s&aacute;ng h&#417;n v&agrave; nh&igrave;n chuy&ecirc;n nghi&#7879;p h&#417;n.</h1>
-            <p class="admin-hero__desc">
-                M&#7897;t m&agrave;n h&igrave;nh &#273;&#7875; theo d&otilde;i &#273;&#417;n h&agrave;ng, b&aacute;o gi&aacute;, kho h&agrave;ng v&agrave; doanh s&#7889; &#273;ang ch&#7841;y.
-            </p>
-            <div class="admin-hero__chips">
-                <span>&#272;&#417;n h&agrave;ng</span>
-                <span>B&aacute;o gi&aacute;</span>
-                <span>Kho h&agrave;ng</span>
-                <span>B&aacute;o c&aacute;o</span>
-            </div>
+    <div class="admin-message success" th:if="${adminSuccess}" th:text="${adminSuccess}">Đã cập nhật.</div>
+    <div class="admin-message error" th:if="${adminError}" th:text="${adminError}">Có lỗi.</div>
+
+    <!-- ===== TỔNG QUAN ===== -->
+    <section id="overview" class="admin-section">
+        <div class="admin-section__head">
+            <h1>Tổng quan hôm nay</h1>
+            <p>Doanh thu chỉ tính đơn đã hoàn thành (tiền thực thu). Đơn mới, đã xác nhận, đang giao là doanh thu dự kiến.</p>
         </div>
 
-        <div class="admin-hero__side">
-            <div class="admin-hero__status">
-                <span class="dot-live"></span>
-                H&#7879; th&#7889;ng &#273;ang ho&#7841;t &#273;&#7897;ng
-            </div>
-            <div class="admin-hero__stack">
-                <article class="admin-hero__revenue">
-                    <span>Doanh thu (&#273;&atilde; ho&agrave;n th&agrave;nh)</span>
-                    <strong th:text="${#numbers.formatDecimal(totalRevenue, 1, 'POINT', 0, 'POINT')} + ' &#8363;'">0 &#8363;</strong>
-                </article>
-                <article>
-                    <span>Doanh thu 30 ng&agrave;y</span>
-                    <strong th:text="${#numbers.formatDecimal(revenueLast30, 1, 'POINT', 0, 'POINT')} + ' &#8363;'">0 &#8363;</strong>
-                </article>
-                <article>
-                    <span>&#272;&#417;n ch&#7901; x&#7917; l&yacute;</span>
-                    <strong th:text="${pendingOrders}">0</strong>
-                </article>
-                <article>
-                    <span>S&#7855;p h&#7871;t h&agrave;ng</span>
-                    <strong th:text="${lowStock}">0</strong>
-                </article>
-            </div>
+        <div class="admin-metrics kpi-grid">
+            <article class="metric-card metric-card--accent">
+                <span>Doanh thu hôm nay</span>
+                <strong data-countup th:data-value="${#numbers.formatDecimal(kpi.revenueToday, 0, 'NONE', 0, 'NONE')}" data-suffix=" ₫"
+                        th:text="${#numbers.formatDecimal(kpi.revenueToday, 0, 'POINT', 0, 'COMMA')} + ' ₫'">0 ₫</strong>
+                <small th:text="|${kpi.ordersToday} đơn đặt hôm nay|">0 đơn đặt hôm nay</small>
+            </article>
+            <article class="metric-card">
+                <span>Doanh thu tháng này</span>
+                <strong data-countup th:data-value="${#numbers.formatDecimal(kpi.revenueThisMonth, 0, 'NONE', 0, 'NONE')}" data-suffix=" ₫"
+                        th:text="${#numbers.formatDecimal(kpi.revenueThisMonth, 0, 'POINT', 0, 'COMMA')} + ' ₫'">0 ₫</strong>
+                <small th:if="${kpi.monthGrowthPercent != null}"
+                       th:classappend="${kpi.monthGrowthPercent >= 0} ? ' kpi-delta kpi-delta--up' : ' kpi-delta kpi-delta--down'"
+                       th:text="|${kpi.monthGrowthPercent >= 0 ? '▲' : '▼'} ${#numbers.formatDecimal(kpi.monthGrowthPercent, 0, 'POINT', 1, 'COMMA')}% so với tháng trước|">so với tháng trước</small>
+                <small th:if="${kpi.monthGrowthPercent == null}"
+                       th:text="|Tháng trước: ${#numbers.formatDecimal(kpi.revenueLastMonth, 0, 'POINT', 0, 'COMMA')} ₫|">Tháng trước: 0 ₫</small>
+            </article>
+            <article class="metric-card">
+                <span>Doanh thu dự kiến</span>
+                <strong data-countup th:data-value="${#numbers.formatDecimal(kpi.pendingRevenue, 0, 'NONE', 0, 'NONE')}" data-suffix=" ₫"
+                        th:text="${#numbers.formatDecimal(kpi.pendingRevenue, 0, 'POINT', 0, 'COMMA')} + ' ₫'">0 ₫</strong>
+                <small th:text="|${kpi.newOrders + kpi.confirmedOrders + kpi.shippingOrders} đơn đang xử lý|">0 đơn đang xử lý</small>
+            </article>
+            <article class="metric-card">
+                <span>Giá trị đơn trung bình</span>
+                <strong data-countup th:data-value="${#numbers.formatDecimal(kpi.averageOrderValue, 0, 'NONE', 0, 'NONE')}" data-suffix=" ₫"
+                        th:text="${#numbers.formatDecimal(kpi.averageOrderValue, 0, 'POINT', 0, 'COMMA')} + ' ₫'">0 ₫</strong>
+                <small th:text="|${kpi.completedThisMonth} đơn hoàn thành tháng này|">0 đơn hoàn thành</small>
+            </article>
+            <article class="metric-card">
+                <span>Tổng đơn hàng</span>
+                <strong data-countup th:data-value="${#numbers.formatDecimal(kpi.totalOrders, 0, 'NONE', 0, 'NONE')}" th:text="${kpi.totalOrders}">0</strong>
+                <small th:text="|Tỷ lệ hủy ${#numbers.formatDecimal(kpi.cancelRatePercent, 0, 'POINT', 1, 'COMMA')}%|">Tỷ lệ hủy 0%</small>
+            </article>
+            <article class="metric-card" th:classappend="${kpi.lowStockCount > 0} ? ' metric-card--warn'">
+                <span>Sắp hết hàng</span>
+                <strong data-countup th:data-value="${#numbers.formatDecimal(kpi.lowStockCount, 0, 'NONE', 0, 'NONE')}" th:text="${kpi.lowStockCount}">0</strong>
+                <small th:text="|trên ${productCount} mặt hàng|">trên 0 mặt hàng</small>
+            </article>
+        </div>
+
+        <div class="admin-overview-grid">
+            <article class="admin-panel todo-panel">
+                <div class="panel-head">
+                    <h2>Việc cần làm</h2>
+                    <span>Ưu tiên từ trên xuống</span>
+                </div>
+                <ul class="todo-list">
+                    <li th:classappend="${kpi.newOrders > 0} ? ' is-hot'">
+                        <a href="/admin?status=NEW#orders">
+                            <b th:text="${kpi.newOrders}">0</b>
+                            <span>đơn mới chưa xác nhận</span>
+                        </a>
+                    </li>
+                    <li th:classappend="${kpi.pendingQuotes > 0} ? ' is-hot'">
+                        <a href="/admin?qstatus=NEW#quotes">
+                            <b th:text="${kpi.pendingQuotes}">0</b>
+                            <span>yêu cầu báo giá chưa phản hồi</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/admin?status=CONFIRMED#orders">
+                            <b th:text="${kpi.confirmedOrders}">0</b>
+                            <span>đơn đã xác nhận, chờ sắp xe</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/admin?status=SHIPPING#orders">
+                            <b th:text="${kpi.shippingOrders}">0</b>
+                            <span>đơn đang giao, chờ chốt hoàn thành</span>
+                        </a>
+                    </li>
+                    <li th:classappend="${kpi.lowStockCount > 0} ? ' is-warn'">
+                        <a href="/admin?stock=low#inventory">
+                            <b th:text="${kpi.lowStockCount}">0</b>
+                            <span>mặt hàng sắp hết, cần nhập thêm</span>
+                        </a>
+                        <div class="todo-sub" th:if="${!lowStock.isEmpty()}">
+                            <span th:each="p, st : ${lowStock}" th:if="${st.index < 6}"
+                                  th:text="|${p.name}: ${p.stockQuantity} ${p.unit}|">Cát: 12 m3</span>
+                            <span th:if="${lowStock.size() > 6}" th:text="|+${lowStock.size() - 6} mặt hàng khác|">...</span>
+                        </div>
+                    </li>
+                </ul>
+            </article>
+
+            <article class="admin-panel chart-card chart-card--wide">
+                <div class="panel-head">
+                    <h2>Doanh thu 30 ngày gần nhất</h2>
+                    <span>Cột: doanh thu hoàn thành theo ngày · Đường: số đơn đặt</span>
+                </div>
+                <canvas id="dailyChart" width="900" height="320"></canvas>
+            </article>
+        </div>
+
+        <div class="admin-charts admin-charts--three">
+            <article class="admin-panel chart-card chart-card--donut">
+                <div class="panel-head">
+                    <h2>Trạng thái đơn hàng</h2>
+                    <span>Tất cả đơn từ trước đến nay</span>
+                </div>
+                <canvas id="orderStatusChart" width="560" height="320"></canvas>
+            </article>
+            <article class="admin-panel chart-card chart-card--donut">
+                <div class="panel-head">
+                    <h2>Doanh thu theo nhóm hàng</h2>
+                    <span>Đơn đã hoàn thành</span>
+                </div>
+                <canvas id="categoryChart" width="560" height="320"></canvas>
+            </article>
+            <article class="admin-panel chart-card">
+                <div class="panel-head">
+                    <h2>Top sản phẩm</h2>
+                    <span>Theo doanh thu hoàn thành</span>
+                </div>
+                <canvas id="salesChart" width="560" height="320"></canvas>
+            </article>
         </div>
     </section>
 
-    <div class="admin-message success reveal-on-scroll" th:if="${adminSuccess}" th:text="${adminSuccess}">&#272;&atilde; c&#7853;p nh&#7853;t.</div>
-    <div class="admin-message error reveal-on-scroll" th:if="${adminError}" th:text="${adminError}">C&oacute; l&#7895;i.</div>
-
-    <section class="admin-metrics reveal-on-scroll">
-        <article class="metric-card metric-card--accent">
-            <span>Doanh thu (&#273;&atilde; ho&agrave;n th&agrave;nh)</span>
-            <strong data-countup data-suffix=" &#8363;" th:text="${#numbers.formatDecimal(totalRevenue, 1, 'POINT', 0, 'POINT')}">0</strong>
-        </article>
-        <article class="metric-card">
-            <span>Gi&aacute; tr&#7883; &#273;&#417;n &#273;ang ch&#7901;</span>
-            <strong data-countup data-suffix=" &#8363;" th:text="${#numbers.formatDecimal(pendingRevenue, 1, 'POINT', 0, 'POINT')}">0</strong>
-        </article>
-        <article class="metric-card">
-            <span>&#272;&#417;n ho&agrave;n th&agrave;nh</span>
-            <strong data-countup th:text="${completedOrders}">0</strong>
-        </article>
-        <article class="metric-card">
-            <span>T&#7893;ng &#273;&#417;n h&agrave;ng</span>
-            <strong data-countup th:text="${orderCount}">0</strong>
-        </article>
-        <article class="metric-card">
-            <span>S&#7843;n ph&#7849;m</span>
-            <strong data-countup th:text="${productCount}">0</strong>
-        </article>
-        <article class="metric-card">
-            <span>Danh m&#7909;c</span>
-            <strong data-countup th:text="${categoryCount}">0</strong>
-        </article>
-        <article class="metric-card">
-            <span>S&#7855;p h&#7871;t h&agrave;ng</span>
-            <strong data-countup th:text="${lowStock}">0</strong>
-        </article>
-        <article class="metric-card">
-            <span>B&aacute;o gi&aacute; ch&#7901;</span>
-            <strong data-countup th:text="${pendingQuotes}">0</strong>
-        </article>
-    </section>
-
-    <section class="admin-charts reveal-on-scroll">
-        <article class="admin-panel chart-card">
-            <div class="panel-head">
-                <h2>Bi&#7875;u &#273;&#7891; doanh thu theo s&#7843;n ph&#7849;m</h2>
-                <span>Top s&#7843;n ph&#7849;m theo doanh thu (&#273;&#417;n &#273;&atilde; ho&agrave;n th&agrave;nh)</span>
-            </div>
-            <canvas id="salesChart" width="560" height="320"></canvas>
-        </article>
-        <article class="admin-panel chart-card">
-            <div class="panel-head">
-                <h2>Bi&#7875;u &#273;&#7891; h&agrave;ng h&oacute;a trong kho</h2>
-                <span>T&#7893;ng t&#7891;n kho theo danh m&#7909;c</span>
-            </div>
-            <canvas id="stockChart" width="560" height="320"></canvas>
-        </article>
-        <article class="admin-panel chart-card chart-card--donut">
-            <div class="panel-head">
-                <h2>Trạng thái đơn hàng</h2>
-                <span>Tỷ lệ đơn theo quy trình xử lý</span>
-            </div>
-            <canvas id="orderStatusChart" width="560" height="320"></canvas>
-        </article>
-    </section>
-
-    <section class="admin-grid reveal-on-scroll">
+    <!-- ===== ĐƠN HÀNG ===== -->
+    <section id="orders" class="admin-section">
         <article class="admin-panel">
             <div class="panel-head">
-                <h2 id="orders">Qu&#7843;n l&yacute; &#273;&#417;n &#273;&#7863;t h&agrave;ng</h2>
-                <span>&#431;u ti&ecirc;n x&#7917; l&yacute; &#273;&#417;n m&#7899;i v&agrave; &#273;ang v&#7853;n chuy&#7875;n</span>
+                <h2>Đơn hàng</h2>
+                <span th:text="|${orderTotalFiltered} đơn${status != '' or q != '' ? ' (đang lọc)' : ''}|">0 đơn</span>
             </div>
+
+            <form class="admin-filter" method="get" action="/admin#orders">
+                <input type="search" name="q" th:value="${q}" placeholder="Tìm mã đơn, tên, số điện thoại, sản phẩm, địa chỉ" aria-label="Tìm đơn hàng">
+                <select name="status" aria-label="Lọc trạng thái">
+                    <option value="">Tất cả trạng thái</option>
+                    <option th:each="s : ${orderStatuses}" th:value="${s}" th:text="${orderStatusLabels.get(s)}" th:selected="${s == status}">Mới</option>
+                </select>
+                <button type="submit">Lọc</button>
+                <a th:if="${status != '' or q != ''}" href="/admin#orders" class="admin-filter__clear">Bỏ lọc</a>
+                <a class="admin-filter__export" th:href="@{/admin/orders/export.csv(status=${status}, q=${q})}">⬇ Xuất Excel danh sách này</a>
+            </form>
+
             <div class="table-responsive admin-table-wrap">
-                <table class="table align-middle admin-table">
+                <table class="table align-middle admin-table orders-table">
                     <thead>
                     <tr>
-                        <th>Kh&aacute;ch</th>
-                        <th>S&#7843;n ph&#7849;m</th>
-                        <th>SL</th>
-                        <th>Thanh to&aacute;n</th>
-                        <th>Tr&#7841;ng th&aacute;i</th>
+                        <th>Mã đơn / Ngày</th>
+                        <th>Khách hàng</th>
+                        <th>Hàng đặt</th>
+                        <th class="text-end">Thành tiền</th>
+                        <th>Thanh toán</th>
+                        <th>Trạng thái</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr th:each="order : ${orders}">
-                        <td>
-                            <b th:text="${order.customerName}">Kh&aacute;ch</b>
-                            <small th:text="${order.phone}">Phone</small>
+                        <td data-label="Mã đơn">
+                            <b th:text="${order.code}">DH1</b>
+                            <small th:text="${#temporals.format(order.createdAt, 'HH:mm dd/MM/yyyy')}">--</small>
                         </td>
-                        <td>
-                            <b th:text="${order.productName}">S&#7843;n ph&#7849;m</b>
-                            <small th:text="${order.address}">&#272;&#7883;a ch&#7881;</small>
+                        <td data-label="Khách">
+                            <b th:text="${order.customerName}">Khách</b>
+                            <small><a th:href="|tel:${order.phone}|" th:text="${order.phone}">0900</a></small>
+                            <small th:text="${order.address}">Địa chỉ</small>
                         </td>
-                        <td th:text="${order.quantity}">0</td>
-                        <td th:text="${order.paymentMethod}">Payment</td>
-                        <td>
+                        <td data-label="Hàng đặt">
+                            <ul class="order-lines">
+                                <li th:each="line : ${order.lines}">
+                                    <span th:text="${line.productName}">SP</span>
+                                    <em th:text="|× ${#numbers.formatDecimal(line.quantity, 0, 'POINT', 2, 'COMMA')}|">× 1</em>
+                                </li>
+                            </ul>
+                            <small class="order-note" th:if="${order.note != null and !order.note.isBlank()}" th:text="${order.note}">Ghi chú</small>
+                        </td>
+                        <td data-label="Thành tiền" class="text-end">
+                            <b th:text="|${#numbers.formatDecimal(order.total, 0, 'POINT', 0, 'COMMA')} ₫|">0 ₫</b>
+                            <small th:if="${order.total == 0}">Cần báo giá</small>
+                        </td>
+                        <td data-label="Thanh toán" th:text="${order.paymentMethod == 'BANK_TRANSFER' ? 'Chuyển khoản' : (order.paymentMethod == 'COD' ? 'Khi nhận hàng' : order.paymentMethod)}">COD</td>
+                        <td data-label="Trạng thái">
                             <span class="status-pill"
                                   th:classappend="${order.status == 'NEW' ? ' status-new' : (order.status == 'COMPLETED' ? ' status-done' : (order.status == 'CANCELED' ? ' status-cancel' : ' status-progress'))}"
-                                  th:text="${order.status}">NEW</span>
-                            <form class="status-form" th:action="@{|/admin/orders/${order.id}/status|}" method="post">
-                                <select name="status">
-                                    <option th:each="statusOption : ${orderStatuses}"
-                                            th:value="${statusOption}"
-                                            th:text="${statusOption}"
-                                            th:selected="${statusOption == order.status}">NEW</option>
+                                  th:text="${orderStatusLabels[order.status]}">Mới</span>
+                            <form class="status-form" th:action="@{|/admin/orders/${order.code}/status|}" method="post">
+                                <select name="status" aria-label="Đổi trạng thái">
+                                    <option th:each="s : ${orderStatuses}" th:value="${s}" th:text="${orderStatusLabels.get(s)}" th:selected="${s == order.status}">Mới</option>
                                 </select>
-                                <button type="submit">L&#432;u</button>
+                                <button type="submit">Lưu</button>
                             </form>
                         </td>
                     </tr>
                     <tr th:if="${#lists.isEmpty(orders)}">
-                        <td colspan="5">Ch&#432;a c&oacute; &#273;&#417;n h&agrave;ng.</td>
+                        <td colspan="6">Không có đơn hàng nào khớp.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <nav class="admin-pagination" th:if="${orderTotalPages > 1}">
+                <a th:if="${orderPage > 0}" th:href="@{/admin(status=${status}, q=${q}, page=${orderPage - 1})} + '#orders'">‹ Trước</a>
+                <span th:text="|Trang ${orderPage + 1} / ${orderTotalPages}|">Trang 1 / 1</span>
+                <a th:if="${orderPage + 1 < orderTotalPages}" th:href="@{/admin(status=${status}, q=${q}, page=${orderPage + 1})} + '#orders'">Sau ›</a>
+            </nav>
+        </article>
+    </section>
+
+    <!-- ===== BÁO GIÁ ===== -->
+    <section id="quotes" class="admin-section">
+        <article class="admin-panel">
+            <div class="panel-head">
+                <h2>Yêu cầu báo giá</h2>
+                <span th:text="|${quotes.size()} yêu cầu|">0 yêu cầu</span>
+            </div>
+            <form class="admin-filter" method="get" action="/admin#quotes">
+                <select name="qstatus" aria-label="Lọc trạng thái báo giá">
+                    <option value="">Tất cả</option>
+                    <option th:each="s : ${quoteStatuses}" th:value="${s}" th:text="${quoteStatusLabels.get(s)}" th:selected="${s == qstatus}">Mới</option>
+                </select>
+                <button type="submit">Lọc</button>
+                <a th:if="${qstatus != ''}" href="/admin#quotes" class="admin-filter__clear">Bỏ lọc</a>
+            </form>
+            <div class="table-responsive admin-table-wrap">
+                <table class="table align-middle admin-table">
+                    <thead>
+                    <tr>
+                        <th>Ngày</th>
+                        <th>Khách hàng</th>
+                        <th>Nội dung</th>
+                        <th>Trạng thái</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="quote : ${quotes}">
+                        <td data-label="Ngày" th:text="${#temporals.format(quote.createdAt, 'HH:mm dd/MM/yyyy')}">--</td>
+                        <td data-label="Khách">
+                            <b th:text="${quote.customerName}">Khách</b>
+                            <small><a th:href="|tel:${quote.phone}|" th:text="${quote.phone}">0900</a></small>
+                            <small th:if="${quote.address != null and !quote.address.isBlank()}" th:text="${quote.address}">Địa chỉ</small>
+                        </td>
+                        <td data-label="Nội dung" class="table-note" th:text="${quote.content}">Nội dung</td>
+                        <td data-label="Trạng thái">
+                            <span class="status-pill"
+                                  th:classappend="${quote.status == 'NEW' ? ' status-new' : (quote.status == 'CLOSED' ? ' status-done' : ' status-progress')}"
+                                  th:text="${quoteStatusLabels[quote.status] != null ? quoteStatusLabels[quote.status] : quote.status}">Mới</span>
+                            <form class="status-form" th:action="@{|/admin/quotes/${quote.id}/status|}" method="post">
+                                <select name="status" aria-label="Đổi trạng thái báo giá">
+                                    <option th:each="s : ${quoteStatuses}" th:value="${s}" th:text="${quoteStatusLabels.get(s)}" th:selected="${s == quote.status}">Mới</option>
+                                </select>
+                                <button type="submit">Lưu</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(quotes)}">
+                        <td colspan="4">Chưa có yêu cầu báo giá.</td>
                     </tr>
                     </tbody>
                 </table>
             </div>
         </article>
+    </section>
 
+    <!-- ===== KHO HÀNG ===== -->
+    <section id="inventory" class="admin-section">
         <article class="admin-panel">
             <div class="panel-head">
-                <h2 id="quotes">Y&ecirc;u c&#7847;u b&aacute;o gi&aacute;</h2>
-                <span>Theo d&otilde;i kh&aacute;ch c&#7847;n ph&#7843;n h&#7891;i</span>
+                <h2>Kho hàng &amp; giá bán</h2>
+                <span th:text="|${inventory.size()} / ${productCount} mặt hàng · ngưỡng sắp hết tính theo đơn vị|">0 mặt hàng</span>
+            </div>
+            <form class="admin-filter" method="get" action="/admin#inventory">
+                <input type="search" name="pq" th:value="${pq}" placeholder="Tìm tên hàng" aria-label="Tìm sản phẩm">
+                <select name="cat" aria-label="Lọc nhóm hàng">
+                    <option value="">Tất cả nhóm</option>
+                    <option th:each="c : ${categories}" th:value="${c}" th:text="${c}" th:selected="${c == cat}">Nhóm</option>
+                </select>
+                <label class="admin-filter__check">
+                    <input type="checkbox" name="stock" value="low" th:checked="${stock == 'low'}"> Chỉ hàng sắp hết
+                </label>
+                <button type="submit">Lọc</button>
+                <a th:if="${cat != '' or pq != '' or stock != ''}" href="/admin#inventory" class="admin-filter__clear">Bỏ lọc</a>
+            </form>
+            <div class="table-responsive admin-table-wrap">
+                <table class="table align-middle admin-table inventory-table">
+                    <thead>
+                    <tr>
+                        <th>Sản phẩm</th>
+                        <th>Nhóm</th>
+                        <th>Tồn / ngưỡng</th>
+                        <th>Cập nhật</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="row : ${inventory}" th:classappend="${row.low} ? ' low-stock-row'">
+                        <td data-label="Sản phẩm">
+                            <div class="inventory-product">
+                                <img th:src="${row.product.imagePath}" th:alt="${row.product.name}">
+                                <div>
+                                    <b th:text="${row.product.name}">Sản phẩm</b>
+                                    <small th:text="|${#numbers.formatDecimal(row.product.price, 0, 'POINT', 0, 'COMMA')} ₫/${row.product.unit}|">0 ₫</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td data-label="Nhóm" th:text="${row.product.category.name}">Nhóm</td>
+                        <td data-label="Tồn / ngưỡng">
+                            <b th:text="|${#numbers.formatDecimal(row.product.stockQuantity, 0, 'POINT', 0, 'COMMA')} ${row.product.unit}|">0</b>
+                            <small th:if="${row.service}">Dịch vụ, không theo dõi tồn</small>
+                            <small th:if="${!row.service and row.low}" class="text-warn" th:text="|Sắp hết (≤ ${row.threshold})|">Sắp hết</small>
+                            <small th:if="${!row.service and !row.low}" th:text="|Ngưỡng báo: ${row.threshold} ${row.product.unit}|">Ngưỡng</small>
+                        </td>
+                        <td data-label="Cập nhật">
+                            <form class="inventory-form" th:action="@{|/admin/products/${row.product.id}/inventory|}" method="post">
+                                <label class="inventory-field">
+                                    <span class="inventory-field__label">Tồn kho</span>
+                                    <input name="stockQuantity" type="number" min="0" th:value="${row.product.stockQuantity}" aria-label="Tồn kho">
+                                </label>
+                                <label class="inventory-field">
+                                    <span class="inventory-field__label">Giá bán</span>
+                                    <input name="price" type="number" min="0" step="100" th:value="${row.product.price.stripTrailingZeros().toPlainString()}" aria-label="Giá">
+                                </label>
+                                <label class="inventory-toggle">
+                                    <input name="active" type="checkbox" value="true" th:checked="${row.product.active}">
+                                    <span>Đang bán</span>
+                                </label>
+                                <button type="submit">Lưu</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(inventory)}">
+                        <td colspan="4">Không có mặt hàng nào khớp.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </article>
+    </section>
+
+    <!-- ===== KHÁCH HÀNG ===== -->
+    <section id="customers" class="admin-section">
+        <article class="admin-panel">
+            <div class="panel-head">
+                <h2>Khách hàng</h2>
+                <span th:text="|${customerCount} khách đã đặt hàng · xếp theo tổng chi (đơn hoàn thành)|">0 khách</span>
             </div>
             <div class="table-responsive admin-table-wrap">
                 <table class="table align-middle admin-table">
                     <thead>
                     <tr>
-                        <th>Kh&aacute;ch</th>
-                        <th>S&#7889; &#273;i&#7879;n tho&#7841;i</th>
-                        <th>N&#7897;i dung</th>
-                        <th>Tr&#7841;ng th&aacute;i</th>
+                        <th>Khách hàng</th>
+                        <th>Địa chỉ gần nhất</th>
+                        <th class="text-end">Số đơn</th>
+                        <th class="text-end">Tổng chi</th>
+                        <th>Lần đặt gần nhất</th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="quote : ${quotes}">
-                        <td th:text="${quote.customerName}">Kh&aacute;ch</td>
-                        <td th:text="${quote.phone}">Phone</td>
-                        <td class="table-note" th:text="${quote.content}">N&#7897;i dung</td>
-                        <td>
-                            <span class="status-pill"
-                                  th:classappend="${quote.status == 'NEW' ? ' status-new' : (quote.status == 'CLOSED' ? ' status-done' : ' status-progress')}"
-                                  th:text="${quote.status}">NEW</span>
-                            <form class="status-form" th:action="@{|/admin/quotes/${quote.id}/status|}" method="post">
-                                <select name="status">
-                                    <option th:each="statusOption : ${quoteStatuses}"
-                                            th:value="${statusOption}"
-                                            th:text="${statusOption}"
-                                            th:selected="${statusOption == quote.status}">NEW</option>
-                                </select>
-                                <button type="submit">L&#432;u</button>
-                            </form>
+                    <tr th:each="c : ${customers}">
+                        <td data-label="Khách">
+                            <b th:text="${c.name}">Khách</b>
+                            <small><a th:href="|tel:${c.phone}|" th:text="${c.phone}">0900</a></small>
                         </td>
-                    </tr>
-                    <tr th:if="${#lists.isEmpty(quotes)}">
-                        <td colspan="4">Ch&#432;a c&oacute; y&ecirc;u c&#7847;u b&aacute;o gi&aacute;.</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </article>
-
-        <article class="admin-panel admin-panel--wide">
-            <div class="panel-head">
-                <h2 id="inventory">Qu&#7843;n l&yacute; kho h&agrave;ng</h2>
-                <span>Ch&#7881;nh t&#7891;n kho, gi&aacute; b&aacute;n v&agrave; tr&#7841;ng th&aacute;i ngay tr&ecirc;n b&#7843;ng</span>
-            </div>
-            <div class="table-responsive admin-table-wrap">
-                <table class="table align-middle admin-table inventory-table">
-                    <thead>
-                    <tr>
-                        <th>S&#7843;n ph&#7849;m</th>
-                        <th>Nh&oacute;m</th>
-                        <th>&#272;&#417;n v&#7883;</th>
-                        <th>Kho / gi&aacute; / tr&#7841;ng th&aacute;i</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr th:each="product : ${products}">
-                        <td data-label="S&#7843;n ph&#7849;m">
-                            <div class="inventory-product">
-                                <img th:src="${product.imagePath}" alt="Vat lieu xay dung">
-                                <div>
-                                    <b th:text="${product.name}">S&#7843;n ph&#7849;m</b>
-                                    <small th:text="${product.description}">M&ocirc; t&#7843;</small>
-                                </div>
-                            </div>
+                        <td data-label="Địa chỉ" th:text="${c.address}">Địa chỉ</td>
+                        <td data-label="Số đơn" class="text-end">
+                            <b th:text="${c.orders}">0</b>
+                            <small th:if="${c.pendingOrders > 0}" th:text="|${c.pendingOrders} đang xử lý|">0 đang xử lý</small>
                         </td>
-                        <td data-label="Nh&oacute;m" th:text="${product.category.name}">Nh&oacute;m</td>
-                        <td data-label="&#272;&#417;n v&#7883;" th:text="${product.unit}">&#272;&#417;n v&#7883;</td>
-                        <td data-label="Kho / gi&aacute; / tr&#7841;ng th&aacute;i">
-                            <form class="inventory-form" th:action="@{|/admin/products/${product.id}/inventory|}" method="post">
-                                <label class="inventory-field">
-                                    <span class="inventory-field__label">T&#7891;n kho</span>
-                                    <input name="stockQuantity" type="number" min="0" th:value="${product.stockQuantity}" aria-label="Ton kho">
-                                </label>
-                                <label class="inventory-field">
-                                    <span class="inventory-field__label">Gi&aacute; b&aacute;n</span>
-                                    <input name="price" type="number" min="0" step="100" th:value="${product.price}" aria-label="Gia">
-                                </label>
-                                <label class="inventory-toggle">
-                                    <input name="active" type="checkbox" value="true" th:checked="${product.active}">
-                                    <span>&#272;ang b&aacute;n</span>
-                                </label>
-                                <button type="submit">L&#432;u kho</button>
-                            </form>
-                        </td>
+                        <td data-label="Tổng chi" class="text-end"><b th:text="|${#numbers.formatDecimal(c.totalSpent, 0, 'POINT', 0, 'COMMA')} ₫|">0 ₫</b></td>
+                        <td data-label="Gần nhất" th:text="${c.lastOrderAt != null ? #temporals.format(c.lastOrderAt, 'dd/MM/yyyy') : '--'}">--</td>
+                        <td><a class="admin-link" th:href="@{/admin(q=${c.phone})} + '#orders'">Xem đơn</a></td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(customers)}">
+                        <td colspan="6">Chưa có khách đặt hàng.</td>
                     </tr>
                     </tbody>
                 </table>
@@ -284,18 +430,19 @@
     </section>
 </main>
 
-<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
-<script th:src="@{/js/main.js(v=24)}"></script>
 <script th:inline="javascript">
     window.adminChartData = {
+        dailyLabels: JSON.parse(/*[[${dailyLabelsJson}]]*/ "[]"),
+        dailyRevenue: JSON.parse(/*[[${dailyRevenueJson}]]*/ "[]"),
+        dailyOrders: JSON.parse(/*[[${dailyOrdersJson}]]*/ "[]"),
+        categoryLabels: JSON.parse(/*[[${categoryLabelsJson}]]*/ "[]"),
+        categoryData: JSON.parse(/*[[${categoryDataJson}]]*/ "[]"),
         salesLabels: JSON.parse(/*[[${salesLabelsJson}]]*/ "[]"),
         salesData: JSON.parse(/*[[${salesDataJson}]]*/ "[]"),
-        stockLabels: JSON.parse(/*[[${stockLabelsJson}]]*/ "[]"),
-        stockData: JSON.parse(/*[[${stockDataJson}]]*/ "[]"),
         orderStatusLabels: JSON.parse(/*[[${orderStatusLabelsJson}]]*/ "[]"),
         orderStatusData: JSON.parse(/*[[${orderStatusDataJson}]]*/ "[]")
     };
 </script>
-<script th:src="@{/js/admin.js(v=6)}"></script>
+<script th:src="@{/js/admin.js(v=10)}"></script>
 </body>
 </html>

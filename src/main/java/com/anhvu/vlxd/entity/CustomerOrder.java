@@ -51,8 +51,17 @@ public class CustomerOrder {
     @Column(nullable = false, length = 30)
     private String status;
 
+    // Ma don chung cho cac dong cua cung mot lan dat (dang DH + id dong dau tien)
+    @Column(length = 30)
+    private String orderCode;
+
     @Column(updatable = false)
     private LocalDateTime createdAt;
+
+    // Ma hien thi: don cu chua co orderCode thi dung DH + id
+    public String displayCode() {
+        return orderCode != null && !orderCode.isBlank() ? orderCode : "DH" + id;
+    }
 
     @PrePersist
     void onCreate() {

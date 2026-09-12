@@ -160,6 +160,7 @@
                 <span th:text="|${line.name} — ${line.quantity} ${line.unit} &#215; ${line.unitPriceDisplay}|">S&#7843;n ph&#7849;m</span>
                 <strong th:text="${line.lineTotalDisplay}">0 VN&#272;</strong>
             </article>
+            <article><span>M&#227; &#273;&#417;n h&#224;ng</span><strong th:text="${orderCode}">DH0</strong></article>
             <article><span>S&#7889; m&#7863;t h&#224;ng</span><strong th:text="${orderedLineCount}">1</strong></article>
             <article><span>T&#7841;m t&iacute;nh</span><strong th:text="${orderTotalDisplay}">0 VN&#272;</strong></article>
             <article class="payment-note" style="grid-column: 1 / -1; background-color: #fff3f3; color: #d32f2f; padding: 12px; border-radius: 6px; font-size: 0.9em; text-align: center; margin-top: 10px;">

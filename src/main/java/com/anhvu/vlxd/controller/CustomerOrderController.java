@@ -108,6 +108,13 @@ public class CustomerOrderController {
                     .build()));
         }
 
+        // Gan ma don chung = DH + id dong dau, de admin va tra cuu gom cac dong lai
+        String orderCode = "DH" + savedOrders.get(0).getId();
+        for (CustomerOrder order : savedOrders) {
+            order.setOrderCode(orderCode);
+        }
+        customerOrderRepository.saveAll(savedOrders);
+
         addOrderPageAttributes(model, prefillNextOrderForm(), true);
         addPaymentResult(model, savedOrders, resolvedProducts);
         return "order";
@@ -139,9 +146,7 @@ public class CustomerOrderController {
         boolean bankTransfer = "BANK_TRANSFER".equalsIgnoreCase(first.getPaymentMethod());
         boolean pricedOrder = totalAmount.compareTo(BigDecimal.ZERO) > 0;
         boolean onlinePaymentAllowed = pricedOrder && totalAmount.compareTo(ONLINE_PAYMENT_LIMIT) < 0;
-        String paymentCode = "ANHVU-DH" + first.getId()
-                + (orders.size() > 1 ? "x" + orders.size() : "")
-                + "-" + onlyDigits(first.getPhone());
+        String paymentCode = "ANHVU-" + first.displayCode() + "-" + onlyDigits(first.getPhone());
         String paymentContent = orders.size() > 1
                 ? paymentCode + " " + orders.size() + " mat hang"
                 : paymentCode + " " + first.getProductName();
@@ -161,6 +166,7 @@ public class CustomerOrderController {
 
         model.addAttribute("orderedLines", lines);
         model.addAttribute("orderedLineCount", orders.size());
+        model.addAttribute("orderCode", first.displayCode());
         model.addAttribute("orderTotal", totalAmount);
         model.addAttribute("orderTotalDisplay", money(totalAmount));
         model.addAttribute("paymentCode", paymentCode);

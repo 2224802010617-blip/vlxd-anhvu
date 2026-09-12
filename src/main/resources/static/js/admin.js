@@ -2,169 +2,126 @@ document.addEventListener("DOMContentLoaded", () => {
     const data = window.adminChartData || {};
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    // ----- Hien dan khi cuon -----
-    const revealItems = Array.from(document.querySelectorAll(".reveal-on-scroll"));
-    if (revealItems.length) {
-        if (prefersReducedMotion || typeof IntersectionObserver === "undefined") {
-            revealItems.forEach((item) => item.classList.add("is-visible"));
-        } else {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach((entry) => {
-                    if (!entry.isIntersecting) {
-                        return;
-                    }
-                    entry.target.classList.add("is-visible");
-                    observer.unobserve(entry.target);
-                });
-            }, { threshold: 0.16 });
+    const COLORS = ["#f43f5e", "#f59e0b", "#38bdf8", "#22c55e", "#a78bfa", "#fb923c", "#94a3b8", "#2dd4bf"];
+    const STATUS_NAMES = { NEW: "Mới", CONFIRMED: "Đã xác nhận", SHIPPING: "Đang giao", COMPLETED: "Hoàn thành", CANCELED: "Đã hủy" };
+    const STATUS_COLORS = { NEW: "#f43f5e", CONFIRMED: "#f59e0b", SHIPPING: "#38bdf8", COMPLETED: "#22c55e", CANCELED: "#94a3b8" };
 
-            revealItems.forEach((item) => observer.observe(item));
+    // Rut gon so lon: 1500000 -> "1,5M", 42000 -> "42K"
+    const shortNumber = (value) => {
+        if (value >= 1000000000) {
+            return (value / 1000000000).toFixed(value % 1000000000 === 0 ? 0 : 1).replace(".", ",") + "B";
         }
-    }
-
-    // ----- Dem so -----
-    const formatAnimatedValue = (target, rawText, progress, suffix) => {
-        const hasDecimal = rawText.includes(".") && !rawText.includes(",");
-        const value = target * progress;
-        const text = hasDecimal ? value.toFixed(1) : Math.round(value).toLocaleString("vi-VN");
-        return text + (suffix || "");
+        if (value >= 1000000) {
+            return (value / 1000000).toFixed(value % 1000000 === 0 ? 0 : 1).replace(".", ",") + "M";
+        }
+        if (value >= 1000) {
+            return (value / 1000).toFixed(value % 1000 === 0 ? 0 : 1).replace(".", ",") + "K";
+        }
+        return Math.round(value).toString();
     };
+    const fullNumber = (value) => Math.round(value).toLocaleString("vi-VN");
 
+    // ----- Dem so: doc gia tri goc tu data-value (server da dinh dang san text neu JS khong chay) -----
     const countElements = Array.from(document.querySelectorAll("[data-countup]"));
     countElements.forEach((el, index) => {
-        const rawText = (el.textContent || "0").trim();
+        const target = Number(el.getAttribute("data-value")) || 0;
         const suffix = el.getAttribute("data-suffix") || "";
-        // Server co the dinh dang nghin bang dau cham hoac phay -> bo het de lay so goc
-        const target = Number(String(rawText).replace(/[.,]/g, "")) || 0;
-
-        el.textContent = "0" + suffix;
         el.style.setProperty("--count-delay", `${index * 90}ms`);
-
         if (prefersReducedMotion) {
-            el.textContent = formatAnimatedValue(target, rawText, 1, suffix);
+            el.textContent = fullNumber(target) + suffix;
             return;
         }
-
-        const duration = 1100;
+        const duration = 1000;
         const start = performance.now();
-
         const tick = (now) => {
             const progress = Math.min((now - start) / duration, 1);
             const eased = 1 - Math.pow(1 - progress, 3);
-            el.textContent = formatAnimatedValue(target, rawText, eased, suffix);
-
+            el.textContent = fullNumber(target * eased) + suffix;
             if (progress < 1) {
                 requestAnimationFrame(tick);
             }
         };
-
         requestAnimationFrame(tick);
     });
 
-    // ----- Bieu do cot: responsive, sac net tren mobile (high-DPI), tong toi khop dashboard -----
+    // ----- Chuan bi canvas theo kich thuoc CSS + retina -----
+    const prepare = (canvas, ratio) => {
+        const ctx = canvas.getContext("2d");
+        const dpr = window.devicePixelRatio || 1;
+        const width = Math.max(240, canvas.clientWidth || 560);
+        const height = Math.max(240, Math.round(width * ratio));
+        canvas.width = Math.round(width * dpr);
+        canvas.height = Math.round(height * dpr);
+        canvas.style.height = height + "px";
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.clearRect(0, 0, width, height);
+        return { ctx, width, height };
+    };
+
+    const roundedRect = (ctx, x, y, w, h, r) => {
+        const radius = Math.max(0, Math.min(r, w / 2, h / 2));
+        ctx.beginPath();
+        ctx.moveTo(x + radius, y);
+        ctx.lineTo(x + w - radius, y);
+        ctx.quadraticCurveTo(x + w, y, x + w, y + radius);
+        ctx.lineTo(x + w, y + h - radius);
+        ctx.quadraticCurveTo(x + w, y + h, x + w - radius, y + h);
+        ctx.lineTo(x + radius, y + h);
+        ctx.quadraticCurveTo(x, y + h, x, y + h - radius);
+        ctx.lineTo(x, y + radius);
+        ctx.quadraticCurveTo(x, y, x + radius, y);
+        ctx.closePath();
+    };
+
+    // Truc Y "dep": 17M -> 20M, 4.3M -> 5M
+    const niceMax = (value) => {
+        if (value <= 0) return 1;
+        const magnitude = Math.pow(10, Math.floor(Math.log10(value)));
+        const normalized = value / magnitude;
+        const step = normalized <= 1 ? 1 : normalized <= 2 ? 2 : normalized <= 2.5 ? 2.5 : normalized <= 5 ? 5 : 10;
+        return step * magnitude;
+    };
+
+    const emptyText = (ctx, width, height, text) => {
+        ctx.fillStyle = "#94a3b8";
+        ctx.font = "14px Inter, Segoe UI, Arial";
+        ctx.textAlign = "center";
+        ctx.fillText(text, width / 2, height / 2);
+    };
+
+    // ----- Bieu do cot -----
     const createBarChart = (canvasId, labels, values, options = {}) => {
         const canvas = document.getElementById(canvasId);
-        if (!canvas) {
-            return null;
-        }
-
-        const ctx = canvas.getContext("2d");
-        const baseColor = options.color || "#f43f5e";
-        const accentColor = options.colorDark || "#0b4ea2";
+        if (!canvas) return null;
         const isMoney = options.money === true;
-
-        // Rut gon so lon: 1500000 -> "1,5M", 42000 -> "42K"
-        const shortNumber = (value) => {
-            if (value >= 1000000) {
-                return (value / 1000000).toFixed(value % 1000000 === 0 ? 0 : 1).replace(".", ",") + "M";
-            }
-            if (value >= 1000) {
-                return (value / 1000).toFixed(value % 1000 === 0 ? 0 : 1).replace(".", ",") + "K";
-            }
-            return Math.round(value).toString();
-        };
-        const formatBarValue = (value) => isMoney
-            ? shortNumber(value) + " ₫"
-            : Number(value).toLocaleString("vi-VN");
-
         const allLabels = labels.slice(0, 10);
         const allValues = values.slice(0, 10).map((value) => Number(value) || 0);
 
-        const roundedRect = (x, y, w, h, r) => {
-            const radius = Math.max(0, Math.min(r, w / 2, h / 2));
-            ctx.beginPath();
-            ctx.moveTo(x + radius, y);
-            ctx.lineTo(x + w - radius, y);
-            ctx.quadraticCurveTo(x + w, y, x + w, y + radius);
-            ctx.lineTo(x + w, y + h - radius);
-            ctx.quadraticCurveTo(x + w, y + h, x + w - radius, y + h);
-            ctx.lineTo(x + radius, y + h);
-            ctx.quadraticCurveTo(x, y + h, x, y + h - radius);
-            ctx.lineTo(x, y + radius);
-            ctx.quadraticCurveTo(x, y, x + radius, y);
-            ctx.closePath();
-        };
-
-        const draw = (progress) => {
-            // Kich thuoc hien thi thuc te (CSS px) + he so man hinh retina
-            const dpr = window.devicePixelRatio || 1;
-            const cssWidth = Math.max(240, canvas.clientWidth || 560);
-            const cssHeight = Math.max(260, Math.round(cssWidth * 0.6));
-            const targetW = Math.round(cssWidth * dpr);
-            const targetH = Math.round(cssHeight * dpr);
-            if (canvas.width !== targetW) {
-                canvas.width = targetW;
+        return (progress) => {
+            const { ctx, width, height } = prepare(canvas, 0.6);
+            if (!allValues.length || allValues.every((value) => value === 0)) {
+                emptyText(ctx, width, height, "Chưa có đơn hoàn thành");
+                return;
             }
-            if (canvas.height !== targetH) {
-                canvas.height = targetH;
-            }
-            canvas.style.height = cssHeight + "px";
-            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-            const width = cssWidth;
-            const height = cssHeight;
-
-            // Man hinh hep -> hien it cot hon cho de doc
             const maxBars = width < 480 ? 6 : 10;
             const visibleLabels = allLabels.slice(0, maxBars);
             const visibleValues = allValues.slice(0, maxBars);
-
-            const padding = { top: 34, right: 18, bottom: 74, left: 54 };
+            const padding = { top: 30, right: 14, bottom: 60, left: 50 };
             const chartWidth = width - padding.left - padding.right;
             const chartHeight = height - padding.top - padding.bottom;
-
-            const maxDataValue = Math.max(...visibleValues, 1);
-            const maxRounded = Math.pow(10, Math.ceil(Math.log10(maxDataValue)));
-            const maxValue = maxRounded > maxDataValue * 1.5 ? maxRounded / 2 : maxRounded;
-
-            const slotWidth = chartWidth / Math.max(visibleValues.length, 1);
-            const barWidth = Math.max(12, Math.min(46, slotWidth * 0.5));
+            const maxValue = niceMax(Math.max(...visibleValues));
+            const slotWidth = chartWidth / visibleValues.length;
+            const barWidth = Math.max(12, Math.min(46, slotWidth * 0.55));
             const eased = prefersReducedMotion ? 1 : 1 - Math.pow(1 - progress, 3);
 
-            ctx.clearRect(0, 0, width, height);
-
-            // Truc
-            ctx.strokeStyle = "rgba(148, 163, 184, .35)";
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.moveTo(padding.left, padding.top);
-            ctx.lineTo(padding.left, padding.top + chartHeight);
-            ctx.lineTo(padding.left + chartWidth, padding.top + chartHeight);
-            ctx.stroke();
-
-            // Vach + nhan truc Y (tuyen tinh - khop chieu cao cot)
-            const ySteps = 4;
             ctx.textAlign = "right";
-            for (let i = 0; i <= ySteps; i++) {
-                const value = (maxValue * i) / ySteps;
-                const displayValue = shortNumber(value);
-
-                const y = padding.top + chartHeight - (chartHeight * i / ySteps);
+            for (let i = 0; i <= 4; i++) {
+                const value = (maxValue * i) / 4;
+                const y = padding.top + chartHeight - (chartHeight * i / 4);
                 ctx.fillStyle = "#94a3b8";
-                ctx.font = "12px Inter, Segoe UI, Arial";
-                ctx.fillText(displayValue, padding.left - 8, y + 4);
-
-                ctx.strokeStyle = i === 0 ? "rgba(148, 163, 184, .35)" : "rgba(148, 163, 184, .14)";
+                ctx.font = "11px Inter, Segoe UI, Arial";
+                ctx.fillText(shortNumber(value), padding.left - 8, y + 4);
+                ctx.strokeStyle = i === 0 ? "rgba(148,163,184,.35)" : "rgba(148,163,184,.14)";
                 ctx.beginPath();
                 ctx.moveTo(padding.left, y);
                 ctx.lineTo(padding.left + chartWidth, y);
@@ -172,139 +129,209 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             visibleValues.forEach((value, index) => {
-                const slotX = padding.left + index * slotWidth;
-                const x = slotX + (slotWidth - barWidth) / 2;
-
-                // Thang tuyen tinh: chieu cao cot dung ti le voi gia tri va khop vach truc
+                const x = padding.left + index * slotWidth + (slotWidth - barWidth) / 2;
                 const barHeight = chartHeight * (value / maxValue) * eased;
                 const y = padding.top + chartHeight - barHeight;
-
-                // Ranh mo phia sau cot
-                ctx.fillStyle = "rgba(148, 163, 184, .08)";
-                roundedRect(x, padding.top, barWidth, chartHeight, 10);
-                ctx.fill();
-
                 if (barHeight > 0) {
-                    const barGradient = ctx.createLinearGradient(0, y, 0, y + barHeight);
-                    barGradient.addColorStop(0, baseColor);
-                    barGradient.addColorStop(1, accentColor);
-                    ctx.fillStyle = barGradient;
-                    roundedRect(x, y, barWidth, Math.max(barHeight, 2), 10);
+                    const gradient = ctx.createLinearGradient(0, y, 0, y + barHeight);
+                    gradient.addColorStop(0, options.color || "#f43f5e");
+                    gradient.addColorStop(1, options.colorDark || "#7f1d2e");
+                    ctx.fillStyle = gradient;
+                    roundedRect(ctx, x, y, barWidth, Math.max(barHeight, 2), 8);
                     ctx.fill();
                 }
-
-                // Gia tri tren dinh cot
                 ctx.fillStyle = "#e2e8f0";
                 ctx.font = "700 11px Inter, Segoe UI, Arial";
                 ctx.textAlign = "center";
-                ctx.fillText(formatBarValue(value), x + barWidth / 2, Math.max(y - 7, padding.top + 11));
-
-                // Nhan truc X (xuong dong toi da 2 dong)
+                ctx.fillText(isMoney ? shortNumber(value) + " ₫" : fullNumber(value), x + barWidth / 2, Math.max(y - 6, padding.top + 10));
                 ctx.fillStyle = "#94a3b8";
                 ctx.font = "11px Inter, Segoe UI, Arial";
-                const label = String(visibleLabels[index] || "").slice(0, 22);
-                const words = label.split(/\s+/);
+                const words = String(visibleLabels[index] || "").slice(0, 24).split(/\s+/);
+                const baseY = padding.top + chartHeight + 16;
                 if (words.length > 2) {
-                    ctx.fillText(words.slice(0, 2).join(" "), x + barWidth / 2, padding.top + chartHeight + 18);
-                    ctx.fillText(words.slice(2).join(" "), x + barWidth / 2, padding.top + chartHeight + 32);
+                    ctx.fillText(words.slice(0, 2).join(" "), x + barWidth / 2, baseY);
+                    ctx.fillText(words.slice(2).join(" "), x + barWidth / 2, baseY + 14);
                 } else {
-                    ctx.fillText(label, x + barWidth / 2, padding.top + chartHeight + 20);
+                    ctx.fillText(words.join(" "), x + barWidth / 2, baseY);
                 }
             });
-
-            if (!visibleValues.length || visibleValues.every((value) => value === 0)) {
-                ctx.fillStyle = "#94a3b8";
-                ctx.font = "14px Inter, Segoe UI, Arial";
-                ctx.textAlign = "center";
-                ctx.fillText("Chưa có dữ liệu", width / 2, height / 2);
-            }
         };
-
-        return draw;
     };
 
-    const createDonutChart = (canvasId, labels, values) => {
+    // ----- Bieu do tron: chu thich ben phai, so + % -----
+    const createDonutChart = (canvasId, labels, values, options = {}) => {
         const canvas = document.getElementById(canvasId);
         if (!canvas) return null;
-        const ctx = canvas.getContext("2d");
-        const colors = ["#f43f5e", "#f59e0b", "#38bdf8", "#22c55e", "#94a3b8"];
-        const statusNames = { NEW: "Mới", CONFIRMED: "Đã xác nhận", SHIPPING: "Đang giao", COMPLETED: "Hoàn thành", CANCELED: "Đã hủy" };
-        const draw = (progress) => {
-            const dpr = window.devicePixelRatio || 1;
-            const width = Math.max(240, canvas.clientWidth || 560);
-            const height = Math.max(280, Math.round(width * .6));
-            canvas.width = Math.round(width * dpr);
-            canvas.height = Math.round(height * dpr);
-            canvas.style.height = height + "px";
-            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-            ctx.clearRect(0, 0, width, height);
+        const names = options.names || {};
+        const colorOf = (label, index) => (options.colors && options.colors[label]) || COLORS[index % COLORS.length];
+        const isMoney = options.money === true;
+
+        return (progress) => {
+            const { ctx, width, height } = prepare(canvas, 0.62);
             const total = values.reduce((sum, value) => sum + (Number(value) || 0), 0);
-            const centerX = width * .35;
-            const centerY = height * .48;
-            const radius = Math.min(width * .25, height * .34);
+            const narrow = width < 420;
+            const centerX = narrow ? width / 2 : width * 0.3;
+            const centerY = narrow ? height * 0.32 : height * 0.5;
+            const radius = narrow ? Math.min(width * 0.26, height * 0.26) : Math.min(width * 0.22, height * 0.36);
             let angle = -Math.PI / 2;
+
             values.forEach((value, index) => {
                 const amount = Number(value) || 0;
                 const slice = total ? amount / total * Math.PI * 2 * progress : 0;
+                if (slice <= 0) return;
                 ctx.beginPath();
                 ctx.moveTo(centerX, centerY);
                 ctx.arc(centerX, centerY, radius, angle, angle + slice);
                 ctx.closePath();
-                ctx.fillStyle = colors[index % colors.length];
+                ctx.fillStyle = colorOf(labels[index], index);
                 ctx.fill();
                 angle += slice;
             });
             ctx.beginPath();
-            ctx.arc(centerX, centerY, radius * .56, 0, Math.PI * 2);
+            ctx.arc(centerX, centerY, radius * 0.6, 0, Math.PI * 2);
             ctx.fillStyle = "#151f31";
             ctx.fill();
             ctx.fillStyle = "#f8fafc";
-            ctx.font = "800 22px Inter, Segoe UI, Arial";
+            ctx.font = "800 " + (isMoney ? 15 : 22) + "px Inter, Segoe UI, Arial";
             ctx.textAlign = "center";
-            ctx.fillText(String(total), centerX, centerY + 7);
+            ctx.fillText(isMoney ? shortNumber(total) + " ₫" : String(total), centerX, centerY + 6);
             ctx.fillStyle = "#cbd5e1";
             ctx.font = "12px Inter, Segoe UI, Arial";
-            ctx.fillText("đơn hàng", centerX, centerY + 26);
-            ctx.textAlign = "left";
+            ctx.fillText(options.centerLabel || "tổng", centerX, centerY + 24);
+
+            if (!total) {
+                emptyText(ctx, width, narrow ? height * 0.75 : height * 0.9, options.emptyText || "Chưa có dữ liệu");
+                return;
+            }
+
+            // Chu thich
+            const legendX = narrow ? 16 : width * 0.58;
+            const legendTop = narrow ? centerY + radius + 28 : centerY - (labels.length - 1) * 14;
+            const rowGap = 28;
             labels.forEach((label, index) => {
-                const y = 34 + index * 32;
-                ctx.fillStyle = colors[index % colors.length];
-                ctx.fillRect(width * .62, y - 9, 12, 12);
+                const amount = Number(values[index]) || 0;
+                const y = legendTop + index * rowGap;
+                ctx.fillStyle = colorOf(label, index);
+                roundedRect(ctx, legendX, y - 9, 12, 12, 3);
+                ctx.fill();
+                ctx.textAlign = "left";
                 ctx.fillStyle = "#cbd5e1";
                 ctx.font = "12px Inter, Segoe UI, Arial";
-                ctx.fillText(statusNames[label] || label, width * .62 + 20, y);
+                ctx.fillText(String(names[label] || label).slice(0, 18), legendX + 20, y + 1);
+                ctx.textAlign = "right";
                 ctx.fillStyle = "#f8fafc";
                 ctx.font = "700 12px Inter, Segoe UI, Arial";
-                ctx.fillText(String(values[index] || 0), width * .88, y);
+                const pct = total ? Math.round(amount / total * 100) : 0;
+                ctx.fillText((isMoney ? shortNumber(amount) + " ₫" : String(amount)) + " · " + pct + "%", width - 14, y + 1);
             });
-            if (!total) {
+        };
+    };
+
+    // ----- Bieu do doanh thu theo ngay: cot doanh thu + duong so don -----
+    const createDailyChart = (canvasId, labels, revenue, orders) => {
+        const canvas = document.getElementById(canvasId);
+        if (!canvas) return null;
+        const rev = revenue.map((value) => Number(value) || 0);
+        const cnt = orders.map((value) => Number(value) || 0);
+
+        return (progress) => {
+            const narrow = canvas.clientWidth < 600;
+            const { ctx, width, height } = prepare(canvas, narrow ? 0.7 : 0.36);
+            const padding = { top: 24, right: 44, bottom: 34, left: 52 };
+            const chartWidth = width - padding.left - padding.right;
+            const chartHeight = height - padding.top - padding.bottom;
+            const maxRevenue = niceMax(Math.max(...rev, 0));
+            // Truc so don: boi so cua 4 de 4 vach chia deu ra so nguyen
+            const maxOrders = Math.max(4, Math.ceil(Math.max(...cnt, 0) / 4) * 4);
+            const n = labels.length || 1;
+            const slot = chartWidth / n;
+            const eased = prefersReducedMotion ? 1 : 1 - Math.pow(1 - progress, 3);
+
+            // Luoi + truc trai (tien)
+            for (let i = 0; i <= 4; i++) {
+                const y = padding.top + chartHeight - (chartHeight * i / 4);
+                ctx.strokeStyle = i === 0 ? "rgba(148,163,184,.35)" : "rgba(148,163,184,.12)";
+                ctx.beginPath();
+                ctx.moveTo(padding.left, y);
+                ctx.lineTo(padding.left + chartWidth, y);
+                ctx.stroke();
                 ctx.fillStyle = "#94a3b8";
-                ctx.textAlign = "center";
-                ctx.font = "13px Inter, Segoe UI, Arial";
-                ctx.fillText("Chưa có đơn hàng", centerX, centerY + 58);
+                ctx.font = "11px Inter, Segoe UI, Arial";
+                ctx.textAlign = "right";
+                ctx.fillText(shortNumber(maxRevenue * i / 4), padding.left - 8, y + 4);
+                ctx.textAlign = "left";
+                ctx.fillStyle = "#38bdf8";
+                ctx.fillText(String(Math.round(maxOrders * i / 4)), padding.left + chartWidth + 8, y + 4);
+            }
+
+            // Cot doanh thu
+            const barWidth = Math.max(3, Math.min(18, slot * 0.6));
+            rev.forEach((value, index) => {
+                const x = padding.left + index * slot + (slot - barWidth) / 2;
+                const h = chartHeight * (value / maxRevenue) * eased;
+                if (h > 0) {
+                    ctx.fillStyle = "#f43f5e";
+                    roundedRect(ctx, x, padding.top + chartHeight - h, barWidth, Math.max(h, 2), 3);
+                    ctx.fill();
+                }
+            });
+
+            // Duong so don
+            ctx.strokeStyle = "#38bdf8";
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            cnt.forEach((value, index) => {
+                const x = padding.left + index * slot + slot / 2;
+                const y = padding.top + chartHeight - chartHeight * (value / maxOrders) * eased;
+                if (index === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+            });
+            ctx.stroke();
+            cnt.forEach((value, index) => {
+                if (!value) return;
+                const x = padding.left + index * slot + slot / 2;
+                const y = padding.top + chartHeight - chartHeight * (value / maxOrders) * eased;
+                ctx.fillStyle = "#38bdf8";
+                ctx.beginPath();
+                ctx.arc(x, y, 3, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            ctx.lineWidth = 1;
+
+            // Nhan ngay: moi 5 ngay tren desktop, moi 10 ngay tren mobile
+            const every = narrow ? 10 : 5;
+            ctx.fillStyle = "#94a3b8";
+            ctx.font = "11px Inter, Segoe UI, Arial";
+            ctx.textAlign = "center";
+            labels.forEach((label, index) => {
+                if (index % every === 0 || index === labels.length - 1) {
+                    ctx.fillText(label, padding.left + index * slot + slot / 2, padding.top + chartHeight + 18);
+                }
+            });
+
+            if (rev.every((value) => value === 0) && cnt.every((value) => value === 0)) {
+                emptyText(ctx, width, height, "Chưa có đơn trong 30 ngày qua");
             }
         };
-        return draw;
     };
 
     const charts = [
+        createDailyChart("dailyChart", data.dailyLabels || [], data.dailyRevenue || [], data.dailyOrders || []),
+        createDonutChart("orderStatusChart", data.orderStatusLabels || [], data.orderStatusData || [], {
+            names: STATUS_NAMES, colors: STATUS_COLORS, centerLabel: "đơn hàng", emptyText: "Chưa có đơn hàng"
+        }),
+        createDonutChart("categoryChart", data.categoryLabels || [], data.categoryData || [], {
+            money: true, centerLabel: "đã thu", emptyText: "Chưa có đơn hoàn thành"
+        }),
         createBarChart("salesChart", data.salesLabels || [], data.salesData || [], {
-            color: "#f43f5e",
-            colorDark: "#7f1d2e",
-            money: true
-        }),
-        createBarChart("stockChart", data.stockLabels || [], data.stockData || [], {
-            color: "#38bdf8",
-            colorDark: "#0b4ea2"
-        }),
-        createDonutChart("orderStatusChart", data.orderStatusLabels || [], data.orderStatusData || [])
+            color: "#f43f5e", colorDark: "#7f1d2e", money: true
+        })
     ].filter(Boolean);
 
     if (charts.length) {
         if (prefersReducedMotion) {
             charts.forEach((draw) => draw(1));
         } else {
-            const duration = 1300;
+            const duration = 1100;
             const start = performance.now();
             const frame = (now) => {
                 const progress = Math.min((now - start) / duration, 1);
@@ -315,14 +342,23 @@ document.addEventListener("DOMContentLoaded", () => {
             };
             requestAnimationFrame(frame);
         }
-
-        // Ve lai (tinh) khi doi kich thuoc/xoay man hinh -> luon sac net & vua khung
         let resizeTimer = null;
         window.addEventListener("resize", () => {
-            if (resizeTimer) {
-                clearTimeout(resizeTimer);
-            }
+            if (resizeTimer) clearTimeout(resizeTimer);
             resizeTimer = setTimeout(() => charts.forEach((draw) => draw(1)), 150);
         });
+    }
+
+    // ----- Danh dau muc dang xem tren thanh dieu huong -----
+    const navLinks = Array.from(document.querySelectorAll(".admin-nav a"));
+    const sections = navLinks.map((link) => document.querySelector(link.getAttribute("href"))).filter(Boolean);
+    if (sections.length && typeof IntersectionObserver !== "undefined") {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (!entry.isIntersecting) return;
+                navLinks.forEach((link) => link.classList.toggle("is-active", link.getAttribute("href") === "#" + entry.target.id));
+            });
+        }, { rootMargin: "-40% 0px -55% 0px" });
+        sections.forEach((section) => observer.observe(section));
     }
 });

@@ -94,14 +94,17 @@
                 <article class="lookup-card" th:each="order : ${orders}">
                     <div class="lookup-head">
                         <div>
-                            <span class="lookup-id">&#272;&#417;n h&agrave;ng #<b th:text="${order.id}">0</b></span>
+                            <span class="lookup-id">M&#227; &#273;&#417;n <b th:text="${order.code}">DH0</b></span>
                             <span class="lookup-date" th:text="${#temporals.format(order.createdAt, 'HH:mm dd/MM/yyyy')}">--</span>
                         </div>
                         <span class="lookup-status" th:classappend="|status-${#strings.toLowerCase(order.status)}|" th:text="${statusLabels[order.status] != null ? statusLabels[order.status] : order.status}">--</span>
                     </div>
                     <div class="lookup-body">
-                        <div class="lookup-row"><span>S&#7843;n ph&#7849;m</span><strong th:text="${order.productName}">--</strong></div>
-                        <div class="lookup-row"><span>S&#7889; l&#432;&#7907;ng</span><strong th:text="${order.quantity}">--</strong></div>
+                        <div class="lookup-row" th:each="line : ${order.lines}">
+                            <span th:text="${line.productName}">S&#7843;n ph&#7849;m</span>
+                            <strong th:text="|${#numbers.formatDecimal(line.quantity, 0, 'POINT', 2, 'COMMA')} &#215; ${#numbers.formatDecimal(line.unitPrice, 0, 'POINT', 0, 'COMMA')} &#273; = ${#numbers.formatDecimal(line.totalAmount, 0, 'POINT', 0, 'COMMA')} &#273;|">--</strong>
+                        </div>
+                        <div class="lookup-row"><span>T&#7841;m t&iacute;nh</span><strong th:text="|${#numbers.formatDecimal(order.total, 0, 'POINT', 0, 'COMMA')} &#273;|">--</strong></div>
                         <div class="lookup-row"><span>Ng&#432;&#7901;i &#273;&#7863;t</span><strong th:text="${order.customerName}">--</strong></div>
                         <div class="lookup-row"><span>Giao &#273;&#7871;n</span><strong th:text="${order.address}">--</strong></div>
                         <div class="lookup-row" th:if="${order.note != null and !order.note.isBlank()}"><span>Ghi ch&uacute;</span><strong th:text="${order.note}">--</strong></div>

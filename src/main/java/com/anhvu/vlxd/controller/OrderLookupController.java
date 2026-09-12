@@ -2,6 +2,8 @@ package com.anhvu.vlxd.controller;
 
 import com.anhvu.vlxd.entity.CustomerOrder;
 import com.anhvu.vlxd.repository.CustomerOrderRepository;
+import com.anhvu.vlxd.service.AdminReportService;
+import com.anhvu.vlxd.web.OrderGroupView;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,6 +31,7 @@ public class OrderLookupController {
     ));
 
     private final CustomerOrderRepository customerOrderRepository;
+    private final AdminReportService reportService;
 
     @GetMapping
     public String lookupPage(@RequestParam(required = false) String phone, Model model) {
@@ -50,7 +53,8 @@ public class OrderLookupController {
             return "order-lookup";
         }
 
-        List<CustomerOrder> orders = customerOrderRepository.findByPhoneOrderByCreatedAtDesc(normalized);
+        List<CustomerOrder> lines = customerOrderRepository.findByPhoneOrderByCreatedAtDesc(normalized);
+        List<OrderGroupView> orders = reportService.groupOrders(lines);
         model.addAttribute("orders", orders);
         model.addAttribute("statusLabels", STATUS_LABELS);
         model.addAttribute("dateFormatter", DateTimeFormatter.ofPattern("HH:mm dd/MM/yyyy"));
