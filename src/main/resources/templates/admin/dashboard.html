@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/css/style.css(v=53)}">
+    <link rel="stylesheet" th:href="@{/css/style.css(v=56)}">
 </head>
 <body class="admin-body">
 <header class="admin-topbar">
@@ -39,6 +39,7 @@
         <a href="#orders">Đơn hàng <b th:if="${kpi.newOrders > 0}" th:text="${kpi.newOrders}">0</b></a>
         <a href="#quotes">Báo giá <b th:if="${kpi.pendingQuotes > 0}" th:text="${kpi.pendingQuotes}">0</b></a>
         <a href="#inventory">Kho hàng <b th:if="${kpi.lowStockCount > 0}" th:text="${kpi.lowStockCount}">0</b></a>
+        <a href="#add-product">+ Thêm SP</a>
         <a href="#customers">Khách hàng</a>
     </div>
 </nav>
@@ -316,6 +317,59 @@
         </article>
     </section>
 
+    <!-- ===== THÊM SẢN PHẨM ===== -->
+    <section id="add-product" class="admin-section">
+        <article class="admin-panel">
+            <div class="panel-head">
+                <h2>Thêm sản phẩm mới</h2>
+                <span>Không có ảnh thì dùng ảnh mặc định của nhóm, đổi sau được</span>
+            </div>
+            <form class="product-form" th:action="@{/admin/products}" method="post" enctype="multipart/form-data">
+                <label class="inventory-field product-form__wide">
+                    <span class="inventory-field__label">Tên sản phẩm *</span>
+                    <input name="name" required maxlength="120" placeholder="VD: Xi măng Hà Tiên PCB40">
+                </label>
+                <label class="inventory-field">
+                    <span class="inventory-field__label">Nhóm hàng *</span>
+                    <select name="category">
+                        <option th:each="c : ${categories}" th:value="${c}" th:text="${c}">Nhóm</option>
+                    </select>
+                </label>
+                <label class="inventory-field">
+                    <span class="inventory-field__label">Hoặc nhóm mới</span>
+                    <input name="newCategory" maxlength="60" placeholder="Gõ tên nhóm mới nếu chưa có">
+                </label>
+                <label class="inventory-field">
+                    <span class="inventory-field__label">Giá bán (₫) *</span>
+                    <input name="price" type="number" min="0" step="100" required placeholder="85000">
+                </label>
+                <label class="inventory-field">
+                    <span class="inventory-field__label">Đơn vị *</span>
+                    <select name="unit">
+                        <option th:each="u : ${units}" th:value="${u}" th:text="${u}">bao</option>
+                    </select>
+                </label>
+                <label class="inventory-field">
+                    <span class="inventory-field__label">Tồn kho *</span>
+                    <input name="stockQuantity" type="number" min="0" required placeholder="500">
+                </label>
+                <label class="inventory-field">
+                    <span class="inventory-field__label">Định mức / m2 (tuỳ chọn)</span>
+                    <input name="consumptionPerM2" type="number" min="0" step="0.01" placeholder="VD: 0.35 bao/m2">
+                </label>
+                <label class="inventory-field product-form__wide">
+                    <span class="inventory-field__label">Mô tả ngắn</span>
+                    <input name="description" maxlength="255" placeholder="Hiện trên thẻ sản phẩm ngoài web">
+                </label>
+                <label class="inventory-field product-form__wide">
+                    <span class="inventory-field__label">Ảnh sản phẩm (JPG/PNG/WEBP, tối đa 5MB)</span>
+                    <input name="image" type="file" accept="image/jpeg,image/png,image/webp">
+                </label>
+                <button type="submit" class="product-form__submit">+ Thêm vào kho</button>
+            </form>
+        </article>
+    </section>
+
     <!-- ===== KHO HÀNG ===== -->
     <section id="inventory" class="admin-section">
         <article class="admin-panel">
@@ -364,7 +418,7 @@
                             <small th:if="${!row.service and !row.low}" th:text="|Ngưỡng báo: ${row.threshold} ${row.product.unit}|">Ngưỡng</small>
                         </td>
                         <td data-label="Cập nhật">
-                            <form class="inventory-form" th:action="@{|/admin/products/${row.product.id}/inventory|}" method="post">
+                            <form class="inventory-form" th:action="@{|/admin/products/${row.product.id}/inventory|}" method="post" enctype="multipart/form-data">
                                 <label class="inventory-field">
                                     <span class="inventory-field__label">Tồn kho</span>
                                     <input name="stockQuantity" type="number" min="0" th:value="${row.product.stockQuantity}" aria-label="Tồn kho">
@@ -377,7 +431,15 @@
                                     <input name="active" type="checkbox" value="true" th:checked="${row.product.active}">
                                     <span>Đang bán</span>
                                 </label>
+                                <label class="inventory-field inventory-field--file">
+                                    <span class="inventory-field__label">Đổi ảnh</span>
+                                    <input name="image" type="file" accept="image/jpeg,image/png,image/webp" aria-label="Đổi ảnh">
+                                </label>
                                 <button type="submit">Lưu</button>
+                            </form>
+                            <form class="delete-form" th:action="@{|/admin/products/${row.product.id}/delete|}" method="post"
+                                  th:attr="onsubmit=|return confirm('Xóa sản phẩm ${row.product.name} khỏi kho? Đơn hàng cũ vẫn giữ nguyên.')|">
+                                <button type="submit" class="btn-delete">Xóa sản phẩm</button>
                             </form>
                         </td>
                     </tr>

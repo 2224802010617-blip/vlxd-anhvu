@@ -10,6 +10,7 @@ import com.anhvu.vlxd.repository.ProductRepository;
 import com.anhvu.vlxd.repository.QuoteRequestRepository;
 import com.anhvu.vlxd.service.AdminReportService;
 import com.anhvu.vlxd.service.InventoryPolicy;
+import com.anhvu.vlxd.service.ProductImageService;
 import com.anhvu.vlxd.web.OrderGroupView;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +25,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.text.Normalizer;
@@ -53,6 +56,7 @@ public class AdminController {
     private final CustomerOrderRepository customerOrderRepository;
     private final AdminReportService reportService;
     private final InventoryPolicy inventoryPolicy;
+    private final ProductImageService productImageService;
     private final ObjectMapper objectMapper;
 
     @GetMapping(value = "/admin", produces = "text/html;charset=UTF-8")
@@ -156,6 +160,7 @@ public class AdminController {
         model.addAttribute("pq", productQuery);
         model.addAttribute("stock", lowOnly ? "low" : "");
         model.addAttribute("productCount", products.size());
+        model.addAttribute("units", List.of("viên", "bao", "kg", "tấn", "m3", "cây", "tấm", "báo giá"));
 
         // ----- Khach hang -----
         model.addAttribute("customers", reportService.customers(allGroups, 30));
@@ -228,20 +233,116 @@ public class AdminController {
                                   @RequestParam Integer stockQuantity,
                                   @RequestParam BigDecimal price,
                                   @RequestParam(required = false) Boolean active,
+                                  @RequestParam(required = false) MultipartFile image,
                                   RedirectAttributes redirectAttributes) {
         if (stockQuantity == null || stockQuantity < 0 || price == null || price.compareTo(BigDecimal.ZERO) < 0) {
             redirectAttributes.addFlashAttribute("adminError", "Tồn kho và giá phải lớn hơn hoặc bằng 0.");
             return "redirect:/admin#inventory";
         }
 
-        productRepository.findById(id).ifPresent(product -> {
-            product.setStockQuantity(stockQuantity);
-            product.setPrice(price);
-            product.setActive(Boolean.TRUE.equals(active));
-            productRepository.save(product);
-            redirectAttributes.addFlashAttribute("adminSuccess", "Đã cập nhật " + product.getName() + ".");
-        });
+        Product product = productRepository.findById(id).orElse(null);
+        if (product == null) {
+            redirectAttributes.addFlashAttribute("adminError", "Không tìm thấy sản phẩm.");
+            return "redirect:/admin#inventory";
+        }
+        product.setStockQuantity(stockQuantity);
+        product.setPrice(price);
+        product.setActive(Boolean.TRUE.equals(active));
+        if (productImageService.isUsable(image)) {
+            try {
+                product.setImagePath(productImageService.store(product.getId(), image));
+            } catch (IOException e) {
+                redirectAttributes.addFlashAttribute("adminError", "Ảnh không hợp lệ: " + e.getMessage());
+                return "redirect:/admin#inventory";
+            }
+        }
+        productRepository.save(product);
+        redirectAttributes.addFlashAttribute("adminSuccess", "Đã cập nhật " + product.getName() + ".");
         return "redirect:/admin#inventory";
+    }
+
+    /** Them san pham moi. Nhom hang: chon san co hoac go ten nhom moi. */
+    @PostMapping("/admin/products")
+    public String createProduct(@RequestParam String name,
+                                @RequestParam(required = false) String category,
+                                @RequestParam(required = false) String newCategory,
+                                @RequestParam BigDecimal price,
+                                @RequestParam String unit,
+                                @RequestParam Integer stockQuantity,
+                                @RequestParam(required = false) String description,
+                                @RequestParam(required = false) BigDecimal consumptionPerM2,
+                                @RequestParam(required = false) MultipartFile image,
+                                RedirectAttributes redirectAttributes) {
+        String cleanName = name == null ? "" : name.trim();
+        String categoryName = newCategory != null && !newCategory.isBlank() ? newCategory.trim()
+                : (category == null ? "" : category.trim());
+        if (cleanName.isEmpty() || categoryName.isEmpty() || unit == null || unit.isBlank()
+                || price == null || price.signum() < 0 || stockQuantity == null || stockQuantity < 0) {
+            redirectAttributes.addFlashAttribute("adminError", "Thiếu tên, nhóm, đơn vị, hoặc giá/tồn kho âm.");
+            return "redirect:/admin#add-product";
+        }
+        boolean duplicated = productRepository.findAll().stream()
+                .anyMatch(product -> product.getName() != null && product.getName().equalsIgnoreCase(cleanName));
+        if (duplicated) {
+            redirectAttributes.addFlashAttribute("adminError", "Đã có sản phẩm tên \"" + cleanName + "\".");
+            return "redirect:/admin#add-product";
+        }
+
+        Category categoryEntity = categoryRepository.findAll().stream()
+                .filter(c -> c.getName() != null && c.getName().equalsIgnoreCase(categoryName))
+                .findFirst()
+                .orElseGet(() -> categoryRepository.save(Category.builder().name(categoryName).build()));
+
+        Product product = productRepository.save(Product.builder()
+                .name(cleanName)
+                .description(description == null ? "" : description.trim())
+                .price(price)
+                .unit(unit.trim())
+                .stockQuantity(stockQuantity)
+                .consumptionPerM2(consumptionPerM2)
+                .category(categoryEntity)
+                .imagePath(defaultImageFor(categoryName))
+                .active(true)
+                .build());
+
+        if (productImageService.isUsable(image)) {
+            try {
+                product.setImagePath(productImageService.store(product.getId(), image));
+                productRepository.save(product);
+            } catch (IOException e) {
+                redirectAttributes.addFlashAttribute("adminError",
+                        "Đã thêm " + cleanName + " nhưng ảnh không hợp lệ: " + e.getMessage() + ". Bạn đổi ảnh lại trong bảng kho.");
+                return "redirect:/admin?pq=" + urlEncode(cleanName) + "#inventory";
+            }
+        }
+        redirectAttributes.addFlashAttribute("adminSuccess", "Đã thêm sản phẩm " + cleanName + ".");
+        return "redirect:/admin?pq=" + urlEncode(cleanName) + "#inventory";
+    }
+
+    /** Xoa san pham. Don hang luu ten san pham dang chu nen lich su don khong bi anh huong. */
+    @PostMapping("/admin/products/{id}/delete")
+    public String deleteProduct(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        productRepository.findById(id).ifPresentOrElse(product -> {
+            productImageService.delete(product.getId());
+            productRepository.delete(product);
+            redirectAttributes.addFlashAttribute("adminSuccess", "Đã xóa sản phẩm " + product.getName() + ".");
+        }, () -> redirectAttributes.addFlashAttribute("adminError", "Không tìm thấy sản phẩm."));
+        return "redirect:/admin#inventory";
+    }
+
+    /** Anh mac dinh theo nhom khi admin chua tai anh len. */
+    private static String defaultImageFor(String categoryName) {
+        String folded = fold(categoryName);
+        if (folded.contains("gach")) return "/images/materials/brick.jpg";
+        if (folded.contains("xi mang")) return "/images/materials/cement.jpg";
+        if (folded.contains("cat")) return "/images/materials/sand.jpg";
+        if (folded.contains("thep")) return "/images/materials/steel.jpg";
+        if (folded.contains("da")) return "/images/materials/warehouse.jpg";
+        return "/images/materials/hero-construction.jpg";
+    }
+
+    private static String urlEncode(String value) {
+        return java.net.URLEncoder.encode(value, StandardCharsets.UTF_8);
     }
 
     /** Xuat danh sach don (moi dong hang mot dong) ra CSV mo duoc bang Excel. */

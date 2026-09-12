@@ -26,12 +26,10 @@ public class DataInitializer implements CommandLineRunner {
     public void run(String... args) {
         fixSteelImages();
 
-        if (productRepository.count() >= 34 && !hasBrokenSampleData() && !hasMissingImages() && !hasOldMaterialImages()) {
+        // Chi seed khi DB trong. Admin da co the them/xoa san pham nen tuyet doi khong xoa de seed lai.
+        if (productRepository.count() > 0) {
             return;
         }
-
-        productRepository.deleteAll();
-        categoryRepository.deleteAll();
 
         Category gach = categoryRepository.save(Category.builder().name("G\u1EA1ch").build());
         Category xiMang = categoryRepository.save(Category.builder().name("Xi m\u0103ng").build());
@@ -165,8 +163,14 @@ public class DataInitializer implements CommandLineRunner {
             if (product.getName() == null) {
                 continue;
             }
+            String current = product.getImagePath();
+            // Anh admin tai len (/images/db/..) hoac anh rieng da co: giu nguyen
+            if (current != null && current.startsWith("/images/db/")) {
+                continue;
+            }
             String desiredImage = productImagePath(product.getName());
-            if (!desiredImage.equals(product.getImagePath())) {
+            boolean bundled = getClass().getResource("/static" + desiredImage) != null;
+            if (bundled && !desiredImage.equals(current)) {
                 product.setImagePath(desiredImage);
                 changed = true;
             }

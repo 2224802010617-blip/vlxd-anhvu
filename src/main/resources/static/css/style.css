@@ -6806,3 +6806,71 @@ textarea:focus-visible {
     opacity: .8;
 }
 .btn-delete:hover { opacity: 1; }
+
+/* Admin v2: form them san pham + doi anh */
+.product-form {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px 14px;
+    align-items: end;
+}
+.product-form .inventory-field { margin: 0; }
+.product-form__wide { grid-column: span 2; }
+.product-form input, .product-form select {
+    width: 100%;
+    min-height: 42px;
+    padding: 0 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(148, 163, 184, .3);
+    background: #0f172a;
+    color: #f8fafc;
+}
+.product-form input[type="file"] { padding: 8px 12px; font-size: .85rem; }
+.product-form__submit {
+    grid-column: 1 / -1;
+    justify-self: start;
+    min-height: 44px;
+    padding: 0 24px;
+    border: 0;
+    border-radius: 10px;
+    background: #22c55e;
+    color: #04130a;
+    font-weight: 800;
+    cursor: pointer;
+}
+.inventory-field--file input[type="file"] { max-width: 180px; font-size: .78rem; color: #cbd5e1; }
+@media (max-width: 900px) {
+    .product-form { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 560px) {
+    .product-form { grid-template-columns: 1fr; }
+    .product-form__wide { grid-column: auto; }
+}
+
+/* Admin v2: nhan luon hien trong form them SP; o doi anh xuong hang rieng trong bang kho */
+.product-form .inventory-field__label {
+    display: block;
+    margin-bottom: 4px;
+    color: #94a3b8;
+    font-size: .78rem;
+    font-weight: 700;
+}
+.inventory-form { grid-template-columns: 120px 150px 120px 96px; }
+.inventory-form .inventory-field--file { grid-column: 1 / -1; }
+.inventory-form .inventory-field--file .inventory-field__label {
+    display: inline-block;
+    margin-right: 8px;
+    color: #94a3b8;
+    font-size: .78rem;
+    font-weight: 700;
+}
+.inventory-form .inventory-field--file input[type="file"] { max-width: none; }
+
+/* Admin v2: .inventory-field mac dinh la display:contents -> trong form them SP va o doi anh can khoi rieng */
+.product-form .inventory-field { display: block; }
+.inventory-form .inventory-field--file {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    grid-column: 1 / -1;
+}
