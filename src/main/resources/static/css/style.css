@@ -7008,3 +7008,113 @@ textarea:focus-visible {
     .order-item-row { grid-template-columns: 1fr 46px !important; }
     .order-item-row > label:first-of-type { grid-column: 1 / -1; }
 }
+
+/* O tick dong y nhan tin khuyen mai */
+.consent-check {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 0;
+    font-size: .9rem;
+    line-height: 1.45;
+    cursor: pointer;
+}
+.consent-check input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin-top: 2px;
+    flex: 0 0 auto;
+}
+.order-form .consent-check { grid-column: 1 / -1; }
+.quote-form .consent-check { color: rgba(255, 255, 255, .9); }
+
+/* Trang huy nhan email */
+.unsub-page {
+    max-width: 560px;
+    margin: 60px auto;
+    padding: 32px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: #fff;
+    text-align: center;
+}
+.unsub-page h1 { font-size: 1.5rem; margin-bottom: 12px; }
+.unsub-page p { color: #475467; line-height: 1.6; }
+
+/* Admin: gui mail cho khach */
+.notify-check {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    grid-column: 1 / -1;
+    margin: 6px 0 0;
+    color: #94a3b8;
+    font-size: .78rem;
+    cursor: pointer;
+}
+.notify-check input { width: 15px; height: 15px; }
+.mail-details { margin-top: 8px; font-size: .82rem; }
+.mail-details summary { cursor: pointer; color: #7dd3fc; font-weight: 700; list-style: none; }
+.mail-details summary::-webkit-details-marker { display: none; }
+.mail-details[open] summary { color: #e2e8f0; margin-bottom: 6px; }
+.mail-none { color: #64748b !important; font-style: italic; }
+.mail-form { display: grid; gap: 6px; margin-top: 4px; }
+.mail-form input, .mail-form select, .mail-form textarea {
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(148, 163, 184, .3);
+    background: #0f172a;
+    color: #f8fafc;
+    font-size: .84rem;
+    font-family: inherit;
+}
+.mail-form small { color: #94a3b8; font-size: .74rem; }
+.mail-form button {
+    justify-self: start;
+    min-height: 34px;
+    padding: 0 16px;
+    border: 0;
+    border-radius: 8px;
+    background: #38bdf8;
+    color: #04121a;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+/* Admin: khu gui hang loat */
+.bulk-warn {
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid rgba(245, 158, 11, .45);
+    background: rgba(245, 158, 11, .08);
+    color: #fcd34d;
+    font-size: .86rem;
+    line-height: 1.55;
+}
+.bulk-warn b { color: #fde68a; }
+.bulk-form { display: grid; gap: 12px; margin-top: 16px; }
+.bulk-form .inventory-field { display: block; }
+.bulk-form .inventory-field__label { display: block; margin-bottom: 4px; color: #94a3b8; font-size: .78rem; font-weight: 700; }
+.bulk-form input, .bulk-form textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(148, 163, 184, .3);
+    background: #0f172a;
+    color: #f8fafc;
+    font-family: inherit;
+}
+.bulk-form .consent-check { color: #cbd5e1; }
+.bulk-form button {
+    justify-self: start;
+    min-height: 44px;
+    padding: 0 24px;
+    border: 0;
+    border-radius: 10px;
+    background: #f43f5e;
+    color: #fff;
+    font-weight: 800;
+    cursor: pointer;
+}
+.bulk-form button:disabled { background: #475569; color: #94a3b8; cursor: not-allowed; }

@@ -1,5 +1,6 @@
 package com.anhvu.vlxd.web;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -20,6 +21,14 @@ public class QuoteRequestForm {
     @Size(max = 255, message = "Địa chỉ không được vượt quá 255 ký tự.")
     private String address = "";
 
+    // Khong bat buoc: co email thi nhan duoc bao gia qua mail
+    @Email(message = "Email chưa đúng định dạng.")
+    @Size(max = 160, message = "Email không được vượt quá 160 ký tự.")
+    private String email = "";
+
     @NotBlank(message = "Vui lòng nhập nội dung báo giá.")
     private String content = "";
+
+    // Khach tu tick moi gui tin khuyen mai (Nghi dinh 91/2020)
+    private boolean marketingConsent;
 }

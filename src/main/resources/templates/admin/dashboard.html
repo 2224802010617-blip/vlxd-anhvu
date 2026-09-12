@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/css/style.css(v=62)}">
+    <link rel="stylesheet" th:href="@{/css/style.css(v=63)}">
 </head>
 <body class="admin-body">
 <header class="admin-topbar">
@@ -42,6 +42,7 @@
         <a href="#add-product">+ Thêm SP</a>
         <a href="#stock-log">Lịch sử kho</a>
         <a href="#customers">Khách hàng</a>
+        <a href="#bulk-email">Gửi mail</a>
     </div>
 </nav>
 
@@ -283,7 +284,25 @@
                                     <option th:each="s : ${orderStatuses}" th:value="${s}" th:text="${orderStatusLabels.get(s)}" th:selected="${s == order.status}">Mới</option>
                                 </select>
                                 <button type="submit">Lưu</button>
+                                <label class="notify-check" th:if="${order.email != null and !order.email.isBlank()}">
+                                    <input type="checkbox" name="notify" value="1" checked> Báo email cho khách
+                                </label>
                             </form>
+                            <details class="mail-details" th:if="${order.email != null and !order.email.isBlank()}">
+                                <summary>✉ Gửi mail cho khách</summary>
+                                <form class="mail-form" th:action="@{|/admin/orders/${order.code}/email|}" method="post">
+                                    <select class="mail-template" aria-label="Mẫu soạn sẵn">
+                                        <option value="">— Chọn mẫu soạn sẵn —</option>
+                                        <option value="confirm">Đã xác nhận đơn</option>
+                                        <option value="shipping">Xe đang trên đường giao</option>
+                                        <option value="debt">Nhắc thanh toán còn nợ</option>
+                                    </select>
+                                    <input name="subject" th:value="|Đơn hàng ${order.code} - VLXD Anh Vũ|" maxlength="150" required aria-label="Tiêu đề">
+                                    <textarea name="message" rows="4" required aria-label="Nội dung" placeholder="Nội dung gửi khách..."></textarea>
+                                    <small>Hệ thống tự thêm lời chào, hotline và chữ ký cửa hàng.</small>
+                                    <button type="submit">Gửi mail</button>
+                                </form>
+                            </details>
                             <form class="delete-form" th:action="@{|/admin/orders/${order.code}/delete|}" method="post"
                                   th:attr="onsubmit=|return confirm('Xóa hẳn đơn ${order.code} của ${order.customerName}? Không khôi phục được.')|">
                                 <button type="submit" class="btn-delete" th:text="|Xóa đơn ${order.code}|">Xóa đơn</button>
@@ -349,6 +368,16 @@
                                 </select>
                                 <button type="submit">Lưu</button>
                             </form>
+                            <details class="mail-details" th:if="${quote.email != null and !quote.email.isBlank()}">
+                                <summary>✉ Trả lời qua email</summary>
+                                <form class="mail-form" th:action="@{|/admin/quotes/${quote.id}/email|}" method="post">
+                                    <input name="subject" value="Báo giá vật liệu - VLXD Anh Vũ" maxlength="150" required aria-label="Tiêu đề">
+                                    <textarea name="message" rows="5" required aria-label="Nội dung" placeholder="Báo giá cho các mặt hàng quý khách yêu cầu:&#10;- Xi măng PCB40: 85.000 đ/bao&#10;- ..."></textarea>
+                                    <small>Gửi xong đơn tự chuyển sang trạng thái Đã báo giá.</small>
+                                    <button type="submit">Gửi báo giá</button>
+                                </form>
+                            </details>
+                            <small th:if="${quote.email == null or quote.email.isBlank()}" class="mail-none">Khách không để email</small>
                         </td>
                     </tr>
                     <tr th:if="${#lists.isEmpty(quotes)}">
@@ -558,6 +587,67 @@
         </article>
     </section>
 
+    <!-- ===== GỬI MAIL HÀNG LOẠT ===== -->
+    <section id="bulk-email" class="admin-section">
+        <article class="admin-panel">
+            <div class="panel-head">
+                <h2>Gửi mail hàng loạt</h2>
+                <span th:text="|${#lists.size(marketingContacts)} khách đồng ý nhận tin · ${contactTotal} email đã thu thập · ${contactUnsubscribed} đã hủy nhận|">0 khách</span>
+            </div>
+
+            <div class="bulk-warn">
+                <b>Chỉ gửi cho khách đã tự tích ô đồng ý</b> khi đặt hàng hoặc gửi báo giá. Đây là yêu cầu của
+                Nghị định 91/2020 về thư quảng cáo, và cũng là điều kiện để tài khoản gửi mail không bị khóa.
+                Mỗi email đều tự kèm link hủy nhận. Hạn mức 300 mail/ngày, mỗi lần gửi tối đa 200.
+            </div>
+
+            <div class="admin-message error" th:if="${!mailReady}" style="margin:14px 0;">
+                Chưa cấu hình dịch vụ gửi mail nên không gửi được.
+            </div>
+
+            <form class="bulk-form" th:action="@{/admin/bulk-email}" method="post"
+                  th:attr="onsubmit=|return confirm('Gửi email này cho ${#lists.size(marketingContacts)} khách?')|">
+                <label class="inventory-field">
+                    <span class="inventory-field__label">Tiêu đề</span>
+                    <input name="subject" maxlength="150" required placeholder="VD: Bảng giá vật liệu tháng 10 - VLXD Anh Vũ">
+                </label>
+                <label class="inventory-field">
+                    <span class="inventory-field__label">Nội dung</span>
+                    <textarea name="message" rows="7" required placeholder="Nội dung gửi khách. Hệ thống tự thêm lời chào, thông tin cửa hàng và link hủy nhận."></textarea>
+                </label>
+                <label class="consent-check">
+                    <input type="checkbox" name="confirm" value="1">
+                    <span>Tôi xác nhận đây là thông tin khách đã đồng ý nhận, không phải thư rác.</span>
+                </label>
+                <button type="submit" th:disabled="${!mailReady or #lists.isEmpty(marketingContacts)}">Gửi cho tất cả</button>
+            </form>
+
+            <div class="table-responsive admin-table-wrap" style="margin-top:18px;">
+                <table class="table align-middle admin-table">
+                    <thead>
+                    <tr>
+                        <th>Email</th>
+                        <th>Tên khách</th>
+                        <th>Nguồn</th>
+                        <th>Thu thập ngày</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="c : ${marketingContacts}">
+                        <td data-label="Email" th:text="${c.email}">email</td>
+                        <td data-label="Tên" th:text="${c.name}">tên</td>
+                        <td data-label="Nguồn" th:text="${c.source == 'quote' ? 'Yêu cầu báo giá' : 'Đặt hàng'}">Đặt hàng</td>
+                        <td data-label="Ngày" th:text="${c.createdAt != null ? #temporals.format(c.createdAt, 'dd/MM/yyyy') : '--'}">--</td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(marketingContacts)}">
+                        <td colspan="4">Chưa có khách nào đồng ý nhận tin. Ô tích đồng ý nằm ở cuối form đặt hàng và form báo giá.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </article>
+    </section>
+
     <!-- ===== KHÁCH HÀNG ===== -->
     <section id="customers" class="admin-section">
         <article class="admin-panel">
@@ -621,5 +711,19 @@
     };
 </script>
 <script th:src="@{/js/admin.js(v=12)}"></script>
+<script>
+    // Mau soan san cho mail gui khach: chon trong danh sach la dien vao o noi dung
+    var MAIL_TEMPLATES = {
+        confirm: 'Cửa hàng đã nhận và xác nhận đơn hàng của quý khách. Chúng tôi đang chuẩn bị hàng và sẽ gọi hẹn giờ giao trong thời gian sớm nhất.',
+        shipping: 'Hàng của quý khách đã lên xe và đang trên đường giao. Tài xế sẽ gọi điện trước khi tới nơi, quý khách để ý điện thoại giúp.',
+        debt: 'Cửa hàng xin phép nhắc quý khách về khoản tiền còn lại của đơn hàng. Quý khách vui lòng thanh toán khi thuận tiện, bằng tiền mặt hoặc chuyển khoản. Xin cảm ơn.'
+    };
+    document.querySelectorAll('.mail-template').forEach(function (select) {
+        select.addEventListener('change', function () {
+            var area = select.closest('form').querySelector('textarea[name=message]');
+            if (MAIL_TEMPLATES[select.value]) area.value = MAIL_TEMPLATES[select.value];
+        });
+    });
+</script>
 </body>
 </html>

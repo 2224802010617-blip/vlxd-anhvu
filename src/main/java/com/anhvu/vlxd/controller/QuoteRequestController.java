@@ -30,6 +30,7 @@ public class QuoteRequestController {
 
     private final QuoteRequestRepository quoteRequestRepository;
     private final com.anhvu.vlxd.service.NotificationService notificationService;
+    private final com.anhvu.vlxd.service.EmailContactService emailContactService;
 
     @PostMapping("/quote-request")
     public String store(@Valid @ModelAttribute("quoteForm") QuoteRequestForm form,
@@ -46,10 +47,12 @@ public class QuoteRequestController {
                 .customerName(form.getCustomerName().trim())
                 .phone(form.getPhone().trim())
                 .address(form.getAddress() == null ? "" : form.getAddress().trim())
+                .email(form.getEmail() == null ? "" : form.getEmail().trim())
                 .content(form.getContent().trim())
                 .status("NEW")
                 .build());
         notificationService.newQuote(saved);
+        emailContactService.record(form.getEmail(), form.getCustomerName(), form.isMarketingConsent(), "quote");
 
         return "redirect:/bao-gia?quoteSuccess=true#quote-form";
     }

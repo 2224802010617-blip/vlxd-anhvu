@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hủy nhận email - VLXD Anh Vũ</title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" type="image/svg+xml" href="/images/anh-vu-logo.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css(v=63)}">
+</head>
+<body style="background:#f8fafc;">
+<main class="container">
+    <section class="unsub-page">
+        <a href="/"><img src="/images/anh-vu-logo.svg" alt="VLXD Anh Vũ" style="height:56px;margin-bottom:16px;"></a>
+        <div th:if="${done}">
+            <h1>Đã hủy nhận email</h1>
+            <p>
+                Địa chỉ <b th:text="${email}">email</b> sẽ không nhận thông tin khuyến mãi từ
+                <span th:text="${companyName}">công ty</span> nữa.
+            </p>
+            <p style="margin-top:14px;">
+                Quý khách vẫn nhận được email xác nhận và cập nhật cho những đơn hàng của mình,
+                vì đó là thông tin cần thiết cho đơn hàng.
+            </p>
+        </div>
+        <div th:if="${!done}">
+            <h1>Không tìm thấy đăng ký</h1>
+            <p>
+                Đường dẫn hủy nhận không đúng hoặc đã hết hiệu lực.
+                Quý khách gọi <b th:text="${phone}">hotline</b> để được hỗ trợ.
+            </p>
+        </div>
+        <p style="margin-top:20px;"><a href="/" style="color:#d11828;font-weight:700;">Về trang chủ</a></p>
+    </section>
+</main>
+</body>
+</html>

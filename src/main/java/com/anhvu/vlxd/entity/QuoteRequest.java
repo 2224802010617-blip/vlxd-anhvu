@@ -27,6 +27,10 @@ public class QuoteRequest {
     @Column(length = 255)
     private String address;
 
+    // Email khach (tuy chon) de gui bao gia qua mail
+    @Column(length = 160)
+    private String email;
+
     @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 

@@ -1,6 +1,7 @@
 package com.anhvu.vlxd.controller;
 
 import com.anhvu.vlxd.entity.Category;
+import com.anhvu.vlxd.entity.EmailContact;
 import com.anhvu.vlxd.entity.Payment;
 import com.anhvu.vlxd.entity.CustomerOrder;
 import com.anhvu.vlxd.entity.Product;
@@ -12,7 +13,9 @@ import com.anhvu.vlxd.repository.ProductRepository;
 import com.anhvu.vlxd.repository.QuoteRequestRepository;
 import com.anhvu.vlxd.service.AdminReportService;
 import com.anhvu.vlxd.service.InventoryPolicy;
+import com.anhvu.vlxd.service.EmailContactService;
 import com.anhvu.vlxd.service.InventoryService;
+import com.anhvu.vlxd.service.NotificationService;
 import com.anhvu.vlxd.service.ProductImageService;
 import com.anhvu.vlxd.web.OrderGroupView;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -52,6 +55,7 @@ public class AdminController {
     private static final Set<String> QUOTE_STATUSES = Set.of("NEW", "CONTACTED", "QUOTED", "CLOSED");
     private static final int ORDER_PAGE_SIZE = 15;
     private static final int INVENTORY_PAGE_SIZE = 12;
+    private static final int BULK_EMAIL_LIMIT = 200;
     private static final DateTimeFormatter CSV_DATE = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
     private final ProductRepository productRepository;
@@ -63,6 +67,8 @@ public class AdminController {
     private final ProductImageService productImageService;
     private final PaymentRepository paymentRepository;
     private final InventoryService inventoryService;
+    private final NotificationService notificationService;
+    private final EmailContactService emailContactService;
     private final ObjectMapper objectMapper;
 
     @GetMapping(value = "/admin", produces = "text/html;charset=UTF-8")
@@ -179,6 +185,11 @@ public class AdminController {
         model.addAttribute("pq", productQuery);
         model.addAttribute("stock", lowOnly ? "low" : "");
         model.addAttribute("productCount", products.size());
+        List<EmailContact> contacts = emailContactService.all();
+        model.addAttribute("mailReady", notificationService.mailReady());
+        model.addAttribute("marketingContacts", contacts.stream().filter(EmailContact::canReceiveMarketing).toList());
+        model.addAttribute("contactTotal", contacts.size());
+        model.addAttribute("contactUnsubscribed", contacts.stream().filter(EmailContact::isUnsubscribed).count());
         model.addAttribute("movements", inventoryService.recent());
         model.addAttribute("units", List.of("viên", "bao", "kg", "tấn", "m3", "cây", "tấm", "báo giá"));
 
@@ -192,6 +203,7 @@ public class AdminController {
     @PostMapping("/admin/orders/{code}/status")
     public String updateOrderStatus(@PathVariable String code,
                                     @RequestParam String status,
+                                    @RequestParam(required = false) String notify,
                                     RedirectAttributes redirectAttributes) {
         if (!ORDER_STATUSES.contains(status)) {
             return "redirect:/admin#orders";
@@ -217,10 +229,118 @@ public class AdminController {
             inventoryService.revertCompletion(code, lines);
         }
         if (!lines.isEmpty()) {
-            redirectAttributes.addFlashAttribute("adminSuccess",
-                    "Đơn " + code + " → " + AdminReportService.ORDER_STATUS_LABELS.getOrDefault(status, status) + ".");
+            String message = "Đơn " + code + " → " + AdminReportService.ORDER_STATUS_LABELS.getOrDefault(status, status) + ".";
+            String customerEmail = lines.get(0).getEmail();
+            if ("1".equals(notify) && customerEmail != null && !customerEmail.isBlank()) {
+                List<OrderGroupView> group = reportService.groupOrders(lines);
+                reportService.attachPayments(group, paymentRepository.findByOrderCodeOrderByPaidAtAsc(code));
+                notificationService.orderStatusToCustomer(code, lines, status, group.get(0).getDebt());
+                message += " Đã gửi email báo cho " + customerEmail + ".";
+            }
+            redirectAttributes.addFlashAttribute("adminSuccess", message);
         }
         return "redirect:/admin#orders";
+    }
+
+    /** Admin tu soan mail gui cho khach cua mot don. */
+    @PostMapping("/admin/orders/{code}/email")
+    public String emailOrderCustomer(@PathVariable String code,
+                                     @RequestParam String subject,
+                                     @RequestParam String message,
+                                     RedirectAttributes redirectAttributes) {
+        List<CustomerOrder> lines = findOrderLines(code);
+        if (lines.isEmpty()) {
+            redirectAttributes.addFlashAttribute("adminError", "Không tìm thấy đơn " + code + ".");
+            return "redirect:/admin#orders";
+        }
+        CustomerOrder first = lines.get(0);
+        if (first.getEmail() == null || first.getEmail().isBlank()) {
+            redirectAttributes.addFlashAttribute("adminError", "Đơn " + code + " không có email khách.");
+            return "redirect:/admin?q=" + code + "#orders";
+        }
+        if (subject == null || subject.isBlank() || message == null || message.isBlank()) {
+            redirectAttributes.addFlashAttribute("adminError", "Cần nhập cả tiêu đề và nội dung.");
+            return "redirect:/admin?q=" + code + "#orders";
+        }
+        try {
+            notificationService.customMessage(first.getEmail(), first.getCustomerName(), subject, message);
+            redirectAttributes.addFlashAttribute("adminSuccess", "Đã gửi email tới " + first.getEmail() + ".");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("adminError", "Không gửi được email: " + e.getMessage());
+        }
+        return "redirect:/admin?q=" + code + "#orders";
+    }
+
+    /** Admin tra loi yeu cau bao gia qua email. */
+    @PostMapping("/admin/quotes/{id}/email")
+    public String emailQuoteCustomer(@PathVariable Long id,
+                                     @RequestParam String subject,
+                                     @RequestParam String message,
+                                     RedirectAttributes redirectAttributes) {
+        QuoteRequest quote = quoteRequestRepository.findById(id).orElse(null);
+        if (quote == null || quote.getEmail() == null || quote.getEmail().isBlank()) {
+            redirectAttributes.addFlashAttribute("adminError", "Yêu cầu báo giá này không có email khách.");
+            return "redirect:/admin#quotes";
+        }
+        if (subject == null || subject.isBlank() || message == null || message.isBlank()) {
+            redirectAttributes.addFlashAttribute("adminError", "Cần nhập cả tiêu đề và nội dung.");
+            return "redirect:/admin#quotes";
+        }
+        try {
+            notificationService.customMessage(quote.getEmail(), quote.getCustomerName(), subject, message);
+            if (QUOTE_STATUSES.contains("QUOTED")) {
+                quote.setStatus("QUOTED");
+                quoteRequestRepository.save(quote);
+            }
+            redirectAttributes.addFlashAttribute("adminSuccess",
+                    "Đã gửi báo giá tới " + quote.getEmail() + " và chuyển trạng thái sang Đã báo giá.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("adminError", "Không gửi được email: " + e.getMessage());
+        }
+        return "redirect:/admin#quotes";
+    }
+
+    /**
+     * Gui tin hang loat cho khach da dong y nhan. Moi mail deu kem link huy nhan.
+     * Gioi han moi lan gui de khong vuot han muc 300 mail/ngay cua Brevo.
+     */
+    @PostMapping("/admin/bulk-email")
+    public String bulkEmail(@RequestParam String subject,
+                            @RequestParam String message,
+                            @RequestParam(required = false) String confirm,
+                            RedirectAttributes redirectAttributes) {
+        if (!"1".equals(confirm)) {
+            redirectAttributes.addFlashAttribute("adminError", "Cần tích ô xác nhận trước khi gửi hàng loạt.");
+            return "redirect:/admin#bulk-email";
+        }
+        if (subject == null || subject.isBlank() || message == null || message.isBlank()) {
+            redirectAttributes.addFlashAttribute("adminError", "Cần nhập cả tiêu đề và nội dung.");
+            return "redirect:/admin#bulk-email";
+        }
+        List<EmailContact> recipients = emailContactService.marketingRecipients();
+        if (recipients.isEmpty()) {
+            redirectAttributes.addFlashAttribute("adminError",
+                    "Chưa có khách nào đồng ý nhận tin. Khách phải tự tích ô đồng ý khi đặt hàng hoặc gửi báo giá.");
+            return "redirect:/admin#bulk-email";
+        }
+        List<EmailContact> batch = recipients.stream().limit(BULK_EMAIL_LIMIT).toList();
+        int sent = 0;
+        int failed = 0;
+        for (EmailContact contact : batch) {
+            try {
+                notificationService.marketingMessage(contact.getEmail(), contact.getName(), subject, message, contact.getToken());
+                sent++;
+            } catch (Exception e) {
+                failed++;
+            }
+        }
+        String result = "Đã gửi " + sent + " email" + (failed > 0 ? ", " + failed + " email lỗi" : "") + ".";
+        if (recipients.size() > batch.size()) {
+            result += " Còn " + (recipients.size() - batch.size()) + " khách chưa gửi (mỗi lần tối đa "
+                    + BULK_EMAIL_LIMIT + " để không vượt hạn mức ngày).";
+        }
+        redirectAttributes.addFlashAttribute(failed > 0 && sent == 0 ? "adminError" : "adminSuccess", result);
+        return "redirect:/admin#bulk-email";
     }
 
     /** Ghi nhan thu tien cho don. amount trong = thu du phan con lai. */

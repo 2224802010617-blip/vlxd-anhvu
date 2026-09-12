@@ -48,6 +48,9 @@ public class CustomerOrderForm {
     @Size(max = 2000, message = "Ghi chú không được vượt quá 2000 ký tự.")
     private String note = "";
 
+    // Khach tu tick moi gui tin khuyen mai (Nghi dinh 91/2020)
+    private boolean marketingConsent;
+
     @Getter
     @Setter
     public static class OrderItem {

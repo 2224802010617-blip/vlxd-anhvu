@@ -45,6 +45,7 @@ public class CustomerOrderController {
     private final ProductRepository productRepository;
     private final ProductService productService;
     private final com.anhvu.vlxd.service.NotificationService notificationService;
+    private final com.anhvu.vlxd.service.EmailContactService emailContactService;
 
     @PostMapping("/order-request")
     public String store(@Valid @ModelAttribute("orderForm") CustomerOrderForm form,
@@ -129,6 +130,7 @@ public class CustomerOrderController {
                 orderTotal,
                 "BANK_TRANSFER".equalsIgnoreCase(form.getPaymentMethod()),
                 paymentContent(savedOrders));
+        emailContactService.record(form.getEmail(), form.getCustomerName(), form.isMarketingConsent(), "order");
 
         addOrderPageAttributes(model, prefillNextOrderForm(), true);
         addPaymentResult(model, savedOrders, resolvedProducts);

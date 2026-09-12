@@ -146,6 +146,82 @@ public class NotificationService {
                 body.toString());
     }
 
+    /** Bao cho khach khi don doi trang thai. Chi gui khi don co email. */
+    public void orderStatusToCustomer(String orderCode, List<CustomerOrder> lines, String status, BigDecimal debt) {
+        if (lines == null || lines.isEmpty()) {
+            return;
+        }
+        CustomerOrder first = lines.get(0);
+        String email = first.getEmail();
+        if (email == null || email.isBlank()) {
+            return;
+        }
+        String headline;
+        String detail;
+        switch (status == null ? "" : status.toUpperCase(Locale.ROOT)) {
+            case "CONFIRMED" -> {
+                headline = "đã được xác nhận";
+                detail = "Cửa hàng đang chuẩn bị hàng và sẽ sắp xe giao sớm nhất. "
+                        + "Nhân viên sẽ gọi trước khi giao để hẹn giờ.";
+            }
+            case "SHIPPING" -> {
+                headline = "đang trên đường giao";
+                detail = "Xe đã rời kho. Quý khách vui lòng để ý điện thoại để tài xế liên hệ khi tới nơi.";
+            }
+            case "COMPLETED" -> {
+                headline = "đã giao xong";
+                detail = "Cảm ơn quý khách đã tin tưởng " + companyName + ". "
+                        + "Nếu có vấn đề về hàng hóa, vui lòng báo trong 03 ngày để cửa hàng xử lý.";
+            }
+            case "CANCELED" -> {
+                headline = "đã được hủy";
+                detail = "Nếu đây là nhầm lẫn hoặc quý khách muốn đặt lại, vui lòng gọi hotline để được hỗ trợ.";
+            }
+            default -> {
+                return;
+            }
+        }
+
+        StringBuilder body = new StringBuilder();
+        body.append("Chào ").append(first.getCustomerName()).append(",\n\n")
+                .append("Đơn hàng ").append(orderCode).append(" của quý khách ").append(headline).append(".\n\n")
+                .append(detail).append("\n\n");
+        if (debt != null && debt.signum() > 0) {
+            body.append("Số tiền còn lại cần thanh toán: ").append(money(debt)).append("\n\n");
+        }
+        body.append("Xem chi tiết đơn tại ").append(siteUrl).append("/tra-cuu-don-hang\n\n")
+                .append("Cần hỗ trợ, quý khách gọi ").append(hotline).append(".\n\n")
+                .append("Trân trọng,\n").append(companyName).append("\n");
+
+        sendTo(email.trim(), "[VLXD Anh Vũ] Đơn hàng " + orderCode + " " + headline, body.toString());
+    }
+
+    /** Mail admin tu soan gui cho mot khach. Tra ve loi neu gui that bai de admin biet. */
+    public void customMessage(String to, String customerName, String subject, String message) {
+        String body = "Chào " + (customerName == null || customerName.isBlank() ? "quý khách" : customerName) + ",\n\n"
+                + message.trim() + "\n\n"
+                + "Cần hỗ trợ, quý khách gọi " + hotline + ".\n\n"
+                + "Trân trọng,\n" + companyName + "\n"
+                + "617 Nguyễn Huệ, P. Bình Long, TP. Đồng Nai\n";
+        mailGateway.send(to.trim(), subject.trim(), body);
+    }
+
+    /** Mot mail trong dot gui hang loat: luon kem link huy nhan. */
+    public void marketingMessage(String to, String customerName, String subject, String message, String unsubscribeToken) {
+        String body = "Chào " + (customerName == null || customerName.isBlank() ? "quý khách" : customerName) + ",\n\n"
+                + message.trim() + "\n\n"
+                + "---\n"
+                + companyName + " · " + hotline + "\n"
+                + "617 Nguyễn Huệ, P. Bình Long, TP. Đồng Nai\n"
+                + "Quý khách nhận email này vì đã đồng ý nhận thông tin khi đặt hàng.\n"
+                + "Không muốn nhận nữa? Bấm vào đây: " + siteUrl + "/huy-nhan-mail?token=" + unsubscribeToken + "\n";
+        mailGateway.send(to.trim(), subject.trim(), body);
+    }
+
+    public boolean mailReady() {
+        return mailGateway.isConfigured();
+    }
+
     // ---------- helpers ----------
 
     /** Gui nen, loi chi ghi log de khong anh huong luong dat hang cua khach. */
