@@ -110,11 +110,11 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     // ----- Chuan bi canvas theo kich thuoc CSS + retina -----
-    const prepare = (canvas, ratio) => {
+    const prepare = (canvas, ratio, minHeight = 240) => {
         const ctx = canvas.getContext("2d");
         const dpr = window.devicePixelRatio || 1;
         const width = Math.max(240, canvas.clientWidth || 560);
-        const height = Math.max(240, Math.round(width * ratio));
+        const height = Math.max(minHeight, Math.round(width * ratio));
         canvas.width = Math.round(width * dpr);
         canvas.height = Math.round(height * dpr);
         canvas.style.height = height + "px";
@@ -171,7 +171,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 emptyText(ctx, width, height, "Chưa có đơn hoàn thành");
                 return;
             }
-            const maxBars = width < 480 ? 6 : 10;
+            const maxBars = width < 360 ? 4 : width < 480 ? 5 : width < 720 ? 6 : 10;
             const visibleLabels = allLabels.slice(0, maxBars);
             const visibleValues = allValues.slice(0, maxBars);
             const padding = { top: 30, right: 14, bottom: 60, left: 50 };
@@ -214,15 +214,26 @@ document.addEventListener("DOMContentLoaded", () => {
                 ctx.textAlign = "center";
                 ctx.fillText(isMoney ? shortNumber(value) + " ₫" : fullNumber(value), x + barWidth / 2, Math.max(y - 6, padding.top + 10));
                 ctx.fillStyle = "#94a3b8";
-                ctx.font = "11px Inter, Segoe UI, Arial";
-                const words = String(visibleLabels[index] || "").slice(0, 24).split(/\s+/);
-                const baseY = padding.top + chartHeight + 16;
-                if (words.length > 2) {
-                    ctx.fillText(words.slice(0, 2).join(" "), x + barWidth / 2, baseY);
-                    ctx.fillText(words.slice(2).join(" "), x + barWidth / 2, baseY + 14);
-                } else {
-                    ctx.fillText(words.join(" "), x + barWidth / 2, baseY);
+                ctx.font = (slotWidth < 70 ? "10px" : "11px") + " Inter, Segoe UI, Arial";
+                // Xuong dong theo do rong cot: moi dong toi da ~slot/6 ky tu, toi da 3 dong
+                const maxChars = Math.max(6, Math.floor(slotWidth / 6));
+                const lines = [];
+                let current = "";
+                String(visibleLabels[index] || "").split(/\s+/).forEach((word) => {
+                    if ((current + " " + word).trim().length > maxChars && current) {
+                        lines.push(current);
+                        current = word;
+                    } else {
+                        current = (current + " " + word).trim();
+                    }
+                });
+                if (current) lines.push(current);
+                if (lines.length > 3) {
+                    lines.length = 3;
+                    lines[2] = lines[2].slice(0, Math.max(3, maxChars - 1)) + "…";
                 }
+                const baseY = padding.top + chartHeight + 16;
+                lines.forEach((line, lineIndex) => ctx.fillText(line, x + barWidth / 2, baseY + lineIndex * 13));
                 const share = total ? Math.round(value / total * 100) : 0;
                 canvas._hits.push({
                     type: "rect", x: slotX, y: padding.top, w: slotWidth, h: chartHeight + 30,
@@ -242,12 +253,15 @@ document.addEventListener("DOMContentLoaded", () => {
         const unit = options.unit || "";
 
         return (progress) => {
-            const { ctx, width, height } = prepare(canvas, 0.62);
+            const probeWidth = Math.max(240, canvas.clientWidth || 560);
+            const narrow = probeWidth < 420;
+            // Man hep: vong tron o tren, chu thich xep doc ben duoi -> can them chieu cao
+            const needed = narrow ? Math.round(probeWidth * 0.52 + 28 + labels.length * 28 + 16) : 240;
+            const { ctx, width, height } = prepare(canvas, 0.62, needed);
             const total = values.reduce((sum, value) => sum + (Number(value) || 0), 0);
-            const narrow = width < 420;
             const centerX = narrow ? width / 2 : width * 0.3;
-            const centerY = narrow ? height * 0.32 : height * 0.5;
-            const radius = narrow ? Math.min(width * 0.26, height * 0.26) : Math.min(width * 0.22, height * 0.36);
+            const radius = narrow ? width * 0.24 : Math.min(width * 0.22, height * 0.36);
+            const centerY = narrow ? radius + 14 : height * 0.5;
             let angle = -Math.PI / 2;
 
             values.forEach((value, index) => {
