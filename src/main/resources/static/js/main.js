@@ -768,7 +768,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     const words = ["gạch ống xây tường...", "xi măng PCB40...", "cát xây, cát tô...", "đá 1x2, đá mi...", "thép cây, thép hộp...", "dịch vụ san lấp..."];
-    const prefix = "Nhập từ khóa: ";
+    const prefix = "Tìm ";
     let wordIdx = 0, charIdx = 0, deleting = false, paused = 0;
 
     const tick = () => {
@@ -791,4 +791,31 @@ document.addEventListener("DOMContentLoaded", () => {
         window.setTimeout(tick, deleting ? 45 : 90);
     };
     window.setTimeout(tick, 1200);
+});
+
+// ===== Header v3: menu gap tren dien thoai =====
+document.addEventListener("DOMContentLoaded", () => {
+    const header = document.getElementById("siteHeader");
+    const burger = header ? header.querySelector(".sh__burger") : null;
+    if (!header || !burger) return;
+
+    const setOpen = (open) => {
+        header.classList.toggle("is-open", open);
+        burger.setAttribute("aria-expanded", String(open));
+        burger.setAttribute("aria-label", open ? "Đóng menu" : "Mở menu");
+    };
+
+    burger.addEventListener("click", () => setOpen(!header.classList.contains("is-open")));
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && header.classList.contains("is-open")) {
+            setOpen(false);
+            burger.focus();
+        }
+    });
+    document.addEventListener("click", (event) => {
+        if (header.classList.contains("is-open") && !header.contains(event.target)) setOpen(false);
+    });
+    const desktop = window.matchMedia("(min-width: 1024px)");
+    const onChange = (event) => { if (event.matches) setOpen(false); };
+    if (desktop.addEventListener) desktop.addEventListener("change", onChange); else desktop.addListener(onChange);
 });

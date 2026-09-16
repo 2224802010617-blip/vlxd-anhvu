@@ -68,6 +68,23 @@ public class ProductController {
                 .filter(product -> product.getPrice() != null && product.getPrice().signum() > 0)
                 .limit(8)
                 .toList());
+        // Bang gia nhanh tren hero: moi nhom hang chinh lay 1 mat hang co gia (uu tien ton kho nhieu)
+        List<Product> priceBoard = new ArrayList<>();
+        for (String categoryName : new String[]{"Gạch", "Xi măng", "Cát xây dựng", "Thép"}) {
+            products.stream()
+                    .filter(product -> product.getPrice() != null && product.getPrice().signum() > 0)
+                    .filter(product -> product.getCategory() != null
+                            && categoryName.equalsIgnoreCase(product.getCategory().getName()))
+                    .findFirst()
+                    .ifPresent(priceBoard::add);
+        }
+        model.addAttribute("priceBoard", priceBoard);
+        model.addAttribute("productCount", products.size());
+        model.addAttribute("priceUpdatedAt", products.stream()
+                .map(product -> product.getUpdatedAt() != null ? product.getUpdatedAt() : product.getCreatedAt())
+                .filter(Objects::nonNull)
+                .max(Comparator.naturalOrder())
+                .orElse(null));
         return "index";
     }
 

@@ -4,471 +4,315 @@
     <meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>VLXD Anh V&#361; - V&#7853;t li&#7879;u x&acirc;y d&#7921;ng &#272;&#7891;ng Nai</title>
-    <meta name="description" content="VLXD Anh V&#361; - Cung c&#7845;p g&#7841;ch, xi m&#259;ng, c&#225;t &#273;&#225;, th&#233;p v&#224; v&#7853;t t&#432; thi c&#244;ng t&#7841;i B&#236;nh Long, &#272;&#7891;ng Nai. B&#225;o gi&#225; nhanh, giao t&#7853;n c&#244;ng tr&#236;nh, cam k&#7871;t &#273;&#250;ng tr&#7885;ng l&#432;&#7907;ng.">
+    <title>VLXD Anh Vũ - Vật liệu xây dựng giao tận công trình tại Bình Long, Đồng Nai</title>
+    <meta name="description" content="VLXD Anh Vũ cung cấp gạch, xi măng, cát đá, thép và giàn giáo từ bãi hàng tại Bình Long, Đồng Nai. Báo giá trong ngày, xe tải và xe ba gác giao tận công trình.">
     <link rel="canonical" href="https://vlxd-app-production.up.railway.app/">
     <meta name="keywords" content="vat lieu xay dung, VLXD Anh Vu, gach, xi mang, cat da, thep, Dong Nai, Binh Long, bao gia vat lieu">
     <meta name="author" content="CONG TY TNHH MTV TM DV XD ANH VU">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="VLXD Anh V&#361; - V&#7853;t li&#7879;u x&#226;y d&#7921;ng &#272;&#7891;ng Nai">
+    <meta property="og:title" content="VLXD Anh Vũ - Vật liệu xây dựng giao tận công trình">
     <meta property="og:url" content="https://vlxd-app-production.up.railway.app/">
-    <meta property="og:description" content="G&#7841;ch, xi m&#259;ng, c&#225;t &#273;&#225;, th&#233;p v&#224; v&#7853;t t&#432; thi c&#244;ng. B&#225;o gi&#225; nhanh, giao t&#7853;n c&#244;ng tr&#236;nh t&#7841;i B&#236;nh Long - &#272;&#7891;ng Nai.">
-    <meta property="og:image" content="https://vlxd-app-production.up.railway.app/images/materials/hero-construction.jpg">
+    <meta property="og:description" content="Gạch, xi măng, cát đá, thép từ bãi hàng Bình Long, Đồng Nai. Báo giá trong ngày, xe vào tận hẻm.">
+    <meta property="og:image" content="https://vlxd-app-production.up.railway.app/images/materials/brick.jpg">
     <meta property="og:locale" content="vi_VN">
     <meta name="twitter:card" content="summary_large_image">
     <link rel="icon" type="image/svg+xml" href="/images/anh-vu-logo.svg">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="preload" as="image" href="/images/materials/brick.jpg">
+    <link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/archivo-100-900-vietnamese.woff2">
+    <link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/archivo-100-900-latin.woff2">
+    <link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/bevietnam-400-vietnamese.woff2">
+    <link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/bevietnam-400-latin.woff2">
+    <link rel="stylesheet" href="/fonts/fonts.css?v=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
-    <link rel="stylesheet" th:href="@{/css/style.css(v=68)}">
-    <style>
-        body, button, input, select, textarea {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/style.css(v=70)}">
 </head>
-<body>
-<header class="qh-header-wrap">
-    <!-- Top bar xanh -->
-    <div class="qh-topbar">
-        <div class="container qh-topbar-inner">
-            <span class="qh-topbar-item">&#128205; &#272;&#7883;a ch&#7881;: 617 Nguy&#7877;n Hu&#7879;, P. B&igrave;nh Long, TP. &#272;&#7891;ng Nai</span>
-            <span class="qh-topbar-item" th:text="|&#9993; Email: ${email}|">&#9993; Email: xaydungvantaidaphuongthucanhvu@gmail.com</span>
-            <div class="qh-topbar-right">
-                <a th:if="${zaloReady}" th:href="${zalo}" target="_blank" rel="noopener">Zalo</a>
-                <a class="qh-login" th:if="${!authenticated}" href="/dang-nhap">&#272;&#259;ng nh&#7853;p</a>
-                <form class="qh-logout" th:if="${authenticated}" th:action="@{/logout}" method="post">
+<body class="hp">
+<header class="sh" id="siteHeader">
+    <div class="container sh__in">
+        <a class="sh__logo" href="/" aria-label="VLXD Anh Vũ, về trang chủ">
+            <img src="/images/anh-vu-logo.svg" alt="VLXD Anh Vũ" width="132" height="44" loading="eager" decoding="async">
+        </a>
+        <button class="sh__burger" type="button" aria-controls="siteMenu" aria-expanded="false" aria-label="Mở menu">
+            <svg class="sh__ico sh__ico--open" aria-hidden="true"><use href="/images/icons.svg#list"></use></svg>
+            <svg class="sh__ico sh__ico--close" aria-hidden="true"><use href="/images/icons.svg#x"></use></svg>
+        </button>
+        <div class="sh__menu" id="siteMenu">
+            <nav class="sh__nav" aria-label="Menu chính">
+                <a href="/" class="is-active">Trang chủ</a>
+                <a href="/gioi-thieu">Giới thiệu</a>
+                <a href="/san-pham">Sản phẩm</a>
+                <a href="/bao-gia">Báo giá</a>
+                <a href="/dat-hang">Đặt hàng</a>
+                <a href="/tra-cuu-don-hang">Tra cứu</a>
+                <a th:if="${isAdmin}" href="/admin">Quản trị</a>
+            </nav>
+            <form class="sh__search qh-search global-search" method="get" action="/san-pham" autocomplete="off" role="search">
+                <input id="productSearchInput" name="keyword" aria-label="Tìm sản phẩm" placeholder="Tìm gạch, xi măng, thép...">
+                <button type="submit" aria-label="Tìm"><svg aria-hidden="true"><use href="/images/icons.svg#magnifying-glass"></use></svg></button>
+            </form>
+            <div class="sh__user">
+                <a th:if="${!authenticated}" href="/dang-nhap" aria-label="Đăng nhập"><svg aria-hidden="true"><use href="/images/icons.svg#sign-in"></use></svg><span>Đăng nhập</span></a>
+                <form th:if="${authenticated}" th:action="@{/logout}" method="post">
                     <span th:text="${currentEmail}">khach@gmail.com</span>
-                    <button type="submit">&#272;&#259;ng xu&#7845;t</button>
+                    <button type="submit">Đăng xuất</button>
                 </form>
             </div>
         </div>
+        <a class="sh__call" href="tel:0866785645">
+            <svg aria-hidden="true"><use href="/images/icons.svg#phone"></use></svg>
+            <span>0866 785 645</span>
+        </a>
     </div>
-
-    <!-- Header chinh (logo + ten + hotline) -->
-    <div class="qh-main">
-        <div class="container qh-main-inner">
-            <a class="qh-logo" href="/">
-                <img src="/images/anh-vu-logo.svg" alt="Anh Vu logo" loading="eager" decoding="async">
-            </a>
-            <div class="qh-brand">
-                <h1>VLXD ANH V&#360;</h1>
-                <p>&#8220;S&#7843;n ph&#7849;m ch&#7845;t l&#432;&#7907;ng - Gi&aacute; c&#7843; c&#7841;nh tranh&#8221;</p>
-            </div>
-            <div class="qh-hotline">
-                <span>Hotline:</span>
-                <a href="tel:0866785645">0866 785 645</a>
-            </div>
-        </div>
-    </div>
-
-    <!-- Menu do full width -->
-    <nav class="qh-menu">
-        <div class="container qh-menu-inner">
-            <div class="qh-menu-links">
-                <a class="is-active" href="/">TRANG CH&#7910;</a>
-                <a href="/gioi-thieu">GI&#7898;I THI&#7878;U</a>
-                <a href="/san-pham">S&#7842;N PH&#7848;M</a>
-                <a href="/bao-gia">B&Aacute;O GI&Aacute;</a>
-                <a href="/dat-hang">&#272;&#7862;T H&Agrave;NG</a>
-                <a href="/tra-cuu-don-hang">TRA C&#7912;U</a>
-                <a th:if="${isAdmin}" href="/admin">ADMIN</a>
-            </div>
-            <form class="qh-search global-search" method="get" action="/san-pham" autocomplete="off">
-                <input id="productSearchInput" name="keyword" aria-label="T&#236;m ki&#7871;m s&#7843;n ph&#7849;m" placeholder="Nh&#7853;p t&#7915; kh&oacute;a">
-                <button type="submit" aria-label="Tim kiem">&#128269;</button>
-            </form>
-        </div>
-    </nav>
 </header>
 
-<section class="qh-hero" id="heroSlideshow" aria-label="Vat lieu xay dung Anh Vu">
-    <img class="qh-hero-img is-active" src="/images/materials/hero-construction.jpg" alt="Cong trinh xay dung" loading="eager" decoding="async">
-    <img class="qh-hero-img" src="/images/materials/warehouse.jpg" alt="Kho vat lieu xay dung Anh Vu" loading="lazy" decoding="async">
-    <img class="qh-hero-img" src="/images/materials/brick.jpg" alt="Gach xay dung" loading="lazy" decoding="async">
-    <img class="qh-hero-img" src="/images/materials/steel.jpg" alt="Thep xay dung" loading="lazy" decoding="async">
-
-    <div class="qh-hero-overlay">
-        <div class="container qh-hero-content">
-            <span class="qh-hero-kicker">VLXD - V&#7852;N T&#7842;I - X&Acirc;Y D&#7920;NG</span>
-            <h2>C&Ocirc;NG TY TNHH MTV TM DV XD ANH V&#360;</h2>
-            <p>Cung c&#7845;p g&#7841;ch, xi m&#259;ng, c&aacute;t, &#273;&aacute;, th&eacute;p v&agrave; v&#7853;t t&#432; thi c&ocirc;ng cho nh&agrave; d&acirc;n, th&#7847;u x&acirc;y d&#7921;ng v&agrave; c&ocirc;ng tr&igrave;nh t&#7841;i khu v&#7921;c &#272;&#7891;ng Nai.</p>
-            <div class="qh-hero-buttons">
-                <a class="btn btn-danger btn-lg" href="/san-pham">Xem s&#7843;n ph&#7849;m</a>
-                <a class="btn btn-light btn-lg" href="/dat-hang">&#272;&#7863;t h&agrave;ng ngay</a>
+<!-- Hero: chu ben trai, anh bai hang ben phai -->
+<section class="hp-hero" aria-labelledby="hero-title">
+    <div class="hp-hero__text">
+        <div class="hp-hero__inner">
+            <h1 id="hero-title">Vật liệu xây dựng giao tận công trình</h1>
+            <p>Gạch, xi măng, cát đá, thép từ bãi hàng Bình Long, Đồng Nai. Báo giá trong ngày, xe vào tận hẻm.</p>
+            <div class="hp-hero__cta">
+                <a class="hp-btn hp-btn--primary" href="/san-pham">Xem bảng giá</a>
+                <a class="hp-btn hp-btn--ghost" href="tel:0866785645">Gọi 0866 785 645</a>
             </div>
         </div>
     </div>
-
-    <div class="qh-hero-dots" id="heroDots" aria-hidden="true"></div>
-</section>
-
-<!-- TRUST BADGES SECTION -->
-<section class="trust-badges-section" style="background-color: #f8f9fa; padding: 20px 0; border-bottom: 1px solid #e9ecef;">
-    <div class="container">
-        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 24px; text-align: center;">
-            <div style="display: flex; align-items: center; gap: 8px;">
-                <span style="background: #e3f2fd; color: #0d6efd; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">&#10003;</span>
-                <span style="font-weight: 600; color: #495057;">Cam k&#7871;t &#273;&#7911; h&agrave;ng, &#273;&#7911; tr&#7885;ng l&#432;&#7907;ng</span>
-            </div>
-            <div style="display: flex; align-items: center; gap: 8px;">
-                <span style="background: #e3f2fd; color: #0d6efd; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">&#10003;</span>
-                <span style="font-weight: 600; color: #495057;">Giao &#273;&uacute;ng ti&#7871;n &#273;&#7897; c&ocirc;ng tr&igrave;nh</span>
-            </div>
-            <div style="display: flex; align-items: center; gap: 8px;">
-                <span style="background: #e3f2fd; color: #0d6efd; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">&#10003;</span>
-                <span style="font-weight: 600; color: #495057;">C&oacute; ch&#7913;ng ch&#7881; CO/CQ nh&agrave; m&aacute;y</span>
-            </div>
-            <div style="display: flex; align-items: center; gap: 8px;">
-                <span style="background: #e3f2fd; color: #0d6efd; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold;">&#10003;</span>
-                <span style="font-weight: 600; color: #495057;">C&oacute; xe t&#7843;i, xe ba g&aacute;c giao t&#7853;n n&#417;i</span>
-            </div>
-        </div>
+    <div class="hp-hero__media">
+        <img src="/images/materials/brick.jpg" alt="Bãi gạch xây dựng của VLXD Anh Vũ" width="900" height="600" loading="eager" decoding="async" fetchpriority="high">
     </div>
 </section>
 
-<!-- SO LIEU CHAY TANG DAN (co animation dem so) -->
-<section class="stats-section animate-in">
-    <div class="container stats-grid">
-        <div class="stat-item">
-            <span class="stat-icon">&#127959;&#65039;</span>
-            <strong class="stat-number" data-count="15" data-suffix="+">0</strong>
-            <span>N&#259;m kinh nghi&#7879;m</span>
+<!-- Bang gia nhanh (du lieu that tu kho) -->
+<div class="container" th:if="${priceBoard != null and !priceBoard.isEmpty()}">
+    <section class="hp-board" aria-label="Giá tham khảo hôm nay">
+        <div class="hp-board__head">
+            <strong>Giá hôm nay</strong>
+            <span th:if="${priceUpdatedAt != null}" th:text="|Cập nhật ${#temporals.format(priceUpdatedAt, 'dd/MM/yyyy')}|">Cập nhật</span>
+            <span th:unless="${priceUpdatedAt != null}">Giá tham khảo tại bãi</span>
         </div>
-        <div class="stat-item">
-            <span class="stat-icon">&#128230;</span>
-            <strong class="stat-number" data-count="40" data-suffix="+">0</strong>
-            <span>Lo&#7841;i v&#7853;t li&#7879;u</span>
-        </div>
-        <div class="stat-item">
-            <span class="stat-icon">&#128667;</span>
-            <strong class="stat-number" data-count="2500" data-suffix="+">0</strong>
-            <span>C&ocirc;ng tr&igrave;nh &#273;&atilde; giao</span>
-        </div>
-        <div class="stat-item">
-            <span class="stat-icon">&#9878;&#65039;</span>
-            <strong class="stat-number" data-count="99" data-suffix="%">0</strong>
-            <span>Kh&aacute;ch h&agrave;ng h&agrave;i l&ograve;ng</span>
-        </div>
-    </div>
-</section>
-
-<div class="floating-contact" aria-label="Lien he nhanh" style="background: transparent !important; border: none !important; box-shadow: none !important; padding: 0 !important; backdrop-filter: none !important; display: flex; flex-direction: column; gap: 12px; align-items: flex-end;">
-    <button class="float-item ai-float" id="chatToggle" type="button" aria-label="Mo chatbox AI" aria-expanded="false" style="border-radius: 50% !important; box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important; font-size: 11px; font-weight: 700; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); animation: pulse 2s ease-in-out infinite;">T&#432; v&#7845;n</button>
-    <a class="float-item zalo" th:if="${zaloReady}" th:href="${zalo}" target="_blank" rel="noopener" aria-label="Chat Zalo" style="border-radius: 50% !important; box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);">Zalo</a>
-    <a class="float-item location" href="/bao-gia" aria-label="Bao gia si" style="background: #ed1b2f; color: white; width: auto; padding: 0 20px; font-weight: bold; border-radius: 30px !important; box-shadow: 0 4px 16px rgba(237,27,47,0.4) !important; height: 54px; display: flex; align-items: center; text-decoration: none; transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); animation: glow 3s ease-in-out infinite;">Y&ecirc;u c&#7847;u b&aacute;o gi&aacute;</a>
+        <ul>
+            <li th:each="item : ${priceBoard}">
+                <a th:href="@{'/san-pham/' + ${item.id}}">
+                    <small th:text="${item.category.name}">Gạch</small>
+                    <b th:text="${item.name}">Gạch ống 8x8x18</b>
+                    <em th:text="|${#numbers.formatDecimal(item.price, 0, 'POINT', 0, 'COMMA')} ₫/${item.unit}|">1.200 ₫/viên</em>
+                </a>
+            </li>
+        </ul>
+        <a class="hp-board__more" href="/san-pham">Bảng giá đầy đủ</a>
+    </section>
 </div>
-<style>
-@keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); box-shadow: 0 6px 20px rgba(237, 27, 47, 0.4); }
-}
-@keyframes glow {
-    0%, 100% { box-shadow: 0 4px 16px rgba(237,27,47,0.4); }
-    50% { box-shadow: 0 6px 24px rgba(237,27,47,0.7), 0 0 30px rgba(237,27,47,0.3); }
-}
-.float-item:hover {
-    transform: translateY(-4px) scale(1.05) !important;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.25) !important;
-}
-.float-item.location:hover {
-    background: #d11828 !important;
-    box-shadow: 0 8px 30px rgba(237,27,47,0.6) !important;
-}
-</style>
-
-<section class="ai-chatbox" id="aiChatbox" aria-label="Tro ly AI VLXD Anh Vu">
-    <div class="chat-panel" id="chatPanel" hidden>
-        <div class="chat-head">
-            <div>
-                <strong>AI VLXD Anh V&#361;</strong>
-                <span>Tr&#7907; l&yacute; t&#432; v&#7845;n 24/7</span>
-            </div>
-            <button type="button" id="chatClose" aria-label="Dong chat">&times;</button>
-        </div>
-        <div class="chat-messages" id="chatMessages">
-            <div class="chat-message bot">Xin ch&agrave;o, t&ocirc;i c&oacute; th&#7875; t&#432; v&#7845;n v&#7853;t li&#7879;u, g&#7907;i &yacute; &#273;&#7883;nh m&#7913;c, h&#432;&#7899;ng d&#7851;n ch&#7885;n v&#7853;t t&#432; v&agrave; &#273;&#7863;t h&agrave;ng.</div>
-        </div>
-        <div class="chat-quick">
-            <button type="button" data-question="T&ocirc;i c&#7847;n x&acirc;y t&#432;&#7901;ng 100m2 th&igrave; n&ecirc;n t&iacute;nh v&#7853;t t&#432; sao?">T&iacute;nh 100m2</button>
-            <button type="button" data-question="C&ocirc;ng ty c&oacute; nh&#7919;ng nh&oacute;m s&#7843;n ph&#7849;m n&agrave;o?">Nh&oacute;m h&agrave;ng</button>
-            <button type="button" data-question="T&ocirc;i mu&#7889;n nh&#7853;n b&aacute;o gi&aacute; s&#7881;">B&aacute;o gi&aacute; s&#7881;</button>
-        </div>
-        <form class="chat-form" id="chatForm">
-            <input id="chatInput" autocomplete="off" placeholder="Nh&#7853;p c&acirc;u h&#7887;i v&#7873; c&aacute;t, &#273;&aacute;, xi m&#259;ng, th&eacute;p...">
-            <button type="submit">G&#7917;i</button>
-        </form>
-    </div>
-</section>
 
 <main>
-
-    <section class="container showroom-section animate-in">
-        <div class="section-heading">
-            <span>Danh m&#7909;c ng&agrave;nh VLXD</span>
-            <h2>Nh&oacute;m h&agrave;ng ph&#7909;c v&#7909; thi c&ocirc;ng</h2>
-        </div>
-        <div class="showroom-grid">
-            <a class="showroom-card" href="/san-pham?category=gach"><img src="/images/materials/brick.jpg" alt="Gach xay dung"><b>G&#7841;ch</b><span>G&#7841;ch &#7889;ng, g&#7841;ch th&#7867;, g&#7841;ch block</span></a>
-            <a class="showroom-card" href="/san-pham?category=xi-mang"><img src="/images/materials/cement.jpg" alt="Xi mang"><b>Xi m&#259;ng</b><span>PCB40, bao 50kg, x&acirc;y t&ocirc; v&agrave; k&#7871;t c&#7845;u</span></a>
-            <a class="showroom-card" href="/san-pham?category=cat-da"><img src="/images/materials/sand.jpg" alt="Cat da xay dung"><b>C&aacute;t - &#273;&aacute;</b><span>C&aacute;t x&acirc;y, c&aacute;t t&ocirc;, &#273;&aacute; 1x2, &#273;&aacute; mi</span></a>
-            <a class="showroom-card" href="/san-pham?category=thep"><img src="/images/materials/steel.jpg" alt="Thep xay dung"><b>Th&eacute;p</b><span>Th&eacute;p c&acirc;y, th&eacute;p cu&#7897;n, th&eacute;p theo quy c&aacute;ch</span></a>
-            <a class="showroom-card" href="/san-pham?category=dich-vu"><img src="/images/products/san-lap-mat-bang.jpg" alt="Dich vu xay dung"><b>D&#7883;ch v&#7909;</b><span>San l&#7845;p, gi&agrave;n gi&aacute;o, &#273;&agrave;o m&oacute;ng, &#273;&agrave;o ao</span></a>
-        </div>
+    <!-- Cam ket: 4 diem, khong the, khong emoji -->
+    <section class="container hp-trust" aria-label="Cam kết của Anh Vũ">
+        <ul>
+            <li>
+                <svg aria-hidden="true"><use href="/images/icons.svg#scales"></use></svg>
+                <div><b>Đủ hàng, đủ trọng lượng</b><span>Cân đo rõ ràng, đối chiếu đủ hàng với khách trước khi giao.</span></div>
+            </li>
+            <li>
+                <svg aria-hidden="true"><use href="/images/icons.svg#truck"></use></svg>
+                <div><b>Xe tải, xe ba gác vào hẻm</b><span>Giao tận chân công trình quanh Bình Long và các phường lân cận.</span></div>
+            </li>
+            <li>
+                <svg aria-hidden="true"><use href="/images/icons.svg#seal-check"></use></svg>
+                <div><b>Có CO/CQ nhà máy</b><span>Xi măng, thép có chứng chỉ xuất xưởng kèm theo hàng.</span></div>
+            </li>
+            <li>
+                <svg aria-hidden="true"><use href="/images/icons.svg#receipt"></use></svg>
+                <div><b>Báo giá trong ngày</b><span>Đơn khối lượng lớn cho nhà thầu có giá riêng.</span></div>
+            </li>
+        </ul>
     </section>
 
-    <section class="container project-showcase-section animate-in" aria-labelledby="project-showcase-title">
-        <div class="section-heading">
-            <span>Năng lực cung ứng</span>
-            <h2 id="project-showcase-title">Vật liệu sẵn sàng cho từng công trình</h2>
-            <p class="showcase-intro">Từ vật liệu xây thô đến vận chuyển tận nơi, Anh Vũ đồng hành cùng nhà dân và đội ngũ thi công.</p>
+    <!-- Nhom hang: o Gach lon, 4 o con lai -->
+    <section class="container hp-sec hp-cats" aria-labelledby="cats-title">
+        <div class="hp-head">
+            <h2 id="cats-title">Nhóm hàng</h2>
+            <a href="/san-pham" th:text="|Tất cả ${productCount != null ? productCount : 40} sản phẩm|">Tất cả 40 sản phẩm</a>
         </div>
-        <div class="project-showcase-grid">
-            <a class="project-feature" href="/san-pham?category=thep">
-                <img src="/images/materials/warehouse.jpg" alt="Kho vật liệu xây dựng Anh Vũ" loading="lazy" decoding="async">
-                <span>Kho hàng</span><strong>Chủ động nguồn vật liệu</strong>
+        <div class="hp-cats__grid">
+            <a class="hp-cat hp-cat--lead" href="/san-pham?category=gach">
+                <img src="/images/materials/brick.jpg" alt="Gạch xây dựng" loading="lazy" decoding="async">
+                <span class="hp-cat__body"><b>Gạch</b><small>Gạch ống, gạch thẻ, gạch block</small></span>
             </a>
-            <a href="/san-pham?category=gach"><img src="/images/materials/brick.jpg" alt="Gạch xây dựng" loading="lazy" decoding="async"><span>Gạch xây dựng</span></a>
-            <a href="/san-pham?category=xi-mang"><img src="/images/materials/cement.jpg" alt="Xi măng xây dựng" loading="lazy" decoding="async"><span>Xi măng</span></a>
-            <a href="/san-pham?category=cat-da"><img src="/images/materials/sand.jpg" alt="Cát đá xây dựng" loading="lazy" decoding="async"><span>Cát đá</span></a>
+            <a class="hp-cat" href="/san-pham?category=xi-mang">
+                <img src="/images/materials/cement.jpg" alt="Xi măng bao" loading="lazy" decoding="async">
+                <span class="hp-cat__body"><b>Xi măng</b><small>PCB40, bao 50 kg, xây tô và kết cấu</small></span>
+            </a>
+            <a class="hp-cat" href="/san-pham?category=cat-da">
+                <img src="/images/materials/sand.jpg" alt="Cát và đá xây dựng" loading="lazy" decoding="async">
+                <span class="hp-cat__body"><b>Cát, đá</b><small>Cát xây, cát tô, đá 1x2, đá mi</small></span>
+            </a>
+            <a class="hp-cat" href="/san-pham?category=thep">
+                <img src="/images/materials/steel.jpg" alt="Thép xây dựng" loading="lazy" decoding="async">
+                <span class="hp-cat__body"><b>Thép</b><small>Thép cây, thép cuộn, thép hình</small></span>
+            </a>
+            <a class="hp-cat" href="/san-pham?category=dich-vu">
+                <img src="/images/products/san-lap-mat-bang.jpg" alt="Xe san lấp mặt bằng" loading="lazy" decoding="async">
+                <span class="hp-cat__body"><b>Dịch vụ</b><small>San lấp, giàn giáo, đào móng, đào ao</small></span>
+            </a>
         </div>
     </section>
 
-    <section id="products" class="container products-section animate-in">
-        <div class="section-heading">
-            <span>S&#7843;n ph&#7849;m n&#7893;i b&#7853;t</span>
-            <h2>V&#7853;t li&#7879;u b&aacute;n ch&#7841;y nh&#7845;t</h2>
+    <!-- San pham ban chay -->
+    <section id="products" class="container hp-sec hp-products" aria-labelledby="products-title">
+        <div class="hp-head">
+            <div>
+                <h2 id="products-title">Bán chạy tại bãi</h2>
+                <p>Giá bán lẻ tham khảo tại bãi. Đơn lớn gọi để có giá sỉ.</p>
+            </div>
         </div>
-        <div class="product-grid">
-            <article class="product-card" th:each="product : ${featuredProducts}">
-                <a class="product-image" th:href="@{'/san-pham/' + ${product.id}}" aria-label="Xem chi tiet">
-                    <img th:src="${product.imagePath}" alt="Vat lieu xay dung" loading="lazy" decoding="async">
-                    <span th:text="${product.category.name}">Danh m&#7909;c</span>
+        <div class="hp-products__grid">
+            <article class="hp-product" th:each="product : ${featuredProducts}">
+                <a class="hp-product__img" th:href="@{'/san-pham/' + ${product.id}}" tabindex="-1" aria-hidden="true">
+                    <img th:src="${product.imagePath}" th:alt="${product.name}" alt="Sản phẩm" loading="lazy" decoding="async">
                 </a>
-                <div class="product-body">
-                    <h3><a th:href="@{'/san-pham/' + ${product.id}}" th:text="${product.name}">T&ecirc;n s&#7843;n ph&#7849;m</a></h3>
-                    <p th:text="${product.description}">M&ocirc; t&#7843;</p>
-                    <a class="detail-link" th:href="@{'/san-pham/' + ${product.id}}">Xem chi ti&#7871;t &#8594;</a>
-                    <div class="product-price-row">
-                        <span class="product-price" th:if="${product.price != null and product.price.doubleValue() > 0}" th:text="|${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} &#8363;/${product.unit}|">0 &#8363;</span>
-                        <span class="product-price price-contact" th:unless="${product.price != null and product.price.doubleValue() > 0}">Li&ecirc;n h&#7879; b&aacute;o gi&aacute;</span>
-                    </div>
-                    <div class="product-line" th:if="${product.price != null and product.price.doubleValue() > 0}"><span>T&#7891;n kho</span><strong th:text="|${product.stockQuantity} ${product.unit}|">0</strong></div>
-                    <div class="product-actions">
-                        <a class="btn btn-sm btn-danger btn-order" th:href="@{/dat-hang(product=${product.name})}">&#272;&#7863;t h&agrave;ng</a>
-                        <a class="btn btn-sm btn-outline-success" href="/bao-gia">B&aacute;o gi&aacute; s&#7881;</a>
+                <div class="hp-product__body">
+                    <small th:text="${product.category.name}">Gạch</small>
+                    <h3><a th:href="@{'/san-pham/' + ${product.id}}" th:text="${product.name}">Tên sản phẩm</a></h3>
+                    <p class="hp-product__price" th:if="${product.price != null and product.price.doubleValue() > 0}">
+                        <span th:text="|${#numbers.formatDecimal(product.price, 0, 'POINT', 0, 'COMMA')} ₫|">1.200 ₫</span>
+                        <small th:text="|/${product.unit}|">/viên</small>
+                    </p>
+                    <p class="hp-product__price hp-product__price--ask" th:unless="${product.price != null and product.price.doubleValue() > 0}">Liên hệ báo giá</p>
+                    <p class="hp-product__stock" th:if="${product.stockQuantity != null and product.stockQuantity > 0}" th:text="|Sẵn kho ${#numbers.formatInteger(product.stockQuantity, 0, 'POINT')} ${product.unit}|">Sẵn kho 50.000 viên</p>
+                    <div class="hp-product__act">
+                        <a class="hp-btn hp-btn--primary hp-btn--sm" th:href="@{/dat-hang(product=${product.name})}">Đặt hàng</a>
+                        <a class="hp-link" href="/bao-gia">Báo giá sỉ</a>
                     </div>
                 </div>
             </article>
         </div>
-        <div class="products-more">
-            <a class="btn btn-outline-dark btn-lg" href="/san-pham">Xem t&#7845;t c&#7843; 40 s&#7843;n ph&#7849;m &#8594;</a>
+        <div class="hp-products__more">
+            <a class="hp-btn hp-btn--outline" href="/san-pham" th:text="|Xem tất cả ${productCount != null ? productCount : 40} sản phẩm|">Xem tất cả 40 sản phẩm</a>
         </div>
     </section>
 
-    <section class="container testimonials-section animate-in">
-        <div class="section-heading">
-            <span>Cam k&#7871;t c&#7911;a ch&uacute;ng t&ocirc;i</span>
-            <h2>V&igrave; sao ch&#7885;n VLXD Anh V&#361;</h2>
-        </div>
-        <div class="testimonial-grid commit-grid">
-            <article>
-                <div class="commit-icon">&#128666;</div>
-                <strong>Giao h&agrave;ng nhanh, t&#7853;n c&ocirc;ng tr&igrave;nh</strong>
-                <p>&#272;&#7897;i xe t&#7843;i, xe ben, xe ba g&aacute;c giao t&#7853;n ch&acirc;n c&ocirc;ng tr&igrave;nh, k&#7875; c&#7843; h&#7867;m nh&#7887; v&agrave; khu v&#7921;c &#273;ang thi c&ocirc;ng.</p>
-            </article>
-            <article>
-                <div class="commit-icon">&#9878;&#65039;</div>
-                <strong>&#272;&uacute;ng tr&#7885;ng l&#432;&#7907;ng, &#273;&uacute;ng ch&#7845;t l&#432;&#7907;ng</strong>
-                <p>C&acirc;n &#273;o r&otilde; r&agrave;ng, v&#7853;t li&#7879;u &#273;&uacute;ng ch&#7911;ng lo&#7841;i cam k&#7871;t. G&#7841;ch, xi m&#259;ng, th&eacute;p c&oacute; ngu&#7891;n g&#7889;c r&otilde; r&agrave;ng.</p>
-            </article>
-            <article>
-                <div class="commit-icon">&#128176;</div>
-                <strong>Gi&aacute; c&#7841;nh tranh, b&aacute;o gi&aacute; nhanh</strong>
-                <p>Gi&aacute; ni&ecirc;m y&#7871;t r&otilde; tr&ecirc;n web. &#272;&#417;n kh&#7889;i l&#432;&#7907;ng l&#7899;n cho nh&agrave; th&#7847;u c&oacute; gi&aacute; &#432;u &#273;&atilde;i ri&ecirc;ng, ph&#7843;n h&#7891;i trong ng&agrave;y.</p>
-            </article>
-            <article>
-                <div class="commit-icon">&#128241;</div>
-                <strong>T&#432; v&#7845;n t&#7853;n t&igrave;nh 24/7</strong>
-                <p>Tr&#7907; l&yacute; AI tr&ecirc;n web + hotline/Zalo lu&ocirc;n s&#7861;n s&agrave;ng t&#432; v&#7845;n &#273;&#7883;nh m&#7913;c, ch&#7885;n v&#7853;t li&#7879;u ph&ugrave; h&#7907;p cho t&#7915;ng h&#7841;ng m&#7909;c.</p>
-            </article>
+    <!-- Cach dat hang: 3 buoc that -->
+    <section class="hp-how" aria-labelledby="how-title">
+        <div class="container hp-how__in">
+            <div class="hp-how__intro">
+                <h2 id="how-title">Đặt hàng thế nào</h2>
+                <p>Không cần tài khoản. Gọi điện, nhắn Zalo hay đặt trên web đều được, nhân viên bãi sẽ xác nhận lại với bạn.</p>
+                <a class="hp-btn hp-btn--primary" href="/dat-hang">Đặt hàng trên web</a>
+            </div>
+            <ol class="hp-steps">
+                <li><b>Gửi loại hàng, số lượng và địa chỉ công trình</b><span>Qua hotline, Zalo hoặc form đặt hàng. Chưa rõ số lượng thì dùng công cụ tính vật liệu ở trang báo giá.</span></li>
+                <li><b>Nhận báo giá và chốt đơn</b><span>Phản hồi trong ngày làm việc. Đơn lớn cho nhà thầu có giá riêng.</span></li>
+                <li><b>Nhận hàng tại công trình</b><span>Kiểm hàng khi xe tới. Thanh toán tiền mặt hoặc chuyển khoản theo mã đơn.</span></li>
+            </ol>
         </div>
     </section>
 
-    <section class="container customer-reviews-section animate-in" aria-labelledby="customer-reviews-title">
-        <div class="section-heading">
-            <span>Phản hồi khách hàng</span>
-            <h2 id="customer-reviews-title">Khách hàng nói gì về Anh Vũ?</h2>
-            <p class="reviews-intro">Một vài phản hồi tiêu biểu từ khách mua vật liệu và đội ngũ thi công tại khu vực.</p>
-        </div>
-        <div class="customer-review-grid">
-            <article class="customer-review-card">
-                <div class="review-topline"><span class="review-avatar">A</span><span class="review-stars" aria-label="5 sao">★★★★★</span></div>
-                <blockquote>“Báo giá nhanh, giao đúng hẹn và tài xế hỗ trợ đưa vật liệu vào tận vị trí công trình.”</blockquote>
-                <strong>Anh A.</strong>
-                <span>Nhà thầu dân dụng · Bình Long</span>
-            </article>
-            <article class="customer-review-card">
-                <div class="review-topline"><span class="review-avatar">H</span><span class="review-stars" aria-label="5 sao">★★★★★</span></div>
-                <blockquote>“Mình cần xi măng và cát gấp cho phần móng, nhân viên tư vấn rõ loại hàng và số lượng cần lấy.”</blockquote>
-                <strong>Chị H.</strong>
-                <span>Khách xây nhà · Đồng Nai</span>
-            </article>
-            <article class="customer-review-card">
-                <div class="review-topline"><span class="review-avatar">T</span><span class="review-stars" aria-label="5 sao">★★★★★</span></div>
-                <blockquote>“Đơn hàng số lượng lớn được báo giá minh bạch, đối chiếu đủ hàng trước khi giao.”</blockquote>
-                <strong>Anh T.</strong>
-                <span>Đội thi công · Phú Cường</span>
-            </article>
-        </div>
-        <a class="reviews-cta" href="/bao-gia">Nhận báo giá cho công trình của bạn <span aria-hidden="true">→</span></a>
-    </section>
-
-    <section id="business-info" class="container business-card animate-in">
-        <div class="section-heading">
-            <span>Th&ocirc;ng tin doanh nghi&#7879;p</span>
-            <h2>C&ocirc;ng ty TNHH MTV TM DV XD Anh V&#361;</h2>
-        </div>
-        <div class="business-grid">
-            <article><span>&#272;&#7883;a ch&#7881;</span><strong>617 Nguy&#7877;n Hu&#7879;, T&#7893; 8 KP Ph&uacute; C&#432;&#7901;ng, Ph&#432;&#7901;ng B&igrave;nh Long, Th&agrave;nh Ph&#7889; &#272;&#7891;ng Nai</strong></article>
-            <article><span>M&atilde; s&#7889; thu&#7871;</span><strong>3901312239</strong></article>
-            <article><span>Gmail</span><strong th:text="${email}">xaydungvantaidaphuongthucanhvu@gmail.com</strong></article>
-            <article th:if="${phone != null and !phone.isBlank()}"><span>&#272;i&#7879;n tho&#7841;i</span><strong><a th:href="|tel:${phone}|" th:text="${phone}">0866785645</a></strong></article>
-            <article th:if="${zaloReady}"><span>Zalo</span><strong><a th:href="${zalo}" target="_blank" rel="noopener">Chat Zalo</a></strong></article>
+    <!-- Ghe bai hang: ban do + lien he -->
+    <section id="business-info" class="container hp-visit" aria-labelledby="visit-title">
+        <div class="hp-visit__in">
+            <div class="hp-visit__map">
+                <iframe src="https://www.google.com/maps?q=617+Nguy%E1%BB%85n+Hu%E1%BB%87,+Ph%C6%B0%E1%BB%9Dng+B%C3%ACnh+Long,+%C4%90%E1%BB%93ng+Nai&amp;z=16&amp;output=embed" title="Bản đồ bãi hàng VLXD Anh Vũ" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+            </div>
+            <div class="hp-visit__info">
+                <h2 id="visit-title">Ghé bãi hàng</h2>
+                <p>Đến xem hàng trực tiếp, cân thử và chọn loại trước khi đặt số lượng lớn.</p>
+                <dl>
+                    <div><dt>Địa chỉ</dt><dd>617 Nguyễn Huệ, Tổ 8 KP Phú Cường, Phường Bình Long, Đồng Nai</dd></div>
+                    <div><dt>Điện thoại</dt><dd><a href="tel:0866785645">0866 785 645</a></dd></div>
+                    <div th:if="${zaloReady}"><dt>Zalo</dt><dd><a th:href="${zalo}" target="_blank" rel="noopener">Nhắn Zalo cho bãi hàng</a></dd></div>
+                    <div><dt>Email</dt><dd><a th:href="|mailto:${email}|" th:text="${email}">xaydungvantaidaphuongthucanhvu@gmail.com</a></dd></div>
+                    <div><dt>Doanh nghiệp</dt><dd th:text="${companyName}">Công ty TNHH MTV TM DV XD Anh Vũ</dd></div>
+                    <div><dt>Mã số thuế</dt><dd>3901312239</dd></div>
+                </dl>
+            </div>
         </div>
     </section>
 </main>
+
+<!-- Nut noi: chat va Zalo, khong nhap nhay -->
+<div class="hp-float" aria-label="Liên hệ nhanh">
+    <button class="hp-float__chat" id="chatToggle" type="button" aria-label="Mở hộp tư vấn" aria-expanded="false">
+        <svg aria-hidden="true"><use href="/images/icons.svg#chat-circle-dots"></use></svg>
+    </button>
+    <a class="hp-float__zalo" th:if="${zaloReady}" th:href="${zalo}" target="_blank" rel="noopener" aria-label="Chat Zalo">Zalo</a>
+</div>
+
+<section class="ai-chatbox" id="aiChatbox" aria-label="Trợ lý tư vấn VLXD Anh Vũ">
+    <div class="chat-panel" id="chatPanel" hidden>
+        <div class="chat-head">
+            <div>
+                <strong>Tư vấn VLXD Anh Vũ</strong>
+                <span>Trả lời tự động theo bảng giá</span>
+            </div>
+            <button type="button" id="chatClose" aria-label="Đóng chat">&times;</button>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="chat-message bot">Xin chào, tôi có thể báo giá, gợi ý định mức và hướng dẫn chọn vật tư, đặt hàng.</div>
+        </div>
+        <div class="chat-quick">
+            <button type="button" data-question="Tôi cần xây tường 100m2 thì nên tính vật tư sao?">Tính 100m2</button>
+            <button type="button" data-question="Công ty có những nhóm sản phẩm nào?">Nhóm hàng</button>
+            <button type="button" data-question="Tôi muốn nhận báo giá sỉ">Báo giá sỉ</button>
+        </div>
+        <form class="chat-form" id="chatForm">
+            <input id="chatInput" autocomplete="off" placeholder="Hỏi về cát, đá, xi măng, thép...">
+            <button type="submit">Gửi</button>
+        </form>
+    </div>
+</section>
 
 <footer class="footer">
     <div class="container footer-grid">
         <div class="footer-col footer-brand">
             <img src="/images/anh-vu-logo.svg" alt="Anh Vu logo" loading="lazy" decoding="async">
-            <strong th:text="${companyName}">C&Ocirc;NG TY TNHH MTV TM DV XD ANH V&#360;</strong>
-            <p>Chuy&ecirc;n cung c&#7845;p g&#7841;ch, xi m&#259;ng, c&aacute;t &#273;&aacute;, th&eacute;p v&agrave; v&#7853;n t&#7843;i thi c&ocirc;ng cho nh&agrave; d&acirc;n v&agrave; nh&agrave; th&#7847;u t&#7841;i B&igrave;nh Long - &#272;&#7891;ng Nai.</p>
+            <strong th:text="${companyName}">CÔNG TY TNHH MTV TM DV XD ANH VŨ</strong>
+            <p>Gạch, xi măng, cát đá, thép và vận tải thi công cho nhà dân và nhà thầu tại Bình Long, Đồng Nai.</p>
         </div>
         <div class="footer-col">
-            <h4>Danh m&#7909;c</h4>
-            <a th:href="@{|/san-pham?category=gach|}">G&#7841;ch x&acirc;y d&#7921;ng</a>
-            <a th:href="@{|/san-pham?category=xi-mang|}">Xi m&#259;ng</a>
-            <a th:href="@{|/san-pham?category=cat-da|}">C&aacute;t - &#273;&aacute;</a>
-            <a th:href="@{|/san-pham?category=thep|}">Th&eacute;p</a>
+            <h4>Nhóm hàng</h4>
+            <a th:href="@{|/san-pham?category=gach|}">Gạch xây dựng</a>
+            <a th:href="@{|/san-pham?category=xi-mang|}">Xi măng</a>
+            <a th:href="@{|/san-pham?category=cat-da|}">Cát, đá</a>
+            <a th:href="@{|/san-pham?category=thep|}">Thép</a>
         </div>
         <div class="footer-col">
-            <h4>D&#7883;ch v&#7909;</h4>
-            <a href="/dat-hang">&#272;&#7863;t h&agrave;ng online</a>
-            <a href="/bao-gia">B&aacute;o gi&aacute; s&#7881;</a>
-            <a href="/tra-cuu-don-hang">Tra c&#7913;u &#273;&#417;n h&agrave;ng</a>
-            <a href="/chinh-sach">Ch&#237;nh s&#225;ch c&#7917;a h&#224;ng</a>
-            <a href="/bao-gia">T&iacute;nh v&#7853;t li&#7879;u</a>
-            <a href="/gioi-thieu">Gi&#7899;i thi&#7879;u</a>
+            <h4>Dịch vụ</h4>
+            <a href="/dat-hang">Đặt hàng online</a>
+            <a href="/bao-gia">Báo giá sỉ</a>
+            <a href="/tra-cuu-don-hang">Tra cứu đơn hàng</a>
+            <a href="/chinh-sach">Chính sách cửa hàng</a>
+            <a href="/gioi-thieu">Giới thiệu</a>
         </div>
         <div class="footer-col">
-            <h4>Li&ecirc;n h&#7879;</h4>
-            <span th:text="|Gmail: ${email}|">Gmail: xaydungvantaidaphuongthucanhvu@gmail.com</span>
-            <span th:if="${phone != null and !phone.isBlank()}" th:text="|S&#272;T: ${phone}|">S&#272;T: 0866785645</span>
+            <h4>Liên hệ</h4>
+            <span th:text="|Email: ${email}|">Email: xaydungvantaidaphuongthucanhvu@gmail.com</span>
+            <span>Điện thoại: 0866 785 645</span>
             <span>MST: 3901312239</span>
-            <span>617 Nguy&#7877;n Hu&#7879;, P. B&igrave;nh Long, TP. &#272;&#7891;ng Nai</span>
+            <span>617 Nguyễn Huệ, P. Bình Long, Đồng Nai</span>
         </div>
     </div>
     <div class="container footer-bottom">
-        <span>&#169; 2026 <b th:text="${companyName}">C&Ocirc;NG TY TNHH MTV TM DV XD ANH V&#360;</b>. M&#7885;i quy&#7873;n &#273;&#432;&#7907;c b&#7843;o l&#432;u.</span>
+        <span>&copy; 2026 <b th:text="${companyName}">CÔNG TY TNHH MTV TM DV XD ANH VŨ</b>. Mọi quyền được bảo lưu.</span>
     </div>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
-<script th:src="@{/js/main.js(v=24)}"></script>
+<button id="scrollToTopBtn" class="hp-top" type="button" aria-label="Lên đầu trang" hidden>
+    <svg aria-hidden="true"><use href="/images/icons.svg#caret-down"></use></svg>
+</button>
 
-<!-- Scroll to Top Button -->
-<button id="scrollToTopBtn" title="L&ecirc;n &#273;&#7847;u trang" style="display: none; position: fixed; bottom: 85px; right: 20px; z-index: 98; border: none; outline: none; background-color: var(--primary); color: white; cursor: pointer; padding: 12px; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.3); transition: all 0.3s; width: 45px; height: 45px; align-items: center; justify-content: center;">&#8593;</button>
-
+<script th:src="@{/js/main.js(v=26)}"></script>
 <script>
-    // Scroll to top logic
-    let topBtn = document.getElementById("scrollToTopBtn");
-    window.onscroll = function() {
-        if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
-            topBtn.style.display = "flex";
-        } else {
-            topBtn.style.display = "none";
-        }
-    };
-    topBtn.onclick = function() {
-        window.scrollTo({top: 0, behavior: "smooth"});
-    };
-
-    // ===== Hero slideshow full man hinh (crossfade + nut cham) =====
+    // Nut len dau trang: hien khi hero da cuon khuat (khong dung su kien scroll)
     (function () {
-        const box = document.getElementById("heroSlideshow");
-        if (!box) return;
-        const slides = box.querySelectorAll(".qh-hero-img");
-        const dotsBox = document.getElementById("heroDots");
-        if (slides.length < 2) return;
-        let current = 0;
-        let timer = null;
-
-        // Tao nut cham cho tung anh
-        const dots = [];
-        if (dotsBox) {
-            slides.forEach((_, i) => {
-                const b = document.createElement("button");
-                b.type = "button";
-                b.setAttribute("aria-label", "Anh " + (i + 1));
-                if (i === 0) b.classList.add("is-active");
-                b.addEventListener("click", () => { goTo(i); restart(); });
-                dotsBox.appendChild(b);
-                dots.push(b);
-            });
-        }
-
-        const goTo = (idx) => {
-            slides[current].classList.remove("is-active");
-            if (dots[current]) dots[current].classList.remove("is-active");
-            current = (idx + slides.length) % slides.length;
-            slides[current].classList.add("is-active");
-            if (dots[current]) dots[current].classList.add("is-active");
-        };
-
-        const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-        const start = () => { if (!prefersReduced) timer = window.setInterval(() => goTo(current + 1), 4500); };
-        const restart = () => { if (timer) window.clearInterval(timer); start(); };
-        start();
-    })();
-
-    // ===== So lieu chay tang dan khi cuon toi =====
-    (function () {
-        const nums = document.querySelectorAll(".stat-number");
-        if (!nums.length) return;
-
-        const animateCount = (el) => {
-            const target = parseInt(el.dataset.count, 10) || 0;
-            const suffix = el.dataset.suffix || "";
-            const duration = 1600;
-            const start = performance.now();
-            const step = (now) => {
-                const progress = Math.min((now - start) / duration, 1);
-                // easeOutCubic cho cam giac cham dan luc cuoi
-                const eased = 1 - Math.pow(1 - progress, 3);
-                const value = Math.round(target * eased);
-                el.textContent = value.toLocaleString("vi-VN") + suffix;
-                if (progress < 1) requestAnimationFrame(step);
-            };
-            requestAnimationFrame(step);
-        };
-
-        if ("IntersectionObserver" in window) {
-            const obs = new IntersectionObserver((entries, observer) => {
-                entries.forEach((entry) => {
-                    if (entry.isIntersecting) {
-                        animateCount(entry.target);
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, { threshold: 0.4 });
-            nums.forEach((n) => obs.observe(n));
-        } else {
-            nums.forEach((n) => animateCount(n));
-        }
+        const topBtn = document.getElementById("scrollToTopBtn");
+        const hero = document.querySelector(".hp-hero");
+        if (!topBtn || !hero || !("IntersectionObserver" in window)) return;
+        new IntersectionObserver((entries) => {
+            topBtn.hidden = entries[0].isIntersecting;
+        }, { threshold: 0 }).observe(hero);
+        topBtn.addEventListener("click", () => {
+            const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+            window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
+        });
     })();
 </script>
 </body>
