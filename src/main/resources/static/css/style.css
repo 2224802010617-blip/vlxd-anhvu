@@ -7819,7 +7819,7 @@ body.hp main {
 /* ---------- Hero: chu lon phia tren, anh tran khung phia duoi ---------- */
 .hp-hero {
     padding: 64px 0 0;
-    background: #fff;
+    background: transparent;
     color: var(--ink);
 }
 
@@ -8930,5 +8930,256 @@ body:has(.hp-float) .chat-panel {
     .js-anim .hp-reveal.is-in.hp-cat,
     .js-anim .hp-reveal.is-in.hp-product {
         transition-delay: 0s;
+    }
+}
+
+
+/* ===== V4 FX: chu chay, khoi 3D o khoang trang hai ben, nut noi nhap nhay diu ===== */
+
+/* ---------- Dai bang gia chay ---------- */
+.hp-ticker {
+    position: relative;
+    margin-top: 40px;
+    padding: 18px 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    background: #fff;
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+
+.hp-ticker__track {
+    display: flex;
+    width: max-content;
+    animation: hpTicker 48s linear infinite;
+}
+
+.hp-ticker:hover .hp-ticker__track,
+.hp-ticker:focus-within .hp-ticker__track {
+    animation-play-state: paused;
+}
+
+.hp-ticker ul {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.hp-ticker li {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 28px;
+    white-space: nowrap;
+}
+
+.hp-ticker li::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    background: var(--brand);
+    transform: rotate(45deg);
+}
+
+.hp-ticker a {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 10px;
+    color: var(--ink);
+    text-decoration: none;
+}
+
+.hp-ticker a:hover em {
+    color: var(--brand);
+}
+
+.hp-ticker b {
+    font-family: var(--f-display);
+    font-size: 1.05rem;
+    font-weight: 700;
+}
+
+.hp-ticker em {
+    color: var(--ink-2);
+    font-size: .95rem;
+    font-style: normal;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    transition: color .18s ease;
+}
+
+@keyframes hpTicker {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+}
+
+@media (max-width: 991px) {
+    .hp-ticker {
+        margin-top: 24px;
+        padding: 14px 0;
+    }
+
+    .hp-ticker__track {
+        animation-duration: 32s;
+    }
+
+    .hp-ticker li {
+        padding: 0 18px;
+    }
+
+    .hp-ticker b {
+        font-size: .95rem;
+    }
+
+    .hp-ticker em {
+        font-size: .88rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hp-ticker__track {
+        animation: none;
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .hp-ticker ul[aria-hidden="true"] {
+        display: none;
+    }
+}
+
+/* ---------- Khoi 3D troi o khoang trang hai ben (man hinh rong) ---------- */
+.hp-decor {
+    display: none;
+}
+
+@media (min-width: 1500px) and (prefers-reduced-motion: no-preference) {
+    .hp-decor {
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        display: block;
+        overflow: hidden;
+        pointer-events: none;
+    }
+
+    .hp-cube {
+        position: absolute;
+        width: var(--s, 72px);
+        height: var(--s, 72px);
+        perspective: 700px;
+        animation: hpFloat 7s ease-in-out infinite alternate, hpBreath 4.2s ease-in-out infinite;
+        opacity: .9;
+    }
+
+    .hp-cube > div {
+        position: absolute;
+        inset: 0;
+        transform-style: preserve-3d;
+        animation: hpSpin var(--spin, 28s) linear infinite;
+    }
+
+    .hp-cube i {
+        position: absolute;
+        inset: 0;
+        border: 1px solid rgba(255, 255, 255, .45);
+        background: var(--c);
+        backface-visibility: visible;
+    }
+
+    .hp-cube i:nth-child(1) { transform: translateZ(calc(var(--s) / 2)); }
+    .hp-cube i:nth-child(2) { transform: rotateY(180deg) translateZ(calc(var(--s) / 2)); filter: brightness(.82); }
+    .hp-cube i:nth-child(3) { transform: rotateY(90deg) translateZ(calc(var(--s) / 2)); filter: brightness(.9); }
+    .hp-cube i:nth-child(4) { transform: rotateY(-90deg) translateZ(calc(var(--s) / 2)); filter: brightness(.76); }
+    .hp-cube i:nth-child(5) { transform: rotateX(90deg) translateZ(calc(var(--s) / 2)); filter: brightness(1.12); }
+    .hp-cube i:nth-child(6) { transform: rotateX(-90deg) translateZ(calc(var(--s) / 2)); filter: brightness(.7); }
+
+    /* Gach: mau dat nung, co vach vua */
+    .hp-cube--brick { --c: #c9553b; --s: clamp(48px, calc((100vw - var(--cw)) / 2 * .55), 78px); --spin: 30s; top: 24vh; left: calc((100vw - var(--cw)) / 2 / 2 - var(--s) / 2); }
+    .hp-cube--brick i {
+        background-image:
+            linear-gradient(rgba(255, 255, 255, .28), rgba(255, 255, 255, .28)),
+            linear-gradient(90deg, rgba(255, 255, 255, .28), rgba(255, 255, 255, .28));
+        background-size: 100% 2px, 2px 100%;
+        background-position: 0 50%, 50% 0;
+        background-repeat: no-repeat;
+    }
+
+    /* Xi mang: bao xam, vong tron do */
+    .hp-cube--cement { --c: #d9dde3; --s: clamp(40px, calc((100vw - var(--cw)) / 2 * .46), 64px); --spin: 34s; top: 72vh; left: calc((100vw - var(--cw)) / 2 / 2 - var(--s) / 2); animation-delay: -3s, -1s; }
+    .hp-cube--cement i:nth-child(1),
+    .hp-cube--cement i:nth-child(2) {
+        background-image: radial-gradient(circle at 50% 50%, var(--brand) 0 22%, transparent 24%);
+    }
+
+    /* Thep: xam xanh, nhan */
+    .hp-cube--steel { --c: #5b6675; --s: clamp(44px, calc((100vw - var(--cw)) / 2 * .5), 70px); --spin: 24s; top: 46vh; right: calc((100vw - var(--cw)) / 2 / 2 - var(--s) / 2); animation-delay: -5s, -2s; }
+    .hp-cube--steel i {
+        background-image: linear-gradient(135deg, rgba(255, 255, 255, .35), transparent 45%, rgba(0, 0, 0, .12));
+    }
+
+    @keyframes hpSpin {
+        from { transform: rotateX(-18deg) rotateY(0deg); }
+        to { transform: rotateX(-18deg) rotateY(360deg); }
+    }
+
+    @keyframes hpFloat {
+        from { translate: 0 -16px; }
+        to { translate: 0 16px; }
+    }
+
+    @keyframes hpBreath {
+        0%, 100% { filter: drop-shadow(0 10px 14px rgba(17, 20, 24, .10)); opacity: .78; }
+        50% { filter: drop-shadow(0 22px 30px rgba(17, 20, 24, .22)); opacity: 1; }
+    }
+}
+
+/* ---------- Nut noi: vong song lan + phap phong ---------- */
+@media (prefers-reduced-motion: no-preference) {
+    .hp-float a,
+    .hp-float button {
+        position: relative;
+        animation: hpPulse 2.8s ease-in-out infinite;
+    }
+
+    .hp-float__zalo {
+        animation-delay: 1.4s;
+    }
+
+    .hp-float a::before,
+    .hp-float button::before {
+        content: "";
+        position: absolute;
+        inset: -3px;
+        border: 2px solid var(--ring, #111418);
+        border-radius: 50%;
+        opacity: 0;
+        animation: hpRing 2.8s ease-out infinite;
+    }
+
+    .hp-float__chat { --ring: #111418; }
+    .hp-float__zalo { --ring: #0068ff; }
+    .hp-float__zalo::before { animation-delay: 1.4s; }
+
+    .hp-float a:hover,
+    .hp-float button:hover {
+        animation-play-state: paused;
+    }
+
+    @keyframes hpRing {
+        0% { transform: scale(.92); opacity: .75; }
+        70% { transform: scale(1.5); opacity: 0; }
+        100% { transform: scale(1.5); opacity: 0; }
+    }
+
+    @keyframes hpPulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.06); }
     }
 }
