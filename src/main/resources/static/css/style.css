@@ -10,7 +10,7 @@ body {
     margin: 0;
     color: var(--text);
     background: var(--soft);
-    font-family: Inter, "Segoe UI", Arial, sans-serif;
+    font-family: 'Be Vietnam Pro', "Segoe UI", Arial, sans-serif;
 }
 
 a {
@@ -2616,7 +2616,7 @@ main {
     border-radius: 10px;
     color: #fff;
     cursor: pointer;
-    font: 950 .86rem/1 Inter, "Segoe UI", Arial, sans-serif;
+    font: 950 .86rem/1 'Be Vietnam Pro', "Segoe UI", Arial, sans-serif;
     text-align: center;
     box-shadow:
         0 18px 28px rgba(15, 23, 42, .22),
@@ -3425,7 +3425,7 @@ main {
     padding: 0 16px;
     border: 1px solid transparent;
     border-radius: 12px;
-    font: 900 .92rem/1 Inter, "Segoe UI", Arial, sans-serif;
+    font: 900 .92rem/1 'Be Vietnam Pro', "Segoe UI", Arial, sans-serif;
     color: #fff;
     cursor: pointer;
     transition: transform .2s ease, box-shadow .2s ease, background .2s ease, border-color .2s ease;
@@ -4853,7 +4853,7 @@ body:not(.admin-body) .animate-in {
     padding: 0 12px;
     color: #182230;
     background: #fff;
-    font: 600 .95rem/1 Inter, "Segoe UI", Arial, sans-serif;
+    font: 600 .95rem/1 'Be Vietnam Pro', "Segoe UI", Arial, sans-serif;
     outline: none;
 }
 
@@ -9682,4 +9682,13 @@ body:has(.hp-float) .chat-panel {
 .hp-board em,
 .hp-product__price > span {
     font-variant-numeric: tabular-nums;
+}
+
+
+/* Tieu de H1 trong khoi section-heading (trang dat hang, tra cuu, chinh sach) */
+.section-heading h1 {
+    margin: 4px 0 0;
+    color: var(--ink);
+    font-size: clamp(1.55rem, 2.6vw, 2.25rem);
+    line-height: 1.12;
 }
