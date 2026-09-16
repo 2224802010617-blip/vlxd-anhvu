@@ -10626,3 +10626,46 @@ body:has(.hp-float) .chat-panel {
 details:not([open]) > *:not(summary) {
     display: none;
 }
+
+
+/* Thanh dau trang: cho biet dang dang nhap bang tai khoan nao.
+   Man hinh ngang khong du cho ca email, nen chi hien vong tron chu cai dau
+   (di chuot vao thay email day du); email day du nam trong menu gap. */
+.sh__who {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+.sh__who > b {
+    display: grid;
+    place-items: center;
+    flex: 0 0 auto;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: #fff;
+    font-family: var(--f-display);
+    font-size: .88rem;
+    font-weight: 800;
+    line-height: 1;
+    cursor: default;
+}
+
+@media (max-width: 1199px) {
+    /* Trong menu gap: vong tron + email day du */
+    .sh__who > b {
+        width: 34px;
+        height: 34px;
+    }
+
+    .sh__email {
+        overflow: hidden;
+        color: var(--mute);
+        font-size: .9rem;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
