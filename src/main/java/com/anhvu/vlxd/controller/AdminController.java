@@ -510,6 +510,7 @@ public class AdminController {
                                   @RequestParam(required = false) MultipartFile image,
                                   @RequestParam(required = false) String name,
                                   @RequestParam(required = false) String description,
+                                  @RequestParam(required = false) String detail,
                                   RedirectAttributes redirectAttributes) {
         if (stockQuantity == null || stockQuantity < 0 || price == null || price.compareTo(BigDecimal.ZERO) < 0) {
             redirectAttributes.addFlashAttribute("adminError", "Tồn kho và giá phải lớn hơn hoặc bằng 0.");
@@ -529,6 +530,9 @@ public class AdminController {
         }
         if (description != null) {
             product.setDescription(description.trim());
+        }
+        if (detail != null) {
+            product.setDetail(detail.trim());
         }
         if (productImageService.isUsable(image)) {
             try {

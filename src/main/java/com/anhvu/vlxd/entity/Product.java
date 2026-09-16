@@ -25,6 +25,10 @@ public class Product {
     @Column(columnDefinition = "TEXT")
     private String description;
 
+    /** Mo ta chi tiet hien tren trang san pham (admin tu viet; trong thi dung bai huong dan theo nhom hang). */
+    @Column(columnDefinition = "TEXT")
+    private String detail;
+
     @Column(nullable = false, precision = 18, scale = 2)
     private BigDecimal price;
 

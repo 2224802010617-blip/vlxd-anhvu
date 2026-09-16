@@ -2,6 +2,7 @@ package com.anhvu.vlxd.controller;
 
 import com.anhvu.vlxd.entity.Product;
 import com.anhvu.vlxd.repository.ReviewRepository;
+import com.anhvu.vlxd.service.ProductGuideService;
 import com.anhvu.vlxd.service.ProductService;
 import com.anhvu.vlxd.web.CustomerOrderForm;
 import com.anhvu.vlxd.web.ReviewForm;
@@ -23,8 +24,10 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 
 @Controller
@@ -33,6 +36,8 @@ public class ProductController {
 
     private final ProductService productService;
     private final ReviewRepository reviewRepository;
+    private final ProductGuideService productGuideService;
+    private final com.fasterxml.jackson.databind.ObjectMapper objectMapper;
 
     @Value("${app.business.company-name}")
     private String companyName;
@@ -153,6 +158,26 @@ public class ProductController {
         addCommonAttributes(model);
         model.addAttribute("product", product);
         model.addAttribute("relatedProducts", productService.getRelatedProducts(product, 4));
+        // Bang gia ca nhom hang (san pham cung danh muc, re truoc), ngay cap nhat, bai huong dan
+        String categoryName = product.getCategory() == null ? "" : product.getCategory().getName();
+        List<Product> categoryProducts = productService.getAllActiveProducts().stream()
+                .filter(p -> p.getCategory() != null && categoryName.equals(p.getCategory().getName()))
+                .sorted(Comparator.comparing(Product::getPrice, Comparator.nullsLast(Comparator.naturalOrder())))
+                .toList();
+        model.addAttribute("categoryProducts", categoryProducts);
+        model.addAttribute("categorySlug", categorySlug(categoryName));
+        model.addAttribute("priceUpdatedAt", categoryProducts.stream()
+                .map(p -> p.getUpdatedAt() != null ? p.getUpdatedAt() : p.getCreatedAt())
+                .filter(Objects::nonNull)
+                .max(Comparator.naturalOrder())
+                .orElse(null));
+        ProductGuideService.Guide guide = productGuideService.forProduct(product);
+        boolean hasPrice = product.getPrice() != null && product.getPrice().signum() > 0;
+        model.addAttribute("guide", guide);
+        model.addAttribute("hasPrice", hasPrice);
+        model.addAttribute("detailParagraphs", product.getDetail() == null ? List.of()
+                : java.util.Arrays.stream(product.getDetail().split("\\r?\\n")).map(String::trim).filter(s -> !s.isEmpty()).toList());
+        model.addAttribute("structuredData", structuredData(product, guide, hasPrice));
         return "product-detail";
     }
 
@@ -242,6 +267,61 @@ public class ProductController {
         }
 
         return hints;
+    }
+
+    /** Du lieu co cau truc cho Google: san pham + gia, cau hoi thuong gap, duong dan. */
+    private String structuredData(Product product, ProductGuideService.Guide guide, boolean hasPrice) {
+        String base = "https://vlxd-app-production.up.railway.app";
+        String url = base + "/san-pham/" + product.getId();
+        Map<String, Object> item = new LinkedHashMap<>();
+        item.put("@type", "Product");
+        item.put("name", product.getName());
+        item.put("description", product.getDescription() == null ? "" : product.getDescription());
+        item.put("category", product.getCategory() == null ? "" : product.getCategory().getName());
+        item.put("image", base + (product.getImagePath() == null ? "/images/anh-vu-logo.svg" : product.getImagePath()));
+        item.put("brand", Map.of("@type", "Organization", "name", "VLXD Anh Vũ"));
+        item.put("url", url);
+        if (hasPrice) {
+            Map<String, Object> offer = new LinkedHashMap<>();
+            offer.put("@type", "Offer");
+            offer.put("priceCurrency", "VND");
+            offer.put("price", product.getPrice().stripTrailingZeros().toPlainString());
+            offer.put("availability", product.getStockQuantity() != null && product.getStockQuantity() > 0
+                    ? "https://schema.org/InStock" : "https://schema.org/OutOfStock");
+            offer.put("url", url);
+            offer.put("seller", Map.of("@type", "Organization", "name", companyName));
+            item.put("offers", offer);
+        }
+        List<Map<String, Object>> faqs = new ArrayList<>();
+        for (ProductGuideService.Faq faq : guide.faqs()) {
+            faqs.add(Map.of("@type", "Question", "name", faq.question(),
+                    "acceptedAnswer", Map.of("@type", "Answer", "text", faq.answer())));
+        }
+        List<Map<String, Object>> crumbs = List.of(
+                Map.of("@type", "ListItem", "position", 1, "name", "Trang chủ", "item", base + "/"),
+                Map.of("@type", "ListItem", "position", 2, "name", "Sản phẩm", "item", base + "/san-pham"),
+                Map.of("@type", "ListItem", "position", 3, "name", product.getName(), "item", url));
+        Map<String, Object> root = new LinkedHashMap<>();
+        root.put("@context", "https://schema.org");
+        root.put("@graph", List.of(item,
+                Map.of("@type", "FAQPage", "mainEntity", faqs),
+                Map.of("@type", "BreadcrumbList", "itemListElement", crumbs)));
+        try {
+            return objectMapper.writeValueAsString(root);
+        } catch (Exception e) {
+            return "{}";
+        }
+    }
+
+    /** Ten nhom -> slug dung tren /san-pham?category= */
+    private static String categorySlug(String categoryName) {
+        String lower = categoryName == null ? "" : categoryName.toLowerCase(Locale.ROOT);
+        if (lower.contains("gạch")) return "gach";
+        if (lower.contains("xi măng")) return "xi-mang";
+        if (lower.contains("cát") || lower.contains("đá")) return "cat-da";
+        if (lower.contains("thép")) return "thep";
+        if (lower.contains("dịch vụ")) return "dich-vu";
+        return "";
     }
 
     private CustomerOrderForm prefillOrderForm(String selectedProduct) {

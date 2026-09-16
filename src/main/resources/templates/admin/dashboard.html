@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/css/style.css(v=82)}">
+    <link rel="stylesheet" th:href="@{/css/style.css(v=83)}">
 </head>
 <body class="admin-body no-js">
 <script>document.body.classList.remove("no-js");</script>
@@ -516,6 +516,7 @@
                                     <summary>Sửa tên, mô tả, ảnh</summary>
                                     <input name="name" th:value="${row.product.name}" maxlength="120" aria-label="Tên sản phẩm">
                                     <input name="description" th:value="${row.product.description}" maxlength="255" placeholder="Mô tả ngắn" aria-label="Mô tả">
+                                    <textarea name="detail" th:text="${row.product.detail}" rows="4" maxlength="6000" placeholder="Mô tả chi tiết hiện trên trang sản phẩm (mỗi đoạn một dòng). Để trống thì web dùng bài hướng dẫn theo nhóm hàng." aria-label="Mô tả chi tiết"></textarea>
                                     <label class="inventory-field inventory-field--file">
                                         <span class="inventory-field__label">Đổi ảnh</span>
                                         <input name="image" type="file" accept="image/jpeg,image/png,image/webp" aria-label="Đổi ảnh">

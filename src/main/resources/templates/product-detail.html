@@ -4,14 +4,22 @@
     <meta charset="UTF-8">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title th:text="|${product.name} - VLXD Anh V&#360;|">Chi tiet san pham - VLXD Anh Vu</title>
+    <title th:text="${hasPrice} ? |${product.name} giá ${#numbers.formatDecimal(product.price, 0, 'POINT', 0, 'COMMA')} ₫/${product.unit} tại Bình Long, Đồng Nai - VLXD Anh Vũ| : |${product.name} tại Bình Long, Đồng Nai - VLXD Anh Vũ|">Chi tiết sản phẩm - VLXD Anh Vũ</title>
+    <meta name="description" th:content="|${product.description} Giá tại bãi cập nhật, bảng giá cả nhóm ${product.category.name}, định mức tham khảo và giao tận công trình quanh Bình Long, Đồng Nai.|">
+    <link rel="canonical" th:href="|https://vlxd-app-production.up.railway.app/san-pham/${product.id}|">
+    <meta property="og:type" content="product">
+    <meta property="og:title" th:content="|${product.name} - VLXD Anh Vũ|">
+    <meta property="og:description" th:content="${product.description}">
+    <meta property="og:image" th:content="|https://vlxd-app-production.up.railway.app${product.imagePath}|">
+    <meta property="og:url" th:content="|https://vlxd-app-production.up.railway.app/san-pham/${product.id}|">
+    <meta property="og:locale" content="vi_VN">
     <link rel="icon" type="image/svg+xml" href="/images/anh-vu-logo.svg">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/fonts/fonts.css?v=1">
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
-    <link rel="stylesheet" th:href="@{/css/style.css(v=82)}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css(v=83)}">
+    <script type="application/ld+json" th:utext="${structuredData}">{}</script>
 </head>
-<body>
+<body class="hp pd">
 <header class="sh" id="siteHeader">
     <div class="sh__progress" aria-hidden="true"></div>
     <div class="container sh__in">
@@ -51,111 +59,237 @@
     </div>
 </header>
 
-<main class="container" style="padding-top:28px;padding-bottom:60px;">
-    <nav class="detail-breadcrumb" aria-label="breadcrumb">
-        <a href="/">Trang ch&#7911;</a> <i>/</i>
-        <a href="/san-pham">S&#7843;n ph&#7849;m</a> <i>/</i>
-        <span th:text="${product.name}">S&#7843;n ph&#7849;m</span>
-    </nav>
+<main class="pd-main">
+    <div class="container">
+        <nav class="pd-crumbs" aria-label="Đường dẫn">
+            <a href="/">Trang chủ</a>
+            <a href="/san-pham">Sản phẩm</a>
+            <a th:href="@{/san-pham(category=${categorySlug})}" th:text="${product.category.name}">Nhóm</a>
+            <span th:text="${product.name}">Tên</span>
+        </nav>
 
-    <section class="detail-wrap">
-        <div class="detail-gallery">
-            <img th:src="${product.imagePath}" th:alt="${product.name}" loading="eager" decoding="async">
-            <span class="detail-category" th:text="${product.category.name}">Danh m&#7909;c</span>
-        </div>
-        <div class="detail-info">
-            <h1 th:text="${product.name}">T&ecirc;n s&#7843;n ph&#7849;m</h1>
-            <div class="detail-price-row">
-                <span class="detail-price" th:if="${product.price != null and product.price.doubleValue() > 0}" th:text="|${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} &#8363;/${product.unit}|">0 &#8363;</span>
-                <span class="detail-price price-contact" th:unless="${product.price != null and product.price.doubleValue() > 0}">Li&ecirc;n h&#7879; b&aacute;o gi&aacute;</span>
-                <span class="stock-pill in-stock" th:if="${product.price != null and product.price.doubleValue() > 0 and product.stockQuantity > 0}">C&ograve;n h&agrave;ng</span>
-                <span class="stock-pill out-stock" th:if="${product.price != null and product.price.doubleValue() > 0 and product.stockQuantity <= 0}">H&#7871;t h&agrave;ng</span>
+        <!-- Phan dau: anh + thong tin mua -->
+        <section class="pd-top">
+            <div class="pd-media">
+                <img th:src="${product.imagePath}" th:alt="${product.name}" loading="eager" decoding="async" fetchpriority="high">
             </div>
-            <p class="detail-desc" th:text="${product.description}">M&ocirc; t&#7843; s&#7843;n ph&#7849;m</p>
-            <div class="detail-specs">
-                <div class="detail-line" th:if="${product.price != null and product.price.doubleValue() > 0}"><span>&#272;&#417;n gi&aacute;</span><strong th:text="|${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} &#8363;/${product.unit}|">0 &#8363;</strong></div>
-                <div class="detail-line" th:unless="${product.price != null and product.price.doubleValue() > 0}"><span>&#272;&#417;n gi&aacute;</span><strong>Li&ecirc;n h&#7879; &#273;&#7875; b&aacute;o gi&aacute;</strong></div>
-                <div class="detail-line"><span>&#272;&#417;n v&#7883; t&iacute;nh</span><strong th:text="${product.unit}">&#273;&#417;n v&#7883;</strong></div>
-                <div class="detail-line" th:if="${product.price != null and product.price.doubleValue() > 0}"><span>T&#7891;n kho</span><strong th:text="|${product.stockQuantity} ${product.unit}|">0</strong></div>
-                <div class="detail-line"><span>Danh m&#7909;c</span><strong th:text="${product.category.name}">Danh m&#7909;c</strong></div>
-            </div>
-            <div class="detail-actions">
-                <a class="btn btn-danger btn-lg" th:href="@{/dat-hang(product=${product.name})}">&#272;&#7863;t h&agrave;ng ngay</a>
-                <a class="btn btn-outline-success btn-lg" href="/bao-gia">Nh&#7853;n b&aacute;o gi&aacute; s&#7881;</a>
-            </div>
-            <div class="detail-hotline">
-                <span>C&#7847;n t&#432; v&#7845;n nhanh? G&#7885;i:</span>
-                <a th:if="${phone != null and !phone.isBlank()}" th:href="|tel:${phone}|" th:text="${phone}">0866785645</a>
-            </div>
-        </div>
-    </section>
-
-    <section class="detail-related" th:if="${relatedProducts != null and !relatedProducts.isEmpty()}">
-        <div class="section-heading">
-            <span>S&#7843;n ph&#7849;m c&ugrave;ng nh&oacute;m</span>
-            <h2 th:text="|C&aacute;c s&#7843;n ph&#7849;m ${product.category.name} kh&aacute;c|">S&#7843;n ph&#7849;m li&ecirc;n quan</h2>
-        </div>
-        <div class="product-grid">
-            <article class="product-card" th:each="item : ${relatedProducts}">
-                <a class="product-image" th:href="@{'/san-pham/' + ${item.id}}">
-                    <img th:src="${item.imagePath}" alt="Vat lieu xay dung" loading="lazy" decoding="async">
-                    <span th:text="${item.category.name}">Danh m&#7909;c</span>
-                </a>
-                <div class="product-body">
-                    <h3><a th:href="@{'/san-pham/' + ${item.id}}" th:text="${item.name}">T&ecirc;n s&#7843;n ph&#7849;m</a></h3>
-                    <p th:text="${item.description}">M&ocirc; t&#7843;</p>
-                    <a class="detail-link" th:href="@{'/san-pham/' + ${item.id}}">Xem chi ti&#7871;t &#8594;</a>
-                    <div class="product-price-row">
-                        <span class="product-price" th:if="${item.price != null and item.price.doubleValue() > 0}" th:text="|${#numbers.formatDecimal(item.price, 0, 'COMMA', 0, 'POINT')} &#8363;/${item.unit}|">0 &#8363;</span>
-                        <span class="product-price price-contact" th:unless="${item.price != null and item.price.doubleValue() > 0}">Li&ecirc;n h&#7879; b&aacute;o gi&aacute;</span>
-                        <span class="stock-pill in-stock" th:if="${item.price != null and item.price.doubleValue() > 0 and item.stockQuantity > 0}">C&ograve;n h&agrave;ng</span>
-                        <span class="stock-pill out-stock" th:if="${item.price != null and item.price.doubleValue() > 0 and item.stockQuantity <= 0}">H&#7871;t h&agrave;ng</span>
-                    </div>
-                    <div class="product-line" th:if="${item.price != null and item.price.doubleValue() > 0}"><span>T&#7891;n kho</span><strong th:text="|${item.stockQuantity} ${item.unit}|">0</strong></div>
-                    <div class="product-actions">
-                        <a class="btn btn-sm btn-danger btn-order" th:href="@{/dat-hang(product=${item.name})}">&#272;&#7863;t h&agrave;ng</a>
-                        <a class="btn btn-sm btn-outline-success" href="/bao-gia">B&aacute;o gi&aacute; s&#7881;</a>
-                    </div>
+            <div class="pd-info">
+                <small th:text="${product.category.name}">Nhóm</small>
+                <h1 th:text="${product.name}">Tên sản phẩm</h1>
+                <p class="pd-lead" th:text="${product.description}">Mô tả</p>
+                <div class="pd-price" th:if="${hasPrice}">
+                    <b th:text="|${#numbers.formatDecimal(product.price, 0, 'POINT', 0, 'COMMA')} ₫|">0 ₫</b>
+                    <span th:text="|/${product.unit}|">/đv</span>
+                    <em th:if="${priceUpdatedAt != null}" th:text="|Giá tại bãi, cập nhật ${#temporals.format(priceUpdatedAt, 'dd/MM/yyyy')}|">Cập nhật</em>
                 </div>
-            </article>
-        </div>
-    </section>
+                <div class="pd-price pd-price--ask" th:unless="${hasPrice}">
+                    <b>Liên hệ báo giá</b>
+                    <em>Giá theo khối lượng và địa điểm, phản hồi trong ngày làm việc</em>
+                </div>
+                <dl class="pd-facts">
+                    <div th:if="${hasPrice}"><dt>Sẵn kho</dt><dd th:text="${product.stockQuantity != null and product.stockQuantity > 0} ? |${#numbers.formatInteger(product.stockQuantity, 0, 'POINT')} ${product.unit}| : 'Hết hàng, gọi để đặt trước'">0</dd></div>
+                    <div><dt>Đơn vị bán</dt><dd th:text="${product.unit}">đv</dd></div>
+                    <div th:if="${product.consumptionPerM2 != null and product.consumptionPerM2.doubleValue() > 0}"><dt>Định mức tham khảo</dt><dd th:text="|${#numbers.formatDecimal(product.consumptionPerM2, 0, 'POINT', 2, 'COMMA')} ${product.unit}/m²|">0</dd></div>
+                    <div><dt>Giao hàng</dt><dd>Xe tải, xe ba gác quanh Bình Long, Đồng Nai</dd></div>
+                    <div th:if="${#strings.containsIgnoreCase(product.category.name, 'xi măng') or #strings.containsIgnoreCase(product.category.name, 'thép')}"><dt>Chứng từ</dt><dd>CO/CQ nhà máy theo lô</dd></div>
+                </dl>
+                <div class="pd-cta">
+                    <a class="hp-btn hp-btn--primary" th:href="@{/dat-hang(product=${product.name})}" th:text="${hasPrice} ? 'Đặt hàng' : 'Yêu cầu báo giá'">Đặt hàng</a>
+                    <a class="hp-btn hp-btn--outline" href="tel:0866785645">Gọi 0866 785 645</a>
+                    <a class="hp-link" th:if="${zaloReady}" th:href="${zalo}" target="_blank" rel="noopener">Nhắn Zalo</a>
+                </div>
+                <p class="pd-note" th:if="${hasPrice}">Giá tham khảo tại bãi, chưa gồm vận chuyển. Đơn khối lượng lớn gọi để có giá riêng.</p>
+            </div>
+        </section>
+
+        <!-- Tinh nhanh theo m2 -->
+        <section class="pd-calc" th:if="${hasPrice and product.consumptionPerM2 != null and product.consumptionPerM2.doubleValue() > 0}" aria-labelledby="calc-title">
+            <div>
+                <h2 id="calc-title">Tính nhanh số lượng</h2>
+                <p th:text="|Định mức tham khảo ${#numbers.formatDecimal(product.consumptionPerM2, 0, 'POINT', 2, 'COMMA')} ${product.unit} cho mỗi m². Nhập diện tích để ước lượng, đã cộng 5% hao hụt.|">Định mức</p>
+            </div>
+            <form class="pd-calc__form" onsubmit="return false" th:attr="data-rate=${product.consumptionPerM2},data-unit=${product.unit},data-price=${product.price}">
+                <label>Diện tích (m²)
+                    <input type="number" id="calcArea" min="1" step="1" value="100" inputmode="numeric">
+                </label>
+                <output class="pd-calc__out" for="calcArea">
+                    <b id="calcQty">0</b> <span id="calcUnit" th:text="${product.unit}">đv</span>
+                    <small>Tạm tính <span id="calcMoney">0 ₫</span></small>
+                </output>
+                <a class="hp-btn hp-btn--primary hp-btn--sm" th:href="@{/dat-hang(product=${product.name})}">Đặt số lượng này</a>
+            </form>
+        </section>
+
+        <!-- Bang gia ca nhom hang -->
+        <section class="pd-table" aria-labelledby="table-title">
+            <div class="hp-head">
+                <div>
+                    <h2 id="table-title" th:text="|Bảng giá ${product.category.name} tại Bình Long, Đồng Nai|">Bảng giá</h2>
+                    <p th:text="${priceUpdatedAt != null} ? |${#lists.size(categoryProducts)} mặt hàng đang bán, cập nhật ${#temporals.format(priceUpdatedAt, 'dd/MM/yyyy')}. Giá tại bãi, chưa gồm vận chuyển.| : |${#lists.size(categoryProducts)} mặt hàng đang bán. Giá tại bãi, chưa gồm vận chuyển.|">Cập nhật</p>
+                </div>
+                <a th:href="@{/san-pham(category=${categorySlug})}">Xem nhóm hàng</a>
+            </div>
+            <div class="pd-table__wrap">
+                <table>
+                    <thead>
+                    <tr><th>Mặt hàng</th><th>ĐVT</th><th class="num">Giá</th><th class="num">Sẵn kho</th><th></th></tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="p : ${categoryProducts}" th:classappend="${p.id == product.id} ? 'is-current'">
+                        <td data-label="Mặt hàng"><a th:href="@{'/san-pham/' + ${p.id}}" th:text="${p.name}">Tên</a><span class="pd-table__you" th:if="${p.id == product.id}">Đang xem</span></td>
+                        <td data-label="ĐVT" th:text="${p.unit}">đv</td>
+                        <td data-label="Giá" class="num">
+                            <b th:if="${p.price != null and p.price.doubleValue() > 0}" th:text="|${#numbers.formatDecimal(p.price, 0, 'POINT', 0, 'COMMA')} ₫|">0</b>
+                            <span th:unless="${p.price != null and p.price.doubleValue() > 0}">Liên hệ</span>
+                        </td>
+                        <td data-label="Sẵn kho" class="num" th:text="${p.price != null and p.price.doubleValue() > 0 and p.stockQuantity != null} ? ${#numbers.formatInteger(p.stockQuantity, 0, 'POINT')} : '-'">0</td>
+                        <td data-label=""><a class="hp-link" th:href="@{/dat-hang(product=${p.name})}">Đặt</a></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <ul class="pd-table__notes">
+                <li>Giá niêm yết theo giá nhập từ nhà máy, có thể thay đổi theo tháng. Gọi để chốt giá khi đặt đơn lớn.</li>
+                <li>Phí vận chuyển báo theo địa chỉ và loại xe vào được. Nhận hàng kiểm đủ rồi mới thanh toán.</li>
+                <li>Thanh toán tiền mặt khi nhận hoặc chuyển khoản theo mã đơn; đơn trên 100 triệu mời đến bãi.</li>
+            </ul>
+        </section>
+
+        <!-- Mo ta chi tiet do cua hang viet (neu co) -->
+        <section class="pd-detail" th:if="${!detailParagraphs.isEmpty()}" aria-labelledby="detail-title">
+            <h2 id="detail-title" th:text="|Về ${product.name}|">Về sản phẩm</h2>
+            <div class="pd-prose">
+                <p th:each="para : ${detailParagraphs}" th:text="${para}">Đoạn</p>
+            </div>
+        </section>
+
+        <!-- Bai huong dan theo nhom hang -->
+        <section class="pd-guide" aria-labelledby="guide-title">
+            <div class="pd-guide__text">
+                <h2 id="guide-title" th:text="${guide.title}">Hướng dẫn</h2>
+                <div class="pd-prose">
+                    <p th:each="para : ${guide.intro}" th:text="${para}">Đoạn</p>
+                </div>
+                <h3 th:if="${!guide.tips.isEmpty()}">Chọn đúng, dùng đúng</h3>
+                <ul class="pd-tips" th:if="${!guide.tips.isEmpty()}">
+                    <li th:each="tip : ${guide.tips}" th:text="${tip}">Mẹo</li>
+                </ul>
+            </div>
+            <aside class="pd-norms" th:if="${!guide.norms.isEmpty()}">
+                <h3>Định mức tham khảo</h3>
+                <table>
+                    <tbody>
+                    <tr th:each="n : ${guide.norms}"><th th:text="${n.item}">Hạng mục</th><td th:text="${n.value}">Giá trị</td></tr>
+                    </tbody>
+                </table>
+                <p>Số liệu tham khảo cho thi công dân dụng, thay đổi theo thiết kế và tay nghề. Gọi bãi để tính chi tiết cho công trình của bạn.</p>
+            </aside>
+        </section>
+
+        <!-- Cau hoi thuong gap -->
+        <section class="pd-faq" th:if="${!guide.faqs.isEmpty()}" aria-labelledby="faq-title">
+            <h2 id="faq-title">Câu hỏi thường gặp</h2>
+            <div class="pd-faq__list">
+                <details th:each="f, st : ${guide.faqs}" th:attr="open=${st.first} ? 'open' : null">
+                    <summary th:text="${f.question}">Câu hỏi</summary>
+                    <p th:text="${f.answer}">Trả lời</p>
+                </details>
+            </div>
+        </section>
+
+        <!-- Cung nhom -->
+        <section class="pd-related" th:if="${relatedProducts != null and !relatedProducts.isEmpty()}" aria-labelledby="related-title">
+            <div class="hp-head">
+                <h2 id="related-title" th:text="|Cùng nhóm ${product.category.name}|">Cùng nhóm</h2>
+                <a th:href="@{/san-pham(category=${categorySlug})}">Tất cả</a>
+            </div>
+            <div class="hp-products__grid">
+                <article class="hp-product" th:each="item : ${relatedProducts}">
+                    <a class="hp-product__img" th:href="@{'/san-pham/' + ${item.id}}" tabindex="-1" aria-hidden="true">
+                        <img th:src="${item.imagePath}" th:alt="${item.name}" loading="lazy" decoding="async">
+                    </a>
+                    <div class="hp-product__body">
+                        <small th:text="${item.category.name}">Nhóm</small>
+                        <h3><a th:href="@{'/san-pham/' + ${item.id}}" th:text="${item.name}">Tên</a></h3>
+                        <p class="hp-product__price" th:if="${item.price != null and item.price.doubleValue() > 0}">
+                            <span th:text="|${#numbers.formatDecimal(item.price, 0, 'POINT', 0, 'COMMA')} ₫|">0 ₫</span>
+                            <small th:text="|/${item.unit}|">/đv</small>
+                        </p>
+                        <p class="hp-product__price hp-product__price--ask" th:unless="${item.price != null and item.price.doubleValue() > 0}">Liên hệ báo giá</p>
+                        <div class="hp-product__act">
+                            <a class="hp-btn hp-btn--primary hp-btn--sm" th:href="@{/dat-hang(product=${item.name})}">Đặt hàng</a>
+                            <a class="hp-link" th:href="@{'/san-pham/' + ${item.id}}">Chi tiết</a>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </div>
 </main>
+
+<a class="hp-phone" href="tel:0866785645" aria-label="Gọi ngay 0866 785 645">
+    <span class="hp-phone__icon"><svg aria-hidden="true"><use href="/images/icons.svg#phone"></use></svg></span>
+    <span class="hp-phone__text"><small>Gọi ngay</small><b>0866 785 645</b></span>
+</a>
+<div class="hp-float" aria-label="Liên hệ nhanh">
+    <a class="hp-float__zalo" th:if="${zaloReady}" th:href="${zalo}" target="_blank" rel="noopener" aria-label="Chat Zalo">Zalo</a>
+</div>
 
 <footer class="footer">
     <div class="container footer-grid">
         <div class="footer-col footer-brand">
             <img src="/images/anh-vu-logo.svg" alt="Anh Vu logo" loading="lazy" decoding="async">
-            <strong th:text="${companyName}">C&Ocirc;NG TY TNHH MTV TM DV XD ANH V&#360;</strong>
-            <p>Chuy&ecirc;n cung c&#7845;p g&#7841;ch, xi m&#259;ng, c&aacute;t &#273;&aacute;, th&eacute;p v&agrave; v&#7853;n t&#7843;i thi c&ocirc;ng cho nh&agrave; d&acirc;n v&agrave; nh&agrave; th&#7847;u t&#7841;i B&igrave;nh Long - &#272;&#7891;ng Nai.</p>
+            <strong th:text="${companyName}">CÔNG TY TNHH MTV TM DV XD ANH VŨ</strong>
+            <p>Gạch, xi măng, cát đá, thép và vận tải thi công cho nhà dân và nhà thầu tại Bình Long, Đồng Nai.</p>
         </div>
         <div class="footer-col">
-            <h4>Danh m&#7909;c</h4>
-            <a th:href="@{|/san-pham?category=gach|}">G&#7841;ch x&acirc;y d&#7921;ng</a>
-            <a th:href="@{|/san-pham?category=xi-mang|}">Xi m&#259;ng</a>
-            <a th:href="@{|/san-pham?category=cat-da|}">C&aacute;t - &#273;&aacute;</a>
-            <a th:href="@{|/san-pham?category=thep|}">Th&eacute;p</a>
+            <h4>Nhóm hàng</h4>
+            <a th:href="@{|/san-pham?category=gach|}">Gạch xây dựng</a>
+            <a th:href="@{|/san-pham?category=xi-mang|}">Xi măng</a>
+            <a th:href="@{|/san-pham?category=cat-da|}">Cát, đá</a>
+            <a th:href="@{|/san-pham?category=thep|}">Thép</a>
         </div>
         <div class="footer-col">
-            <h4>D&#7883;ch v&#7909;</h4>
-            <a href="/dat-hang">&#272;&#7863;t h&agrave;ng online</a>
-            <a href="/bao-gia">B&aacute;o gi&aacute; s&#7881;</a>
-            <a href="/bao-gia">T&iacute;nh v&#7853;t li&#7879;u</a>
+            <h4>Dịch vụ</h4>
+            <a href="/dat-hang">Đặt hàng online</a>
+            <a href="/bao-gia">Báo giá sỉ</a>
+            <a href="/tra-cuu-don-hang">Tra cứu đơn hàng</a>
+            <a href="/chinh-sach">Chính sách cửa hàng</a>
+            <a href="/gioi-thieu">Giới thiệu</a>
         </div>
         <div class="footer-col">
-            <h4>Li&ecirc;n h&#7879;</h4>
-            <span th:text="|Gmail: ${email}|">Gmail: xaydungvantaidaphuongthucanhvu@gmail.com</span>
-            <span th:if="${phone != null and !phone.isBlank()}" th:text="|S&#272;T: ${phone}|">S&#272;T: 0866785645</span>
+            <h4>Liên hệ</h4>
+            <span th:text="|Email: ${email}|">Email</span>
+            <span>Điện thoại: 0866 785 645</span>
             <span>MST: 3901312239</span>
-            <span>617 Nguy&#7877;n Hu&#7879;, P. B&igrave;nh Long, TP. &#272;&#7891;ng Nai</span>
+            <span>617 Nguyễn Huệ, P. Bình Long, Đồng Nai</span>
         </div>
     </div>
     <div class="container footer-bottom">
-        <span>&#169; 2026 <b th:text="${companyName}">C&Ocirc;NG TY TNHH MTV TM DV XD ANH V&#360;</b>. M&#7885;i quy&#7873;n &#273;&#432;&#7907;c b&#7843;o l&#432;u.</span>
+        <span>&copy; 2026 <b th:text="${companyName}">CÔNG TY TNHH MTV TM DV XD ANH VŨ</b>. Mọi quyền được bảo lưu.</span>
     </div>
 </footer>
 
-<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
 <script th:src="@{/js/main.js(v=29)}"></script>
+<script>
+    // Tinh nhanh so luong theo m2: so luong = m2 x dinh muc x 1,05 (hao hut), lam tron len
+    (function () {
+        var form = document.querySelector('.pd-calc__form');
+        if (!form) return;
+        var rate = parseFloat(form.dataset.rate), price = parseFloat(form.dataset.price) || 0;
+        var whole = /viên|bao|cây|tấm|bộ/i.test(form.dataset.unit || ''); // don vi dem thi lam tron len so nguyen
+        var area = document.getElementById('calcArea'), qty = document.getElementById('calcQty'), money = document.getElementById('calcMoney');
+        var fmt = function (n) { return Math.round(n).toLocaleString('vi-VN'); };
+        var update = function () {
+            var m2 = Math.max(0, parseFloat(area.value) || 0);
+            var raw = m2 * rate * 1.05;
+            var q = whole ? Math.ceil(raw) : Math.ceil(raw * 100) / 100;
+            qty.textContent = q % 1 === 0 ? fmt(q) : q.toLocaleString('vi-VN', { maximumFractionDigits: 2 });
+            money.textContent = fmt(q * price) + ' ₫';
+        };
+        area.addEventListener('input', update);
+        update();
+    })();
+</script>
 </body>
 </html>
