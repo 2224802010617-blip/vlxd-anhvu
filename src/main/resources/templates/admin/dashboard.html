@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/css/style.css(v=92)}">
+    <link rel="stylesheet" th:href="@{/css/style.css(v=93)}">
 </head>
 <body class="admin-body no-js">
 <script>document.body.classList.remove("no-js");</script>
@@ -804,8 +804,8 @@
                             <a th:if="${a.phone != null and !a.phone.isBlank()}" th:href="|tel:${a.phone}|" th:text="${a.phone}">0900</a>
                             <span th:unless="${a.phone != null and !a.phone.isBlank()}">--</span>
                         </td>
-                        <td data-label="Cách đăng ký" th:text="${a.providerLabel()}">Tự đăng ký</td>
-                        <td data-label="Ngày đăng ký" th:text="${a.createdAt != null ? #temporals.format(a.createdAt, 'dd/MM/yyyy') : '--'}">--</td>
+                        <td data-label="Đăng ký" th:text="${a.providerLabel()}">Tự đăng ký</td>
+                        <td data-label="Ngày" th:text="${a.createdAt != null ? #temporals.format(a.createdAt, 'dd/MM/yyyy') : '--'}">--</td>
                         <td data-label="Đã đặt" class="text-end">
                             <b th:text="${a.orders}">0</b>
                             <small th:if="${a.totalSpent > 0}" th:text="|${#numbers.formatDecimal(a.totalSpent, 0, 'POINT', 0, 'COMMA')} ₫|">0 ₫</small>
@@ -813,6 +813,7 @@
                         </td>
                         <td data-label="Thao tác">
                             <a class="admin-link" th:if="${a.phone != null and !a.phone.isBlank()}" th:href="@{/admin(q=${a.phone})} + '#orders'">Xem đơn</a>
+                            <span th:unless="${a.phone != null and !a.phone.isBlank()}">--</span>
                         </td>
                     </tr>
                     <tr th:if="${#lists.isEmpty(accounts)}">

@@ -10669,3 +10669,14 @@ details:not([open]) > *:not(summary) {
         white-space: nowrap;
     }
 }
+
+
+/* Admin tren dien thoai: chu dai (email, dia chi) phai xuong dong trong the, khong tran ra ngoai */
+@media (max-width: 760px) {
+    .admin-table:not(.inventory-table) tbody td,
+    .admin-table:not(.inventory-table) tbody td b,
+    .admin-table:not(.inventory-table) tbody td a {
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+}
