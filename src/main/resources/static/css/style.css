@@ -7510,7 +7510,7 @@ body.hp main {
     box-shadow: none;
 }
 
-.sh .qh-search button {
+.sh .qh-search > button[type="submit"] {
     display: grid;
     place-items: center;
     width: 40px;
@@ -7523,14 +7523,70 @@ body.hp main {
     box-shadow: none;
 }
 
-.sh .qh-search button svg {
+.sh .qh-search > button[type="submit"] svg {
     width: 20px;
     height: 20px;
     fill: currentColor;
 }
 
+/* Khung goi y do JS sinh ra: hang ngang, chu toi, khong bi bop */
 .sh .qh-search .search-suggest {
+    top: calc(100% + 6px);
+    right: 0;
+    left: 0;
+    min-width: 280px;
+    padding: 4px;
+    border: 1px solid var(--line);
+    border-radius: var(--r);
+    background: #fff;
     color: var(--ink);
+    box-shadow: 0 18px 40px rgba(16, 24, 40, .18);
+}
+
+.sh .qh-search .search-suggest__item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    width: 100%;
+    height: auto;
+    padding: 9px 12px;
+    border: 0;
+    border-bottom: 1px solid var(--line);
+    border-radius: 4px;
+    background: transparent;
+    color: var(--ink);
+    font: inherit;
+    text-align: left;
+    white-space: normal;
+    cursor: pointer;
+}
+
+.sh .qh-search .search-suggest__item:last-child {
+    border-bottom: 0;
+}
+
+.sh .qh-search .search-suggest__item:hover,
+.sh .qh-search .search-suggest__item.is-active {
+    background: var(--brand-tint);
+}
+
+.sh .qh-search .search-suggest__name {
+    color: var(--ink);
+    font-size: .92rem;
+    font-weight: 600;
+}
+
+.sh .qh-search .search-suggest__meta {
+    color: var(--mute);
+    font-size: .78rem;
+    font-weight: 500;
+}
+
+@media (max-width: 1023px) {
+    .sh .qh-search .search-suggest {
+        min-width: 0;
+    }
 }
 
 .sh__user {
