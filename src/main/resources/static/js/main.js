@@ -938,3 +938,40 @@ document.addEventListener("DOMContentLoaded", () => {
         if (Math.abs(dx) > 40) { go(dx < 0 ? current + 1 : current - 1); restart(); }
     }, { passive: true });
 });
+
+
+// ===== V4: so nhay tu 0 len gia that khi phan tu hien ra (bang gia, gia san pham) =====
+document.addEventListener("DOMContentLoaded", () => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const targets = document.querySelectorAll(".hp-board em, .hp-product__price > span");
+    if (!targets.length || !("IntersectionObserver" in window)) return;
+
+    const animate = (el) => {
+        const original = el.textContent;
+        const match = original.match(/^\s*([\d.]+)([\s\S]*)$/);
+        if (!match) return;
+        const target = parseInt(match[1].replace(/\./g, ""), 10);
+        if (!isFinite(target) || target <= 0) return;
+        const suffix = match[2];
+        const duration = 1100;
+        const start = performance.now();
+        const step = (now) => {
+            const t = Math.min((now - start) / duration, 1);
+            const eased = 1 - Math.pow(1 - t, 3);
+            const value = Math.round(target * eased);
+            el.textContent = value.toLocaleString("vi-VN") + suffix;
+            if (t < 1) requestAnimationFrame(step); else el.textContent = original;
+        };
+        el.textContent = "0" + suffix;
+        requestAnimationFrame(step);
+    };
+
+    const io = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            io.unobserve(entry.target);
+            animate(entry.target);
+        });
+    }, { threshold: .4 });
+    targets.forEach((el) => io.observe(el));
+});
