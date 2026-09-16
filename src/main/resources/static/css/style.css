@@ -10617,3 +10617,12 @@ body:has(.hp-float) .chat-panel {
 }
 
 
+
+
+/* Khoi gap (details): bat buoc an noi dung khi dang dong.
+   Can thiet vi cac quy tac display cua rieng ta (.pay-form, .mail-form, .receive-form,
+   .inventory-more input, form danh gia, cau tra loi FAQ) co the ghi de kieu mac dinh
+   cua trinh duyet, lam noi dung hien ra va tran khoi o chua no. */
+details:not([open]) > *:not(summary) {
+    display: none;
+}

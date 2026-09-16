@@ -34,6 +34,16 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class ProductController {
 
+    /**
+     * Sap xep ten theo bang chu cai tieng Viet (Collator), khong phai theo ma ky tu:
+     * "Cat da" truoc "Cho thue", "Gach ong" truoc "Gach Tuynel".
+     * Tao moi moi lan goi vi Collator khong an toan khi nhieu luong dung chung.
+     */
+    private static Comparator<String> vietnameseOrder() {
+        java.text.Collator collator = java.text.Collator.getInstance(new Locale("vi", "VN"));
+        return collator::compare;
+    }
+
     private final ProductService productService;
     private final ReviewRepository reviewRepository;
     private final ProductGuideService productGuideService;
@@ -215,7 +225,7 @@ public class ProductController {
             case "price-asc" -> Comparator.comparing(Product::getPrice, Comparator.nullsLast(Comparator.naturalOrder()));
             case "price-desc" -> Comparator.comparing(Product::getPrice, Comparator.nullsLast(Comparator.naturalOrder())).reversed();
             case "stock-desc" -> Comparator.comparing(Product::getStockQuantity, Comparator.nullsLast(Comparator.naturalOrder())).reversed();
-            case "name-asc" -> Comparator.comparing(Product::getName, String.CASE_INSENSITIVE_ORDER);
+            case "name-asc" -> Comparator.comparing(Product::getName, vietnameseOrder());
             default -> relevance;
         };
 
