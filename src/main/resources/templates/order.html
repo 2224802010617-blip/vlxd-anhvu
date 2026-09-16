@@ -9,7 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/fonts/fonts.css?v=1">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
-    <link rel="stylesheet" th:href="@{/css/style.css(v=84)}">
+    <link rel="stylesheet" th:href="@{/css/style.css(v=85)}">
 </head>
 <body>
 <header class="sh" id="siteHeader">
@@ -196,38 +196,46 @@
     </section>
 </main>
 
+<a class="hp-phone" href="tel:0866785645" aria-label="Gọi ngay 0866 785 645">
+    <span class="hp-phone__icon"><svg aria-hidden="true"><use href="/images/icons.svg#phone"></use></svg></span>
+    <span class="hp-phone__text"><small>Gọi ngay</small><b>0866 785 645</b></span>
+</a>
+<div class="hp-float" aria-label="Liên hệ nhanh">
+    <a class="hp-float__zalo" th:if="${zaloReady}" th:href="${zalo}" target="_blank" rel="noopener" aria-label="Chat Zalo">Zalo</a>
+</div>
+
 <footer class="footer">
     <div class="container footer-grid">
         <div class="footer-col footer-brand">
             <img src="/images/anh-vu-logo.svg" alt="Anh Vu logo" loading="lazy" decoding="async">
-            <strong th:text="${companyName}">C&Ocirc;NG TY TNHH MTV TM DV XD ANH V&#360;</strong>
-            <p>Chuy&ecirc;n cung c&#7845;p g&#7841;ch, xi m&#259;ng, c&aacute;t &#273;&aacute;, th&eacute;p v&agrave; v&#7853;n t&#7843;i thi c&ocirc;ng cho nh&agrave; d&acirc;n v&agrave; nh&agrave; th&#7847;u t&#7841;i B&igrave;nh Long - &#272;&#7891;ng Nai.</p>
+            <strong th:text="${companyName}">CÔNG TY TNHH MTV TM DV XD ANH VŨ</strong>
+            <p>Gạch, xi măng, cát đá, thép và vận tải thi công cho nhà dân và nhà thầu tại Bình Long, Đồng Nai.</p>
         </div>
         <div class="footer-col">
-            <h4>Danh m&#7909;c</h4>
-            <a th:href="@{|/san-pham?category=gach|}">G&#7841;ch x&acirc;y d&#7921;ng</a>
-            <a th:href="@{|/san-pham?category=xi-mang|}">Xi m&#259;ng</a>
-            <a th:href="@{|/san-pham?category=cat-da|}">C&aacute;t - &#273;&aacute;</a>
-            <a th:href="@{|/san-pham?category=thep|}">Th&eacute;p</a>
+            <h4>Nhóm hàng</h4>
+            <a th:href="@{|/san-pham?category=gach|}">Gạch xây dựng</a>
+            <a th:href="@{|/san-pham?category=xi-mang|}">Xi măng</a>
+            <a th:href="@{|/san-pham?category=cat-da|}">Cát, đá</a>
+            <a th:href="@{|/san-pham?category=thep|}">Thép</a>
         </div>
         <div class="footer-col">
-            <h4>D&#7883;ch v&#7909;</h4>
-            <a href="/dat-hang">&#272;&#7863;t h&agrave;ng online</a>
-            <a href="/bao-gia">B&aacute;o gi&aacute; s&#7881;</a>
-            <a href="/tra-cuu-don-hang">Tra c&#7913;u &#273;&#417;n h&agrave;ng</a>
-            <a href="/chinh-sach">Ch&#237;nh s&#225;ch c&#7917;a h&#224;ng</a>
-            <a href="/gioi-thieu">Gi&#7899;i thi&#7879;u</a>
+            <h4>Dịch vụ</h4>
+            <a href="/dat-hang">Đặt hàng online</a>
+            <a href="/bao-gia">Báo giá sỉ</a>
+            <a href="/tra-cuu-don-hang">Tra cứu đơn hàng</a>
+            <a href="/chinh-sach">Chính sách cửa hàng</a>
+            <a href="/gioi-thieu">Giới thiệu</a>
         </div>
         <div class="footer-col">
-            <h4>Li&ecirc;n h&#7879;</h4>
-            <span th:text="|Gmail: ${email}|">Gmail: xaydungvantaidaphuongthucanhvu@gmail.com</span>
-            <span th:if="${phone != null and !phone.isBlank()}" th:text="|S&#272;T: ${phone}|">S&#272;T: 0866785645</span>
+            <h4>Liên hệ</h4>
+            <span th:text="|Email: ${email}|">Email: xaydungvantaidaphuongthucanhvu@gmail.com</span>
+            <span>Điện thoại: 0866 785 645</span>
             <span>MST: 3901312239</span>
-            <span>617 Nguy&#7877;n Hu&#7879;, P. B&igrave;nh Long, TP. &#272;&#7891;ng Nai</span>
+            <span>617 Nguyễn Huệ, P. Bình Long, Đồng Nai</span>
         </div>
     </div>
     <div class="container footer-bottom">
-        <span>&#169; 2026 <b th:text="${companyName}">C&Ocirc;NG TY TNHH MTV TM DV XD ANH V&#360;</b>. M&#7885;i quy&#7873;n &#273;&#432;&#7907;c b&#7843;o l&#432;u.</span>
+        <span>&copy; 2026 <b th:text="${companyName}">CÔNG TY TNHH MTV TM DV XD ANH VŨ</b>. Mọi quyền được bảo lưu.</span>
     </div>
 </footer>
 

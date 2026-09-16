@@ -32,6 +32,11 @@ public class QuoteRequestController {
     private final com.anhvu.vlxd.service.NotificationService notificationService;
     private final com.anhvu.vlxd.service.EmailContactService emailContactService;
 
+    @org.springframework.beans.factory.annotation.Value("${app.business.phone:}")
+    private String phone;
+    @org.springframework.beans.factory.annotation.Value("${app.business.zalo-url:}")
+    private String zaloUrl;
+
     @PostMapping("/quote-request")
     public String store(@Valid @ModelAttribute("quoteForm") QuoteRequestForm form,
                         BindingResult bindingResult,
@@ -87,6 +92,9 @@ public class QuoteRequestController {
         model.addAttribute("bankAccount", BANK_ACCOUNT);
         model.addAttribute("bankName", BANK_NAME);
         model.addAttribute("email", EMAIL);
+        model.addAttribute("phone", phone == null ? "" : phone.trim());
+        model.addAttribute("zalo", zaloUrl == null ? "" : zaloUrl.trim());
+        model.addAttribute("zaloReady", zaloUrl != null && !zaloUrl.isBlank());
         model.addAttribute("authenticated", authenticated);
         model.addAttribute("currentEmail", currentEmail);
     }

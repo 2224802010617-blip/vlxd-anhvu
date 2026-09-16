@@ -33,6 +33,9 @@ public class OrderLookupController {
     private final CustomerOrderRepository customerOrderRepository;
     private final AdminReportService reportService;
 
+    @org.springframework.beans.factory.annotation.Value("${app.business.zalo-url:}")
+    private String zaloUrl;
+
     @GetMapping
     public String lookupPage(@RequestParam(required = false) String phone, Model model) {
         addCommonAttributes(model);
@@ -64,6 +67,8 @@ public class OrderLookupController {
     private void addCommonAttributes(Model model) {
         model.addAttribute("companyName", "CÔNG TY TNHH MTV TM DV XD ANH VŨ");
         model.addAttribute("email", "xaydungvantaidaphuongthucanhvu@gmail.com");
+        model.addAttribute("zalo", zaloUrl == null ? "" : zaloUrl.trim());
+        model.addAttribute("zaloReady", zaloUrl != null && !zaloUrl.isBlank());
         model.addAttribute("authenticated", false);
         model.addAttribute("currentEmail", "");
     }

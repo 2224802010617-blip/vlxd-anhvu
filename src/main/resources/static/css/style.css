@@ -9891,10 +9891,16 @@ body:has(.hp-float) .chat-panel {
 
 .hp-hp {
     position: absolute !important;
-    left: -9999px !important;
     width: 1px;
     height: 1px;
+    margin: -1px;
+    padding: 0;
+    border: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
     opacity: 0;
+    pointer-events: none;
 }
 
 @media (max-width: 991px) {
