@@ -7173,3 +7173,173 @@ textarea:focus-visible {
 }
 .admin-nav__logout { display: none; margin-left: auto; color: #fb7185 !important; }
 @media (max-width: 760px) { .admin-nav__logout { display: inline-flex; } }
+
+
+/* ===== Admin: menu co dinh - cot trai tren may tinh, thanh day tren dien thoai ===== */
+.admin-nav a i { font-style: normal; line-height: 1; }
+.admin-nav__brand { display: none; }
+.admin-nav__logout { color: #fb7185 !important; }
+
+@media (min-width: 1024px) {
+    .admin-nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: 232px;
+        z-index: 60;
+        padding: 18px 12px;
+        overflow-y: auto;
+        background: #0b1220;
+        border-right: 1px solid rgba(148, 163, 184, .18);
+        border-bottom: 0;
+        backdrop-filter: none;
+    }
+    .admin-nav__brand {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 0 6px 18px;
+        color: #f8fafc;
+        font-weight: 800;
+        text-decoration: none;
+    }
+    .admin-nav__brand img { height: 40px; border-radius: 6px; }
+    .admin-nav__inner {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        padding: 0;
+        margin: 0;
+        max-width: none;
+        width: auto;
+        overflow: visible;
+    }
+    .admin-nav a {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+        padding: 11px 14px;
+        border-radius: 10px;
+        font-size: .92rem;
+    }
+    .admin-nav a i { width: 22px; text-align: center; font-size: 1.1rem; }
+    .admin-nav a span { flex: 1; }
+    .admin-nav a b { margin-left: auto; }
+    .admin-nav__logout {
+        display: flex !important;
+        margin-top: auto;
+        margin-left: 0;
+        padding-top: 14px;
+        border-top: 1px solid rgba(148, 163, 184, .18);
+        border-radius: 0 !important;
+    }
+    .admin-nav__logout:hover { background: transparent; }
+    /* Noi dung nhuong cho cot menu */
+    .admin-topbar,
+    .admin-page,
+    .admin-body > main,
+    .admin-body > header { margin-left: 232px; }
+    .admin-topbar { position: sticky; top: 0; z-index: 50; }
+    .admin-brand { display: none; }
+    .admin-topbar__inner { justify-content: space-between; }
+    .admin-topbar__inner::before {
+        content: attr(data-today);
+        color: #cbd5e1;
+        font-size: .9rem;
+        font-weight: 600;
+    }
+    .admin-page.container,
+    .admin-topbar .container { max-width: none; padding-left: 28px; padding-right: 28px; }
+}
+
+@media (max-width: 1023px) {
+    .admin-nav {
+        position: fixed;
+        top: auto;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 60;
+        background: rgba(11, 18, 32, .97);
+        border-top: 1px solid rgba(148, 163, 184, .25);
+        border-bottom: 0;
+        box-shadow: 0 -8px 24px rgba(0, 0, 0, .35);
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+    .admin-nav__inner {
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        gap: 0;
+        padding: 4px 6px;
+        margin: 0;
+        max-width: none;
+        overflow-x: auto;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+    }
+    .admin-nav__inner::-webkit-scrollbar { display: none; }
+    .admin-nav a {
+        position: relative;
+        flex: 0 0 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 3px;
+        min-width: 74px;
+        min-height: 56px;
+        padding: 6px 6px;
+        border-radius: 12px;
+        font-size: .7rem;
+        font-weight: 700;
+        line-height: 1.1;
+        white-space: nowrap;
+    }
+    .admin-nav a i { font-size: 1.3rem; }
+    .admin-nav a b {
+        position: absolute;
+        top: 2px;
+        right: 8px;
+        min-width: 18px;
+        height: 18px;
+        line-height: 18px;
+        font-size: .68rem;
+        padding: 0 5px;
+    }
+    .admin-nav__logout { display: flex !important; margin-left: 0; }
+    /* Chua cho cho thanh menu day */
+    .admin-body { padding-bottom: calc(76px + env(safe-area-inset-bottom)); }
+    .admin-topbar__actions { display: none; }
+}
+
+/* Sua: .admin-nav a co do uu tien cao hon .admin-nav__brand; container Bootstrap rong 100% nen tran khi co margin-left */
+.admin-nav a.admin-nav__brand { display: none; }
+@media (min-width: 1024px) {
+    .admin-nav a.admin-nav__brand { display: flex; }
+    .admin-page.container,
+    .admin-topbar .container { width: auto; }
+    .admin-topbar { margin-left: 232px; }
+}
+@media (max-width: 1023px) {
+    .admin-nav a.admin-nav__brand { display: none !important; }
+    .admin-nav { padding: 0; }
+    /* Bao hieu con muc ben phai: mo dan mep phai thanh menu */
+    .admin-nav::after {
+        content: "";
+        position: absolute;
+        top: 0; right: 0; bottom: 0;
+        width: 28px;
+        pointer-events: none;
+        background: linear-gradient(90deg, rgba(11, 18, 32, 0), rgba(11, 18, 32, .95));
+    }
+}
+
+/* Cot menu trai: khong cho cuon ngang, ten "Quan tri" khong xuong dong */
+@media (min-width: 1024px) {
+    .admin-nav { overflow-x: hidden; }
+    .admin-nav a.admin-nav__brand span { white-space: nowrap; }
+    .admin-nav a { box-sizing: border-box; }
+}

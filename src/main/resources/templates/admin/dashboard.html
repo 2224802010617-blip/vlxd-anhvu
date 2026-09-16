@@ -11,12 +11,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/css/style.css(v=65)}">
+    <link rel="stylesheet" th:href="@{/css/style.css(v=68)}">
 </head>
 <body class="admin-body no-js">
 <script>document.body.classList.remove("no-js");</script>
 <header class="admin-topbar">
-    <div class="container admin-topbar__inner">
+    <div class="container admin-topbar__inner" th:attr="data-today=${todayLabel}">
         <a class="admin-brand" href="/admin">
             <img src="/images/anh-vu-logo.svg" alt="Anh Vu logo">
             <span>
@@ -34,17 +34,21 @@
     </div>
 </header>
 
-<nav class="admin-nav">
-    <div class="container admin-nav__inner">
-        <a href="#overview">Tổng quan</a>
-        <a href="#orders">Đơn hàng <b th:if="${kpi.newOrders > 0}" th:text="${kpi.newOrders}">0</b></a>
-        <a href="#quotes">Báo giá <b th:if="${kpi.pendingQuotes > 0}" th:text="${kpi.pendingQuotes}">0</b></a>
-        <a href="#inventory">Kho hàng <b th:if="${kpi.lowStockCount > 0}" th:text="${kpi.lowStockCount}">0</b></a>
-        <a href="#add-product">+ Thêm SP</a>
-        <a href="#stock-log">Lịch sử kho</a>
-        <a href="#customers">Khách hàng</a>
-        <a href="#bulk-email">Gửi mail</a>
-        <a class="admin-nav__logout" href="/logout" onclick="event.preventDefault();document.getElementById('logoutForm').submit();">Đăng xuất</a>
+<nav class="admin-nav" aria-label="Các mục quản trị">
+    <a class="admin-nav__brand" href="/admin">
+        <img src="/images/anh-vu-logo.svg" alt="Anh Vu logo">
+        <span>Quản trị</span>
+    </a>
+    <div class="admin-nav__inner">
+        <a href="#overview"><i>📊</i><span>Tổng quan</span></a>
+        <a href="#orders"><i>🧾</i><span>Đơn hàng</span><b th:if="${kpi.newOrders > 0}" th:text="${kpi.newOrders}">0</b></a>
+        <a href="#quotes"><i>💬</i><span>Báo giá</span><b th:if="${kpi.pendingQuotes > 0}" th:text="${kpi.pendingQuotes}">0</b></a>
+        <a href="#inventory"><i>📦</i><span>Kho hàng</span><b th:if="${kpi.lowStockCount > 0}" th:text="${kpi.lowStockCount}">0</b></a>
+        <a href="#add-product"><i>➕</i><span>Thêm SP</span></a>
+        <a href="#stock-log"><i>📜</i><span>Lịch sử kho</span></a>
+        <a href="#customers"><i>👥</i><span>Khách hàng</span></a>
+        <a href="#bulk-email"><i>✉️</i><span>Gửi mail</span></a>
+        <a class="admin-nav__logout" href="/logout" onclick="event.preventDefault();document.getElementById('logoutForm').submit();"><i>⏻</i><span>Đăng xuất</span></a>
     </div>
 </nav>
 
@@ -712,7 +716,7 @@
         orderStatusData: JSON.parse(/*[[${orderStatusDataJson}]]*/ "[]")
     };
 </script>
-<script th:src="@{/js/admin.js(v=13)}"></script>
+<script th:src="@{/js/admin.js(v=14)}"></script>
 <script>
     // Mau soan san cho mail gui khach: chon trong danh sach la dien vao o noi dung
     var MAIL_TEMPLATES = {
