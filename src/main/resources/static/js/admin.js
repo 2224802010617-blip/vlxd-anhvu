@@ -451,16 +451,44 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // ----- Danh dau muc dang xem tren thanh dieu huong -----
-    const navLinks = Array.from(document.querySelectorAll(".admin-nav a"));
-    const sections = navLinks.map((link) => document.querySelector(link.getAttribute("href"))).filter(Boolean);
-    if (sections.length && typeof IntersectionObserver !== "undefined") {
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
-                if (!entry.isIntersecting) return;
-                navLinks.forEach((link) => link.classList.toggle("is-active", link.getAttribute("href") === "#" + entry.target.id));
-            });
-        }, { rootMargin: "-40% 0px -55% 0px" });
-        sections.forEach((section) => observer.observe(section));
+    // ----- Tab: moi luc chi hien mot muc, thanh menu chuyen qua lai khong can cuon -----
+    const navLinks = Array.from(document.querySelectorAll(".admin-nav a[href^='#']"));
+    const sections = Array.from(document.querySelectorAll(".admin-section[id]"));
+    const sectionIds = sections.map((section) => section.id);
+    const flash = document.querySelector(".admin-message");
+
+    const showTab = (id, pushHistory) => {
+        const target = sectionIds.includes(id) ? id : "overview";
+        sections.forEach((section) => section.classList.toggle("is-active", section.id === target));
+        navLinks.forEach((link) => link.classList.toggle("is-active", link.getAttribute("href") === "#" + target));
+        if (pushHistory && history.replaceState) {
+            history.replaceState(null, "", "#" + target);
+        }
+        window.scrollTo({ top: 0 });
+        // Canvas ve luc dang an se sai kich thuoc -> ve lai khi tab tong quan hien ra
+        if (target === "overview" && charts.length) {
+            requestAnimationFrame(() => charts.forEach((draw) => draw(1)));
+        }
+    };
+
+    if (sections.length) {
+        navLinks.forEach((link) => link.addEventListener("click", (event) => {
+            event.preventDefault();
+            showTab(link.getAttribute("href").slice(1), true);
+        }));
+        // Link trong trang (viec can lam, phan trang, redirect sau khi luu) deu dung #id
+        document.addEventListener("click", (event) => {
+            const anchor = event.target.closest("a[href]");
+            if (!anchor || anchor.closest(".admin-nav")) return;
+            const href = anchor.getAttribute("href");
+            if (href.startsWith("#") && sectionIds.includes(href.slice(1))) {
+                event.preventDefault();
+                showTab(href.slice(1), true);
+            }
+        });
+        window.addEventListener("hashchange", () => showTab(location.hash.slice(1), false));
+        showTab(location.hash.slice(1), false);
+        // Thong bao sau khi luu luon hien tren tab dang mo
+        if (flash) flash.classList.add("is-visible");
     }
 });

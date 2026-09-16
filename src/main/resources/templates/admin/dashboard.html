@@ -11,9 +11,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/css/style.css(v=64)}">
+    <link rel="stylesheet" th:href="@{/css/style.css(v=65)}">
 </head>
-<body class="admin-body">
+<body class="admin-body no-js">
+<script>document.body.classList.remove("no-js");</script>
 <header class="admin-topbar">
     <div class="container admin-topbar__inner">
         <a class="admin-brand" href="/admin">
@@ -26,7 +27,7 @@
         <div class="admin-topbar__actions">
             <a class="admin-action admin-action--ghost" th:href="@{/admin/orders/export.csv(status=${status}, q=${q})}">⬇ Xuất Excel</a>
             <a class="admin-action admin-action--ghost" href="/" target="_blank" rel="noopener">Xem web</a>
-            <form th:action="@{/logout}" method="post">
+            <form id="logoutForm" th:action="@{/logout}" method="post">
                 <button class="admin-action admin-action--solid" type="submit">Đăng xuất</button>
             </form>
         </div>
@@ -43,6 +44,7 @@
         <a href="#stock-log">Lịch sử kho</a>
         <a href="#customers">Khách hàng</a>
         <a href="#bulk-email">Gửi mail</a>
+        <a class="admin-nav__logout" href="/logout" onclick="event.preventDefault();document.getElementById('logoutForm').submit();">Đăng xuất</a>
     </div>
 </nav>
 
@@ -710,7 +712,7 @@
         orderStatusData: JSON.parse(/*[[${orderStatusDataJson}]]*/ "[]")
     };
 </script>
-<script th:src="@{/js/admin.js(v=12)}"></script>
+<script th:src="@{/js/admin.js(v=13)}"></script>
 <script>
     // Mau soan san cho mail gui khach: chon trong danh sach la dien vao o noi dung
     var MAIL_TEMPLATES = {

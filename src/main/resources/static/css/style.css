@@ -7158,3 +7158,18 @@ textarea:focus-visible {
     .pay-form button,
     .receive-form button { min-height: 40px; }
 }
+
+/* Admin dang tab: chi hien muc dang chon, thanh menu co dinh */
+.admin-body .admin-section { display: none; }
+.admin-body .admin-section.is-active { display: block; animation: tabIn .18s ease-out; }
+.admin-body.no-js .admin-section { display: block; }
+@keyframes tabIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+.admin-nav a.is-active { background: #f43f5e; color: #fff; }
+.admin-nav a { scroll-margin: 0; }
+@media (max-width: 760px) {
+    .admin-topbar__actions { display: none; }
+    .admin-nav__inner { padding: 6px 4px; gap: 4px; }
+    .admin-nav a { padding: 9px 12px; font-size: .84rem; }
+}
+.admin-nav__logout { display: none; margin-left: auto; color: #fb7185 !important; }
+@media (max-width: 760px) { .admin-nav__logout { display: inline-flex; } }
