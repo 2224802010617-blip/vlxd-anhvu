@@ -7346,9 +7346,9 @@ textarea:focus-visible {
 
 
 /* =====================================================================
-   V3 (2026-09-16): giao dien trang chu + header dung chung
+   V4 (2026-09-16): giao dien sang, thoang, bo goc lon
    Font: Archivo (tieu de) + Be Vietnam Pro (noi dung), tu luu tren server.
-   Mot mau nhan (do thuong hieu), bo goc 6px thong nhat, khong emoji.
+   Nen trang, mot mau nhan do chi dung cho nut chinh, khong vien the.
    ===================================================================== */
 :root {
     --f-display: 'Archivo', 'Be Vietnam Pro', 'Segoe UI', Arial, sans-serif;
@@ -7358,12 +7358,15 @@ textarea:focus-visible {
     --brand-tint: #fbe9ea;
     --navy: #101828;
     --navy-2: #1b2537;
-    --ink: #14181f;
+    --ink: #111418;
     --ink-2: #3b4350;
-    --mute: #66707f;
-    --line: #e3e6eb;
-    --soft: #f4f5f7;
-    --r: 6px;
+    --mute: #6b7280;
+    --line: #e8eaee;
+    --soft: #f5f6f8;
+    --soft-2: #eceef2;
+    --r: 16px;
+    --r-lg: 24px;
+    --pill: 999px;
     --cw: 100%;
 }
 @media (min-width: 576px) { :root { --cw: 540px; } }
@@ -7383,13 +7386,13 @@ textarea {
 h1, h2, h3, h4,
 .h1, .h2, .h3 {
     font-family: var(--f-display);
-    font-stretch: 112%;
+    font-stretch: 108%;
     font-weight: 800;
-    letter-spacing: -0.012em;
+    letter-spacing: -0.02em;
 }
 
 body.hp {
-    background: var(--soft);
+    background: #fff;
     color: var(--ink);
 }
 
@@ -7399,21 +7402,27 @@ body.hp main {
     box-shadow: none;
 }
 
-/* ---------- Header mot thanh, dinh khi cuon ---------- */
+/* ---------- Header: trang mo, dinh khi cuon ---------- */
 .sh {
     position: sticky;
     top: 0;
     z-index: 90;
-    background: var(--navy);
-    color: #fff;
-    border-bottom: 1px solid rgba(255, 255, 255, .08);
+    background: rgba(255, 255, 255, .84);
+    -webkit-backdrop-filter: saturate(160%) blur(16px);
+    backdrop-filter: saturate(160%) blur(16px);
+    color: var(--ink);
+    border-bottom: 1px solid rgba(17, 20, 24, .07);
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+    .sh { background: rgba(255, 255, 255, .97); }
 }
 
 .sh__in {
     display: flex;
     align-items: center;
     gap: 18px;
-    min-height: 68px;
+    min-height: 72px;
 }
 
 .sh__logo {
@@ -7424,7 +7433,8 @@ body.hp main {
 .sh__logo img {
     display: block;
     width: auto;
-    height: 44px;
+    height: 42px;
+    border-radius: 10px;
 }
 
 .sh__menu {
@@ -7444,9 +7454,9 @@ body.hp main {
     display: inline-flex;
     align-items: center;
     min-height: 40px;
-    padding: 0 12px;
-    border-radius: var(--r);
-    color: rgba(255, 255, 255, .82);
+    padding: 0 14px;
+    border-radius: var(--pill);
+    color: var(--ink-2);
     font-weight: 600;
     font-size: .95rem;
     white-space: nowrap;
@@ -7456,14 +7466,13 @@ body.hp main {
 
 .sh__nav a:hover,
 .sh__nav a:focus-visible {
-    background: rgba(255, 255, 255, .08);
-    color: #fff;
+    background: var(--soft);
+    color: var(--ink);
 }
 
 .sh__nav a.is-active {
+    background: var(--ink);
     color: #fff;
-    box-shadow: inset 0 -2px 0 var(--brand);
-    border-radius: var(--r) var(--r) 0 0;
 }
 
 .sh .qh-search {
@@ -7474,35 +7483,35 @@ body.hp main {
     min-width: 160px;
     margin: 0 0 0 auto;
     padding: 0;
-    border: 1px solid rgba(255, 255, 255, .16);
-    border-radius: var(--r);
-    background: rgba(255, 255, 255, .08);
+    border: 1px solid transparent;
+    border-radius: var(--pill);
+    background: var(--soft);
     box-shadow: none;
     transition: background .18s ease, border-color .18s ease;
 }
 
 .sh .qh-search:focus-within {
-    background: rgba(255, 255, 255, .14);
-    border-color: rgba(255, 255, 255, .45);
+    background: #fff;
+    border-color: var(--ink);
     box-shadow: none;
 }
 
 .sh .qh-search input {
     flex: 1 1 auto;
     min-width: 0;
-    height: 40px;
-    padding: 0 12px;
+    height: 42px;
+    padding: 0 8px 0 18px;
     border: 0;
-    border-radius: var(--r) 0 0 var(--r);
+    border-radius: var(--pill) 0 0 var(--pill);
     background: transparent;
-    color: #fff;
+    color: var(--ink);
     font: inherit;
     font-size: .92rem;
     box-shadow: none;
 }
 
 .sh .qh-search input::placeholder {
-    color: rgba(255, 255, 255, .55);
+    color: var(--mute);
 }
 
 .sh .qh-search input:focus {
@@ -7513,13 +7522,13 @@ body.hp main {
 .sh .qh-search > button[type="submit"] {
     display: grid;
     place-items: center;
-    width: 40px;
-    height: 40px;
+    width: 42px;
+    height: 42px;
     padding: 0;
     border: 0;
-    border-radius: 0 var(--r) var(--r) 0;
+    border-radius: 0 var(--pill) var(--pill) 0;
     background: transparent;
-    color: #fff;
+    color: var(--ink);
     box-shadow: none;
 }
 
@@ -7529,18 +7538,18 @@ body.hp main {
     fill: currentColor;
 }
 
-/* Khung goi y do JS sinh ra: hang ngang, chu toi, khong bi bop */
+/* Khung goi y do JS sinh ra */
 .sh .qh-search .search-suggest {
-    top: calc(100% + 6px);
+    top: calc(100% + 8px);
     right: 0;
     left: 0;
-    min-width: 280px;
-    padding: 4px;
+    min-width: 300px;
+    padding: 6px;
     border: 1px solid var(--line);
     border-radius: var(--r);
     background: #fff;
     color: var(--ink);
-    box-shadow: 0 18px 40px rgba(16, 24, 40, .18);
+    box-shadow: 0 24px 60px rgba(17, 20, 24, .14);
 }
 
 .sh .qh-search .search-suggest__item {
@@ -7550,10 +7559,9 @@ body.hp main {
     gap: 2px;
     width: 100%;
     height: auto;
-    padding: 9px 12px;
+    padding: 10px 14px;
     border: 0;
-    border-bottom: 1px solid var(--line);
-    border-radius: 4px;
+    border-radius: 10px;
     background: transparent;
     color: var(--ink);
     font: inherit;
@@ -7562,13 +7570,9 @@ body.hp main {
     cursor: pointer;
 }
 
-.sh .qh-search .search-suggest__item:last-child {
-    border-bottom: 0;
-}
-
 .sh .qh-search .search-suggest__item:hover,
 .sh .qh-search .search-suggest__item.is-active {
-    background: var(--brand-tint);
+    background: var(--soft);
 }
 
 .sh .qh-search .search-suggest__name {
@@ -7583,12 +7587,6 @@ body.hp main {
     font-weight: 500;
 }
 
-@media (max-width: 1023px) {
-    .sh .qh-search .search-suggest {
-        min-width: 0;
-    }
-}
-
 .sh__user {
     flex: 0 0 auto;
 }
@@ -7597,22 +7595,29 @@ body.hp main {
 .sh__user button {
     display: inline-flex;
     align-items: center;
-    min-height: 36px;
-    padding: 0 10px;
-    border: 1px solid rgba(255, 255, 255, .18);
-    border-radius: var(--r);
-    background: transparent;
-    color: rgba(255, 255, 255, .85);
-    font-size: .85rem;
+    gap: 6px;
+    min-height: 40px;
+    padding: 0 14px;
+    border: 1px solid var(--line);
+    border-radius: var(--pill);
+    background: #fff;
+    color: var(--ink);
+    font-size: .88rem;
     font-weight: 600;
     text-decoration: none;
-    transition: background .18s ease;
+    transition: background .18s ease, border-color .18s ease;
 }
 
 .sh__user a:hover,
 .sh__user button:hover {
-    background: rgba(255, 255, 255, .1);
-    color: #fff;
+    border-color: var(--ink);
+    color: var(--ink);
+}
+
+.sh__user a svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
 }
 
 .sh__user form {
@@ -7625,7 +7630,7 @@ body.hp main {
 .sh__user form span {
     max-width: 150px;
     overflow: hidden;
-    color: rgba(255, 255, 255, .7);
+    color: var(--mute);
     font-size: .82rem;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -7636,18 +7641,18 @@ body.hp main {
     flex: 0 0 auto;
     align-items: center;
     gap: 8px;
-    min-height: 42px;
-    padding: 0 16px;
-    border-radius: var(--r);
+    min-height: 44px;
+    padding: 0 20px;
+    border-radius: var(--pill);
     background: var(--brand);
     color: #fff;
     font-family: var(--f-display);
-    font-size: 1.02rem;
-    font-weight: 800;
+    font-size: 1rem;
+    font-weight: 700;
     letter-spacing: .01em;
     white-space: nowrap;
     text-decoration: none;
-    transition: background .18s ease;
+    transition: background .18s ease, transform .1s ease;
 }
 
 .sh__call svg {
@@ -7662,19 +7667,17 @@ body.hp main {
     color: #fff;
 }
 
+.sh__call:active {
+    transform: scale(.98);
+}
+
 .sh__burger {
     display: none;
 }
 
-.sh__user a svg {
-    width: 18px;
-    height: 18px;
-    fill: currentColor;
-}
-
 @media (min-width: 1024px) and (max-width: 1399px) {
     .sh__nav a {
-        padding: 0 9px;
+        padding: 0 10px;
         font-size: .9rem;
     }
 
@@ -7688,7 +7691,7 @@ body.hp main {
     }
 
     .sh__user a {
-        width: 36px;
+        width: 40px;
         padding: 0;
         justify-content: center;
     }
@@ -7697,7 +7700,7 @@ body.hp main {
 @media (max-width: 1023px) {
     .sh__in {
         gap: 10px;
-        min-height: 60px;
+        min-height: 64px;
     }
 
     .sh__logo img {
@@ -7707,8 +7710,8 @@ body.hp main {
     .sh__call {
         order: 2;
         margin-left: auto;
-        padding: 0 12px;
-        font-size: .98rem;
+        padding: 0 14px;
+        font-size: .95rem;
     }
 
     .sh__burger {
@@ -7719,9 +7722,9 @@ body.hp main {
         height: 44px;
         padding: 0;
         border: 0;
-        border-radius: var(--r);
+        border-radius: var(--pill);
         background: transparent;
-        color: #fff;
+        color: var(--ink);
     }
 
     .sh__burger svg {
@@ -7751,10 +7754,11 @@ body.hp main {
         flex-direction: column;
         align-items: stretch;
         gap: 14px;
-        padding: 14px 16px 20px;
-        border-top: 1px solid rgba(255, 255, 255, .08);
-        background: var(--navy);
-        box-shadow: 0 20px 34px rgba(0, 0, 0, .35);
+        padding: 14px 16px 22px;
+        border-top: 1px solid var(--line);
+        border-radius: 0 0 var(--r-lg) var(--r-lg);
+        background: #fff;
+        box-shadow: 0 30px 60px rgba(17, 20, 24, .16);
     }
 
     .sh.is-open .sh__menu {
@@ -7767,14 +7771,10 @@ body.hp main {
     }
 
     .sh__nav a {
-        min-height: 46px;
-        font-size: 1rem;
-    }
-
-    .sh__nav a.is-active {
-        border-radius: var(--r);
-        box-shadow: inset 3px 0 0 var(--brand);
-        background: rgba(255, 255, 255, .06);
+        min-height: 48px;
+        padding: 0 16px;
+        border-radius: 12px;
+        font-size: 1.02rem;
     }
 
     .sh .qh-search {
@@ -7784,14 +7784,18 @@ body.hp main {
     }
 
     .sh .qh-search input {
-        height: 46px;
+        height: 48px;
+    }
+
+    .sh .qh-search .search-suggest {
+        min-width: 0;
     }
 
     .sh__user a,
     .sh__user button {
-        min-height: 42px;
-        padding: 0 14px;
-        font-size: .92rem;
+        min-height: 44px;
+        padding: 0 16px;
+        font-size: .95rem;
     }
 
     .sh__user form span {
@@ -7806,44 +7810,39 @@ body.hp main {
     }
 
     .sh__call {
-        width: 42px;
+        width: 44px;
         padding: 0;
         justify-content: center;
     }
 }
 
-/* ---------- Hero: chu trai, anh phai ---------- */
+/* ---------- Hero: chu lon phia tren, anh tran khung phia duoi ---------- */
 .hp-hero {
+    padding: 64px 0 0;
+    background: #fff;
+    color: var(--ink);
+}
+
+.hp-hero__grid {
     display: grid;
-    grid-template-columns: minmax(0, calc(var(--cw) * .5)) minmax(0, 1fr);
-    padding-left: calc((100% - var(--cw)) / 2 + 12px);
-    background: var(--navy);
-    color: #fff;
-}
-
-.hp-hero__text {
-    display: flex;
-    align-items: center;
-    padding: 56px 48px 112px 0;
-}
-
-.hp-hero__inner {
-    max-width: 560px;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: 32px 48px;
+    align-items: end;
+    margin-bottom: 40px;
 }
 
 .hp-hero h1 {
-    margin: 0 0 18px;
-    color: #fff;
-    font-size: clamp(2.1rem, 3.5vw, 3.2rem);
-    line-height: 1.04;
+    margin: 0;
+    font-size: clamp(2.5rem, 4.4vw, 4.2rem);
+    line-height: .98;
     text-wrap: balance;
 }
 
-.hp-hero p {
-    margin: 0 0 28px;
-    max-width: 48ch;
-    color: rgba(255, 255, 255, .8);
-    font-size: 1.08rem;
+.hp-hero__aside p {
+    margin: 0 0 24px;
+    max-width: 40ch;
+    color: var(--ink-2);
+    font-size: 1.12rem;
     line-height: 1.6;
 }
 
@@ -7855,13 +7854,14 @@ body.hp main {
 
 .hp-hero__media {
     position: relative;
-    min-height: 520px;
-    background: var(--navy-2);
+    overflow: hidden;
+    aspect-ratio: 21 / 9;
+    border-radius: var(--r-lg);
+    background: var(--soft-2);
 }
 
-.hp-hero__media img {
-    position: absolute;
-    inset: 0;
+.hp-hero__media > img {
+    display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -7869,51 +7869,51 @@ body.hp main {
 
 @media (max-width: 991px) {
     .hp-hero {
+        padding-top: 36px;
+    }
+
+    .hp-hero__grid {
         grid-template-columns: 1fr;
-        padding-left: 0;
-    }
-
-    .hp-hero__media {
-        order: -1;
-        min-height: 0;
-        aspect-ratio: 16 / 9;
-    }
-
-    .hp-hero__media img {
-        position: static;
-        display: block;
-        aspect-ratio: 16 / 9;
-    }
-
-    .hp-hero__text {
-        padding: 28px 24px 36px;
+        gap: 18px;
+        margin-bottom: 26px;
     }
 
     .hp-hero h1 {
-        font-size: clamp(1.8rem, 6.4vw, 2.4rem);
+        font-size: clamp(2.2rem, 9vw, 3.2rem);
+        max-width: none;
     }
 
-    .hp-hero p {
-        font-size: 1rem;
-        margin-bottom: 22px;
+    .hp-hero__aside p {
+        font-size: 1.02rem;
+        margin-bottom: 18px;
     }
 
     .hp-hero__cta .hp-btn {
         flex: 1 1 auto;
     }
+
+    .hp-hero__media {
+        aspect-ratio: 4 / 3;
+        border-radius: 20px;
+    }
 }
 
-/* ---------- Bang gia nhanh ---------- */
+/* ---------- Bang gia nhanh: the kinh noi tren anh ---------- */
 .hp-board {
-    position: relative;
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+    left: 20px;
     z-index: 2;
     display: grid;
     grid-template-columns: auto 1fr auto;
-    margin-top: -60px;
-    border: 1px solid var(--line);
-    border-radius: var(--r);
-    background: #fff;
-    box-shadow: 0 18px 44px rgba(16, 24, 40, .14);
+    align-items: stretch;
+    border: 1px solid rgba(255, 255, 255, .6);
+    border-radius: 18px;
+    background: rgba(255, 255, 255, .86);
+    -webkit-backdrop-filter: saturate(160%) blur(18px);
+    backdrop-filter: saturate(160%) blur(18px);
+    box-shadow: 0 24px 60px rgba(17, 20, 24, .22);
 }
 
 .hp-board__head {
@@ -7922,12 +7922,12 @@ body.hp main {
     justify-content: center;
     gap: 2px;
     padding: 18px 22px;
-    border-right: 1px solid var(--line);
+    border-right: 1px solid rgba(17, 20, 24, .08);
 }
 
 .hp-board__head strong {
     font-family: var(--f-display);
-    font-size: 1.08rem;
+    font-size: 1.05rem;
     font-weight: 800;
 }
 
@@ -7945,7 +7945,7 @@ body.hp main {
 }
 
 .hp-board li + li {
-    border-left: 1px solid var(--line);
+    border-left: 1px solid rgba(17, 20, 24, .08);
 }
 
 .hp-board li a {
@@ -7960,7 +7960,7 @@ body.hp main {
 }
 
 .hp-board li a:hover {
-    background: var(--soft);
+    background: rgba(255, 255, 255, .9);
 }
 
 .hp-board li small {
@@ -7978,9 +7978,9 @@ body.hp main {
 }
 
 .hp-board li em {
-    color: var(--brand);
+    color: var(--ink);
     font-family: var(--f-display);
-    font-size: 1.28rem;
+    font-size: 1.25rem;
     font-style: normal;
     font-weight: 800;
     font-variant-numeric: tabular-nums;
@@ -7990,7 +7990,7 @@ body.hp main {
     display: flex;
     align-items: center;
     padding: 0 22px;
-    border-left: 1px solid var(--line);
+    border-left: 1px solid rgba(17, 20, 24, .08);
     color: var(--ink);
     font-weight: 700;
     white-space: nowrap;
@@ -7999,7 +7999,7 @@ body.hp main {
 }
 
 .hp-board__more:hover {
-    background: var(--soft);
+    background: rgba(255, 255, 255, .9);
     color: var(--brand);
 }
 
@@ -8014,7 +8014,7 @@ body.hp main {
         gap: 10px;
         padding: 14px 18px;
         border-right: 0;
-        border-bottom: 1px solid var(--line);
+        border-bottom: 1px solid rgba(17, 20, 24, .08);
     }
 
     .hp-board ul {
@@ -8026,7 +8026,7 @@ body.hp main {
     }
 
     .hp-board li:nth-child(n+3) {
-        border-top: 1px solid var(--line);
+        border-top: 1px solid rgba(17, 20, 24, .08);
     }
 
     .hp-board li a {
@@ -8037,14 +8037,19 @@ body.hp main {
         justify-content: center;
         padding: 14px 18px;
         border-left: 0;
-        border-top: 1px solid var(--line);
+        border-top: 1px solid rgba(17, 20, 24, .08);
     }
 }
 
 @media (max-width: 991px) {
     .hp-board {
-        margin-top: 20px;
-        box-shadow: 0 8px 24px rgba(16, 24, 40, .08);
+        position: static;
+        margin-top: 16px;
+        border: 1px solid var(--line);
+        background: #fff;
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
+        box-shadow: none;
     }
 }
 
@@ -8061,13 +8066,13 @@ body.hp main {
 
 /* ---------- Cam ket ---------- */
 .hp-trust {
-    padding: 44px 12px 4px;
+    padding: 72px 12px 0;
 }
 
 .hp-trust ul {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 28px;
+    gap: 32px;
     margin: 0;
     padding: 0;
     list-style: none;
@@ -8075,25 +8080,21 @@ body.hp main {
 
 .hp-trust li {
     display: grid;
-    grid-template-columns: 44px 1fr;
     gap: 14px;
-    align-items: start;
+    align-content: start;
 }
 
 .hp-trust svg {
-    width: 44px;
-    height: 44px;
-    padding: 9px;
-    border-radius: var(--r);
-    background: var(--brand-tint);
-    color: var(--brand);
+    width: 28px;
+    height: 28px;
+    color: var(--ink);
     fill: currentColor;
 }
 
 .hp-trust b {
     display: block;
-    margin-bottom: 3px;
-    font-size: 1rem;
+    margin-bottom: 4px;
+    font-size: 1.02rem;
     font-weight: 700;
     line-height: 1.3;
 }
@@ -8101,31 +8102,35 @@ body.hp main {
 .hp-trust span {
     display: block;
     color: var(--mute);
-    font-size: .9rem;
-    line-height: 1.5;
+    font-size: .92rem;
+    line-height: 1.55;
 }
 
 @media (max-width: 991px) {
+    .hp-trust {
+        padding-top: 48px;
+    }
+
     .hp-trust ul {
         grid-template-columns: 1fr 1fr;
-        gap: 20px;
+        gap: 24px;
     }
 }
 
 @media (max-width: 575px) {
-    .hp-trust {
-        padding-top: 32px;
-    }
-
     .hp-trust ul {
         grid-template-columns: 1fr;
-        gap: 16px;
+        gap: 20px;
+    }
+
+    .hp-trust li {
+        grid-template-columns: 28px 1fr;
     }
 }
 
 /* ---------- Tieu de muc ---------- */
 .hp-sec {
-    padding-top: 56px;
+    padding-top: 112px;
 }
 
 .hp-head {
@@ -8133,43 +8138,51 @@ body.hp main {
     align-items: flex-end;
     justify-content: space-between;
     gap: 16px;
-    margin-bottom: 22px;
+    margin-bottom: 32px;
 }
 
 .hp-head h2 {
     margin: 0;
-    font-size: clamp(1.6rem, 2.6vw, 2.1rem);
-    line-height: 1.1;
+    font-size: clamp(1.9rem, 3.2vw, 2.7rem);
+    line-height: 1.05;
 }
 
 .hp-head p {
-    max-width: 60ch;
-    margin: 6px 0 0;
+    max-width: 56ch;
+    margin: 10px 0 0;
     color: var(--mute);
+    font-size: 1.02rem;
 }
 
 .hp-head > a {
-    padding-bottom: 2px;
-    border-bottom: 2px solid var(--brand);
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 0 16px;
+    border: 1px solid var(--line);
+    border-radius: var(--pill);
     color: var(--ink);
-    font-weight: 700;
+    font-weight: 600;
+    font-size: .92rem;
     white-space: nowrap;
     text-decoration: none;
+    transition: border-color .18s ease;
 }
 
 .hp-head > a:hover {
-    color: var(--brand);
+    border-color: var(--ink);
 }
 
-@media (max-width: 575px) {
+@media (max-width: 767px) {
     .hp-sec {
-        padding-top: 40px;
+        padding-top: 64px;
     }
 
     .hp-head {
         flex-direction: column;
         align-items: flex-start;
-        gap: 8px;
+        gap: 10px;
+        margin-bottom: 22px;
     }
 }
 
@@ -8179,10 +8192,10 @@ body.hp main {
     align-items: center;
     justify-content: center;
     gap: 8px;
-    min-height: 48px;
-    padding: 0 22px;
+    min-height: 50px;
+    padding: 0 26px;
     border: 1.5px solid transparent;
-    border-radius: var(--r);
+    border-radius: var(--pill);
     font-size: 1rem;
     font-weight: 700;
     line-height: 1.2;
@@ -8193,7 +8206,7 @@ body.hp main {
 }
 
 .hp-btn:active {
-    transform: translateY(1px);
+    transform: scale(.98);
 }
 
 .hp-btn--primary {
@@ -8207,25 +8220,15 @@ body.hp main {
     color: #fff;
 }
 
-.hp-btn--ghost {
-    border-color: rgba(255, 255, 255, .45);
-    background: transparent;
-    color: #fff;
-}
-
-.hp-btn--ghost:hover,
-.hp-btn--ghost:focus-visible {
-    border-color: #fff;
-    background: rgba(255, 255, 255, .08);
-    color: #fff;
-}
-
+.hp-btn--ghost,
 .hp-btn--outline {
-    border-color: #c9ced6;
+    border-color: var(--line);
     background: #fff;
     color: var(--ink);
 }
 
+.hp-btn--ghost:hover,
+.hp-btn--ghost:focus-visible,
 .hp-btn--outline:hover,
 .hp-btn--outline:focus-visible {
     border-color: var(--ink);
@@ -8233,21 +8236,24 @@ body.hp main {
 }
 
 .hp-btn--sm {
-    min-height: 40px;
-    padding: 0 16px;
+    min-height: 42px;
+    padding: 0 18px;
     font-size: .92rem;
 }
 
 .hp-link {
     color: var(--ink);
-    font-size: .9rem;
-    font-weight: 700;
+    font-size: .92rem;
+    font-weight: 600;
     text-decoration: underline;
-    text-underline-offset: 3px;
+    text-underline-offset: 4px;
+    text-decoration-color: var(--line);
+    transition: text-decoration-color .18s ease;
 }
 
 .hp-link:hover {
-    color: var(--brand);
+    color: var(--ink);
+    text-decoration-color: var(--ink);
 }
 
 /* ---------- Nhom hang ---------- */
@@ -8255,26 +8261,20 @@ body.hp main {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     grid-auto-rows: 1fr;
-    gap: 16px;
+    gap: 20px;
 }
 
 .hp-cat {
     position: relative;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
-    border: 1px solid var(--line);
-    border-radius: var(--r);
-    background: #fff;
+    gap: 12px;
     color: inherit;
     text-decoration: none;
-    transition: border-color .18s ease, box-shadow .18s ease;
 }
 
 .hp-cat:hover,
 .hp-cat:focus-visible {
-    border-color: #c9ced6;
-    box-shadow: 0 10px 24px rgba(16, 24, 40, .08);
     color: inherit;
 }
 
@@ -8283,11 +8283,13 @@ body.hp main {
     width: 100%;
     aspect-ratio: 4 / 3;
     object-fit: cover;
-    transition: transform .35s ease;
+    border-radius: var(--r-lg);
+    background: var(--soft-2);
+    transition: transform .45s cubic-bezier(.16, 1, .3, 1), opacity .3s ease;
 }
 
 .hp-cat:hover img {
-    transform: scale(1.04);
+    transform: scale(1.02);
 }
 
 .hp-cat--lead {
@@ -8304,33 +8306,32 @@ body.hp main {
 
 .hp-cat__body {
     display: block;
-    padding: 12px 14px 13px;
-    background: #fff;
+    padding: 0 4px;
 }
 
 .hp-cat__body b {
     display: block;
     font-family: var(--f-display);
-    font-size: 1.06rem;
+    font-size: 1.1rem;
     font-weight: 800;
 }
 
 .hp-cat--lead .hp-cat__body b {
-    font-size: 1.3rem;
+    font-size: 1.4rem;
 }
 
 .hp-cat__body small {
     display: block;
     margin-top: 2px;
     color: var(--mute);
-    font-size: .86rem;
+    font-size: .9rem;
 }
 
 @media (max-width: 991px) {
     .hp-cats__grid {
         grid-template-columns: 1fr 1fr;
         grid-auto-rows: auto;
-        gap: 12px;
+        gap: 16px;
     }
 
     .hp-cat--lead {
@@ -8342,35 +8343,31 @@ body.hp main {
         aspect-ratio: 16 / 8;
         height: auto;
     }
+
+    .hp-cat img {
+        border-radius: 18px;
+    }
 }
 
 /* ---------- San pham ---------- */
 .hp-products__grid {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 16px;
+    gap: 28px 20px;
 }
 
 .hp-product {
     display: flex;
     flex-direction: column;
-    overflow: hidden;
-    border: 1px solid var(--line);
-    border-radius: var(--r);
-    background: #fff;
-    transition: border-color .18s ease, box-shadow .18s ease;
-}
-
-.hp-product:hover {
-    border-color: #c9ced6;
-    box-shadow: 0 10px 24px rgba(16, 24, 40, .08);
+    gap: 12px;
 }
 
 .hp-product__img {
     display: block;
     aspect-ratio: 4 / 3;
     overflow: hidden;
-    background: #eef1f5;
+    border-radius: 20px;
+    background: var(--soft-2);
 }
 
 .hp-product__img img {
@@ -8378,6 +8375,11 @@ body.hp main {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform .45s cubic-bezier(.16, 1, .3, 1);
+}
+
+.hp-product:hover .hp-product__img img {
+    transform: scale(1.03);
 }
 
 .hp-product__body {
@@ -8385,18 +8387,18 @@ body.hp main {
     flex: 1 1 auto;
     flex-direction: column;
     gap: 4px;
-    padding: 14px 16px 16px;
+    padding: 0 4px;
 }
 
 .hp-product__body > small {
     color: var(--mute);
-    font-size: .78rem;
+    font-size: .8rem;
     font-weight: 600;
 }
 
 .hp-product h3 {
     margin: 0;
-    font-size: 1.04rem;
+    font-size: 1.08rem;
     line-height: 1.3;
 }
 
@@ -8406,7 +8408,8 @@ body.hp main {
 }
 
 .hp-product h3 a:hover {
-    color: var(--brand);
+    text-decoration: underline;
+    text-underline-offset: 4px;
 }
 
 .hp-product__price {
@@ -8414,9 +8417,9 @@ body.hp main {
     align-items: baseline;
     gap: 4px;
     margin: 6px 0 0;
-    color: var(--brand);
+    color: var(--ink);
     font-family: var(--f-display);
-    font-size: 1.32rem;
+    font-size: 1.3rem;
     font-weight: 800;
     font-variant-numeric: tabular-nums;
     line-height: 1.1;
@@ -8437,7 +8440,7 @@ body.hp main {
 .hp-product__stock {
     margin: 0;
     color: var(--mute);
-    font-size: .85rem;
+    font-size: .86rem;
 }
 
 .hp-product__act {
@@ -8449,30 +8452,39 @@ body.hp main {
     padding-top: 12px;
 }
 
+.hp-product__act .hp-btn--primary {
+    background: var(--ink);
+}
+
+.hp-product__act .hp-btn--primary:hover {
+    background: #000;
+}
+
 .hp-products__more {
     display: flex;
     justify-content: center;
-    margin-top: 24px;
+    margin-top: 40px;
 }
 
 @media (max-width: 991px) {
     .hp-products__grid {
         grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 12px;
+        gap: 24px 16px;
     }
 }
 
 @media (max-width: 767px) {
     .hp-products__grid {
         grid-template-columns: 1fr 1fr;
+        gap: 22px 14px;
     }
 
-    .hp-product__body {
-        padding: 12px 12px 14px;
+    .hp-product__img {
+        border-radius: 16px;
     }
 
     .hp-product h3 {
-        font-size: .98rem;
+        font-size: 1rem;
     }
 
     .hp-product__price {
@@ -8490,13 +8502,10 @@ body.hp main {
     }
 }
 
-/* ---------- Cach dat hang ---------- */
+/* ---------- Cach dat hang: khoi xam bo lon ---------- */
 .hp-how {
-    margin-top: 56px;
-    padding: 56px 0;
-    border-top: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
-    background: #fff;
+    margin-top: 112px;
+    padding: 0 12px;
 }
 
 .hp-how__in {
@@ -8504,18 +8513,22 @@ body.hp main {
     grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
     gap: 48px;
     align-items: start;
+    padding: 64px;
+    border-radius: 32px;
+    background: var(--soft);
 }
 
 .hp-how__intro h2 {
-    margin: 0 0 12px;
-    font-size: clamp(1.6rem, 2.6vw, 2.1rem);
-    line-height: 1.1;
+    margin: 0 0 14px;
+    font-size: clamp(1.9rem, 3.2vw, 2.7rem);
+    line-height: 1.05;
 }
 
 .hp-how__intro p {
-    max-width: 44ch;
-    margin: 0 0 22px;
-    color: var(--mute);
+    max-width: 40ch;
+    margin: 0 0 26px;
+    color: var(--ink-2);
+    font-size: 1.02rem;
     line-height: 1.6;
 }
 
@@ -8524,99 +8537,108 @@ body.hp main {
     padding: 0;
     list-style: none;
     counter-reset: step;
+    display: grid;
+    gap: 14px;
 }
 
 .hp-steps li {
     position: relative;
-    padding: 18px 0 18px 64px;
-    border-top: 1px solid var(--line);
-}
-
-.hp-steps li:last-child {
-    border-bottom: 1px solid var(--line);
+    padding: 22px 24px 22px 80px;
+    border-radius: 20px;
+    background: #fff;
 }
 
 .hp-steps li::before {
     counter-increment: step;
     content: counter(step);
     position: absolute;
-    top: 16px;
-    left: 0;
+    top: 22px;
+    left: 24px;
     display: grid;
     place-items: center;
     width: 40px;
     height: 40px;
-    border-radius: var(--r);
-    background: var(--navy);
+    border-radius: 50%;
+    background: var(--ink);
     color: #fff;
     font-family: var(--f-display);
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     font-weight: 800;
 }
 
 .hp-steps b {
     display: block;
     margin-bottom: 4px;
-    font-size: 1.02rem;
+    font-size: 1.04rem;
     font-weight: 700;
 }
 
 .hp-steps span {
     display: block;
     color: var(--mute);
-    font-size: .92rem;
+    font-size: .94rem;
     line-height: 1.55;
 }
 
 @media (max-width: 991px) {
     .hp-how {
-        margin-top: 44px;
-        padding: 44px 0;
+        margin-top: 64px;
     }
 
     .hp-how__in {
         grid-template-columns: 1fr;
-        gap: 24px;
+        gap: 28px;
+        padding: 32px 22px;
+        border-radius: 24px;
+    }
+
+    .hp-steps li {
+        padding: 18px 18px 18px 70px;
+    }
+
+    .hp-steps li::before {
+        top: 18px;
+        left: 18px;
     }
 }
 
 /* ---------- Ghe bai hang ---------- */
 .hp-visit {
-    padding: 56px 12px 64px;
+    padding: 112px 12px 120px;
 }
 
 .hp-visit__in {
     display: grid;
     grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
-    gap: 32px;
+    gap: 48px;
     align-items: stretch;
 }
 
 .hp-visit__map {
-    min-height: 400px;
+    min-height: 420px;
     overflow: hidden;
-    border: 1px solid var(--line);
-    border-radius: var(--r);
-    background: #e9ecf1;
+    border-radius: var(--r-lg);
+    background: var(--soft-2);
 }
 
 .hp-visit__map iframe {
     display: block;
     width: 100%;
     height: 100%;
-    min-height: 400px;
+    min-height: 420px;
     border: 0;
 }
 
 .hp-visit__info h2 {
-    margin: 0 0 10px;
-    font-size: clamp(1.6rem, 2.6vw, 2.1rem);
-    line-height: 1.1;
+    margin: 0 0 12px;
+    font-size: clamp(1.9rem, 3.2vw, 2.7rem);
+    line-height: 1.05;
 }
 
 .hp-visit__info > p {
-    margin: 0 0 20px;
-    color: var(--mute);
+    margin: 0 0 26px;
+    color: var(--ink-2);
+    font-size: 1.02rem;
     line-height: 1.6;
 }
 
@@ -8627,14 +8649,14 @@ body.hp main {
 }
 
 .hp-visit dl > div {
-    padding: 12px 0;
+    padding: 14px 0;
     border-top: 1px solid var(--line);
 }
 
 .hp-visit dt {
-    margin-bottom: 2px;
+    margin-bottom: 3px;
     color: var(--mute);
-    font-size: .78rem;
+    font-size: .8rem;
     font-weight: 600;
 }
 
@@ -8648,21 +8670,22 @@ body.hp main {
 .hp-visit dd a {
     color: var(--ink);
     text-decoration: underline;
-    text-underline-offset: 3px;
+    text-underline-offset: 4px;
+    text-decoration-color: var(--line);
 }
 
 .hp-visit dd a:hover {
-    color: var(--brand);
+    text-decoration-color: var(--ink);
 }
 
 @media (max-width: 991px) {
     .hp-visit {
-        padding: 44px 12px 52px;
+        padding: 64px 12px 72px;
     }
 
     .hp-visit__in {
         grid-template-columns: minmax(0, 1fr);
-        gap: 22px;
+        gap: 26px;
     }
 
     .hp-visit__map,
@@ -8672,11 +8695,62 @@ body.hp main {
     }
 }
 
+/* ---------- Footer sang ---------- */
+body.hp .footer,
+.footer {
+    padding: 0;
+    border-top: 1px solid var(--line);
+    background: var(--soft);
+    color: var(--ink);
+}
+
+.footer-grid {
+    padding-top: 56px;
+    padding-bottom: 36px;
+}
+
+.footer-col,
+.footer-col a,
+.footer-col span {
+    color: var(--ink-2);
+}
+
+.footer-col h4 {
+    color: var(--ink);
+    font-family: var(--f-display);
+    font-weight: 800;
+}
+
+.footer-col a:hover {
+    color: var(--brand);
+}
+
+.footer-brand img {
+    border-radius: 10px;
+}
+
+.footer-brand strong {
+    color: var(--ink);
+}
+
+.footer-brand p {
+    color: var(--mute);
+}
+
+.footer-bottom {
+    border-top: 1px solid var(--line);
+    color: var(--mute);
+}
+
+.footer-bottom b {
+    color: var(--ink-2);
+}
+
 /* ---------- Nut noi + len dau trang ---------- */
 .hp-float {
     position: fixed;
-    right: 16px;
-    bottom: 16px;
+    right: 20px;
+    bottom: 20px;
     z-index: 80;
     display: flex;
     flex-direction: column;
@@ -8687,8 +8761,8 @@ body.hp main {
 .hp-float button {
     display: grid;
     place-items: center;
-    width: 52px;
-    height: 52px;
+    width: 54px;
+    height: 54px;
     padding: 0;
     border: 0;
     border-radius: 50%;
@@ -8697,14 +8771,14 @@ body.hp main {
     font-size: .82rem;
     font-weight: 800;
     text-decoration: none;
-    box-shadow: 0 10px 24px rgba(16, 24, 40, .22);
+    box-shadow: 0 12px 30px rgba(17, 20, 24, .2);
     transition: transform .15s ease, box-shadow .15s ease;
 }
 
 .hp-float a:hover,
 .hp-float button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 14px 28px rgba(16, 24, 40, .28);
+    box-shadow: 0 16px 34px rgba(17, 20, 24, .26);
     color: #fff;
 }
 
@@ -8715,7 +8789,7 @@ body.hp main {
 }
 
 .hp-float__chat {
-    background: var(--navy);
+    background: var(--ink);
 }
 
 .hp-float__zalo {
@@ -8724,8 +8798,8 @@ body.hp main {
 
 .hp-top {
     position: fixed;
-    right: 16px;
-    bottom: 140px;
+    right: 20px;
+    bottom: 148px;
     z-index: 80;
     display: grid;
     place-items: center;
@@ -8736,7 +8810,7 @@ body.hp main {
     border-radius: 50%;
     background: #fff;
     color: var(--ink);
-    box-shadow: 0 8px 20px rgba(16, 24, 40, .16);
+    box-shadow: 0 8px 20px rgba(17, 20, 24, .12);
     cursor: pointer;
 }
 
@@ -8752,32 +8826,32 @@ body.hp main {
 }
 
 body:has(.hp-float) .ai-chatbox {
-    right: 16px;
-    bottom: 16px;
+    right: 20px;
+    bottom: 20px;
 }
 
 body:has(.hp-float) .chat-panel {
     right: 0;
     bottom: 76px;
+    border-radius: 20px;
 }
 
 /* ---------- Giam chuyen dong ---------- */
 @media (prefers-reduced-motion: reduce) {
     .hp-cat img,
     .hp-btn,
-    .hp-product,
-    .hp-cat,
+    .hp-product__img img,
     .hp-float a,
     .hp-float button,
     .sh__nav a {
         transition: none;
     }
 
-    .hp-cat:hover img {
+    .hp-cat:hover img,
+    .hp-product:hover .hp-product__img img {
         transform: none;
     }
 }
-
 
 /* ===== V3 motion: chieu sau tinh te (chi khi khach khong bat "giam chuyen dong") ===== */
 @media (prefers-reduced-motion: no-preference) {
@@ -8787,15 +8861,16 @@ body:has(.hp-float) .chat-panel {
         to { opacity: 1; transform: translateY(0); }
     }
 
-    .hp-hero__inner > * {
+    .hp-hero h1,
+    .hp-hero__aside > * {
         animation: hpRise .7s cubic-bezier(.16, 1, .3, 1) backwards;
     }
 
-    .hp-hero__inner > h1 { animation-delay: .05s; }
-    .hp-hero__inner > p { animation-delay: .17s; }
-    .hp-hero__inner > .hp-hero__cta { animation-delay: .28s; }
+    .hp-hero h1 { animation-delay: .05s; }
+    .hp-hero__aside > p { animation-delay: .17s; }
+    .hp-hero__aside > .hp-hero__cta { animation-delay: .28s; }
 
-    .hp-hero__media img {
+    .hp-hero__media > img {
         animation: hpPhotoIn 1.1s cubic-bezier(.16, 1, .3, 1) backwards;
     }
 
@@ -8811,7 +8886,7 @@ body:has(.hp-float) .chat-panel {
     /* Anh hero troi cham khi cuon (CSS scroll-driven, khong dung JS scroll) */
     @supports (animation-timeline: scroll()) {
         @media (min-width: 992px) {
-            .hp-hero__media img {
+            .hp-hero__media > img {
                 animation: hpPhotoIn 1.1s cubic-bezier(.16, 1, .3, 1) backwards, hpDrift linear both;
                 animation-timeline: auto, scroll(root);
                 animation-range: normal, 0 700px;
@@ -8837,9 +8912,7 @@ body:has(.hp-float) .chat-panel {
         transition: transform .08s linear, border-color .18s ease, box-shadow .18s ease;
     }
 
-    .hp-board.hp-tilt:hover {
-        box-shadow: 0 26px 56px rgba(16, 24, 40, .18);
-    }
+    
 
     /* Cac muc hien dan khi cuon toi */
     .js-anim .hp-reveal {
