@@ -24,7 +24,7 @@
     <link rel="preload" as="font" type="font/woff2" crossorigin href="/fonts/bevietnam-400-latin.woff2">
     <link rel="stylesheet" href="/fonts/fonts.css?v=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/css/style.css(v=70)}">
+    <link rel="stylesheet" th:href="@{/css/style.css(v=71)}">
 </head>
 <body class="hp">
 <header class="sh" id="siteHeader">
@@ -84,7 +84,7 @@
 
 <!-- Bang gia nhanh (du lieu that tu kho) -->
 <div class="container" th:if="${priceBoard != null and !priceBoard.isEmpty()}">
-    <section class="hp-board" aria-label="Giá tham khảo hôm nay">
+    <section class="hp-board" data-tilt="2.5" aria-label="Giá tham khảo hôm nay">
         <div class="hp-board__head">
             <strong>Giá hôm nay</strong>
             <span th:if="${priceUpdatedAt != null}" th:text="|Cập nhật ${#temporals.format(priceUpdatedAt, 'dd/MM/yyyy')}|">Cập nhật</span>
@@ -107,19 +107,19 @@
     <!-- Cam ket: 4 diem, khong the, khong emoji -->
     <section class="container hp-trust" aria-label="Cam kết của Anh Vũ">
         <ul>
-            <li>
+            <li class="hp-reveal">
                 <svg aria-hidden="true"><use href="/images/icons.svg#scales"></use></svg>
                 <div><b>Đủ hàng, đủ trọng lượng</b><span>Cân đo rõ ràng, đối chiếu đủ hàng với khách trước khi giao.</span></div>
             </li>
-            <li>
+            <li class="hp-reveal">
                 <svg aria-hidden="true"><use href="/images/icons.svg#truck"></use></svg>
                 <div><b>Xe tải, xe ba gác vào hẻm</b><span>Giao tận chân công trình quanh Bình Long và các phường lân cận.</span></div>
             </li>
-            <li>
+            <li class="hp-reveal">
                 <svg aria-hidden="true"><use href="/images/icons.svg#seal-check"></use></svg>
                 <div><b>Có CO/CQ nhà máy</b><span>Xi măng, thép có chứng chỉ xuất xưởng kèm theo hàng.</span></div>
             </li>
-            <li>
+            <li class="hp-reveal">
                 <svg aria-hidden="true"><use href="/images/icons.svg#receipt"></use></svg>
                 <div><b>Báo giá trong ngày</b><span>Đơn khối lượng lớn cho nhà thầu có giá riêng.</span></div>
             </li>
@@ -128,28 +128,28 @@
 
     <!-- Nhom hang: o Gach lon, 4 o con lai -->
     <section class="container hp-sec hp-cats" aria-labelledby="cats-title">
-        <div class="hp-head">
+        <div class="hp-head hp-reveal">
             <h2 id="cats-title">Nhóm hàng</h2>
             <a href="/san-pham" th:text="|Tất cả ${productCount != null ? productCount : 40} sản phẩm|">Tất cả 40 sản phẩm</a>
         </div>
         <div class="hp-cats__grid">
-            <a class="hp-cat hp-cat--lead" href="/san-pham?category=gach">
+            <a class="hp-cat hp-cat--lead hp-reveal" data-tilt="3" href="/san-pham?category=gach">
                 <img src="/images/materials/brick.jpg" alt="Gạch xây dựng" loading="lazy" decoding="async">
                 <span class="hp-cat__body"><b>Gạch</b><small>Gạch ống, gạch thẻ, gạch block</small></span>
             </a>
-            <a class="hp-cat" href="/san-pham?category=xi-mang">
+            <a class="hp-cat hp-reveal" data-tilt="4" href="/san-pham?category=xi-mang">
                 <img src="/images/materials/cement.jpg" alt="Xi măng bao" loading="lazy" decoding="async">
                 <span class="hp-cat__body"><b>Xi măng</b><small>PCB40, bao 50 kg, xây tô và kết cấu</small></span>
             </a>
-            <a class="hp-cat" href="/san-pham?category=cat-da">
+            <a class="hp-cat hp-reveal" data-tilt="4" href="/san-pham?category=cat-da">
                 <img src="/images/materials/sand.jpg" alt="Cát và đá xây dựng" loading="lazy" decoding="async">
                 <span class="hp-cat__body"><b>Cát, đá</b><small>Cát xây, cát tô, đá 1x2, đá mi</small></span>
             </a>
-            <a class="hp-cat" href="/san-pham?category=thep">
+            <a class="hp-cat hp-reveal" data-tilt="4" href="/san-pham?category=thep">
                 <img src="/images/materials/steel.jpg" alt="Thép xây dựng" loading="lazy" decoding="async">
                 <span class="hp-cat__body"><b>Thép</b><small>Thép cây, thép cuộn, thép hình</small></span>
             </a>
-            <a class="hp-cat" href="/san-pham?category=dich-vu">
+            <a class="hp-cat hp-reveal" data-tilt="4" href="/san-pham?category=dich-vu">
                 <img src="/images/products/san-lap-mat-bang.jpg" alt="Xe san lấp mặt bằng" loading="lazy" decoding="async">
                 <span class="hp-cat__body"><b>Dịch vụ</b><small>San lấp, giàn giáo, đào móng, đào ao</small></span>
             </a>
@@ -158,14 +158,14 @@
 
     <!-- San pham ban chay -->
     <section id="products" class="container hp-sec hp-products" aria-labelledby="products-title">
-        <div class="hp-head">
+        <div class="hp-head hp-reveal">
             <div>
                 <h2 id="products-title">Bán chạy tại bãi</h2>
                 <p>Giá bán lẻ tham khảo tại bãi. Đơn lớn gọi để có giá sỉ.</p>
             </div>
         </div>
         <div class="hp-products__grid">
-            <article class="hp-product" th:each="product : ${featuredProducts}">
+            <article class="hp-product hp-reveal" th:each="product : ${featuredProducts}">
                 <a class="hp-product__img" th:href="@{'/san-pham/' + ${product.id}}" tabindex="-1" aria-hidden="true">
                     <img th:src="${product.imagePath}" th:alt="${product.name}" alt="Sản phẩm" loading="lazy" decoding="async">
                 </a>
@@ -185,7 +185,7 @@
                 </div>
             </article>
         </div>
-        <div class="hp-products__more">
+        <div class="hp-products__more hp-reveal">
             <a class="hp-btn hp-btn--outline" href="/san-pham" th:text="|Xem tất cả ${productCount != null ? productCount : 40} sản phẩm|">Xem tất cả 40 sản phẩm</a>
         </div>
     </section>
@@ -193,15 +193,15 @@
     <!-- Cach dat hang: 3 buoc that -->
     <section class="hp-how" aria-labelledby="how-title">
         <div class="container hp-how__in">
-            <div class="hp-how__intro">
+            <div class="hp-how__intro hp-reveal">
                 <h2 id="how-title">Đặt hàng thế nào</h2>
                 <p>Không cần tài khoản. Gọi điện, nhắn Zalo hay đặt trên web đều được, nhân viên bãi sẽ xác nhận lại với bạn.</p>
                 <a class="hp-btn hp-btn--primary" href="/dat-hang">Đặt hàng trên web</a>
             </div>
             <ol class="hp-steps">
-                <li><b>Gửi loại hàng, số lượng và địa chỉ công trình</b><span>Qua hotline, Zalo hoặc form đặt hàng. Chưa rõ số lượng thì dùng công cụ tính vật liệu ở trang báo giá.</span></li>
-                <li><b>Nhận báo giá và chốt đơn</b><span>Phản hồi trong ngày làm việc. Đơn lớn cho nhà thầu có giá riêng.</span></li>
-                <li><b>Nhận hàng tại công trình</b><span>Kiểm hàng khi xe tới. Thanh toán tiền mặt hoặc chuyển khoản theo mã đơn.</span></li>
+                <li class="hp-reveal"><b>Gửi loại hàng, số lượng và địa chỉ công trình</b><span>Qua hotline, Zalo hoặc form đặt hàng. Chưa rõ số lượng thì dùng công cụ tính vật liệu ở trang báo giá.</span></li>
+                <li class="hp-reveal"><b>Nhận báo giá và chốt đơn</b><span>Phản hồi trong ngày làm việc. Đơn lớn cho nhà thầu có giá riêng.</span></li>
+                <li class="hp-reveal"><b>Nhận hàng tại công trình</b><span>Kiểm hàng khi xe tới. Thanh toán tiền mặt hoặc chuyển khoản theo mã đơn.</span></li>
             </ol>
         </div>
     </section>
@@ -209,10 +209,10 @@
     <!-- Ghe bai hang: ban do + lien he -->
     <section id="business-info" class="container hp-visit" aria-labelledby="visit-title">
         <div class="hp-visit__in">
-            <div class="hp-visit__map">
+            <div class="hp-visit__map hp-reveal">
                 <iframe src="https://www.google.com/maps?q=617+Nguy%E1%BB%85n+Hu%E1%BB%87,+Ph%C6%B0%E1%BB%9Dng+B%C3%ACnh+Long,+%C4%90%E1%BB%93ng+Nai&amp;z=16&amp;output=embed" title="Bản đồ bãi hàng VLXD Anh Vũ" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
             </div>
-            <div class="hp-visit__info">
+            <div class="hp-visit__info hp-reveal">
                 <h2 id="visit-title">Ghé bãi hàng</h2>
                 <p>Đến xem hàng trực tiếp, cân thử và chọn loại trước khi đặt số lượng lớn.</p>
                 <dl>
@@ -299,7 +299,7 @@
     <svg aria-hidden="true"><use href="/images/icons.svg#caret-down"></use></svg>
 </button>
 
-<script th:src="@{/js/main.js(v=26)}"></script>
+<script th:src="@{/js/main.js(v=27)}"></script>
 <script>
     // Nut len dau trang: hien khi hero da cuon khuat (khong dung su kien scroll)
     (function () {

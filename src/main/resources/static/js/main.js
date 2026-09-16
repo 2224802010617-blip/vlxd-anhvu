@@ -819,3 +819,60 @@ document.addEventListener("DOMContentLoaded", () => {
     const onChange = (event) => { if (event.matches) setOpen(false); };
     if (desktop.addEventListener) desktop.addEventListener("change", onChange); else desktop.addListener(onChange);
 });
+
+
+// ===== V3 motion: nghieng 3D theo chuot + hien dan khi cuon =====
+document.addEventListener("DOMContentLoaded", () => {
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const finePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+    // Nghieng nhe: bang gia va o nhom hang, toi da vai do, tra ve khi roi chuot
+    const tilts = document.querySelectorAll("[data-tilt]");
+    if (!reduce && finePointer && tilts.length) {
+        tilts.forEach((el) => {
+            const max = parseFloat(el.dataset.tilt) || 4;
+            let rx = 0, ry = 0, raf = 0;
+            const apply = () => {
+                raf = 0;
+                el.style.setProperty("--rx", rx.toFixed(2) + "deg");
+                el.style.setProperty("--ry", ry.toFixed(2) + "deg");
+            };
+            el.classList.add("hp-tilt");
+            el.addEventListener("pointerenter", () => el.classList.add("is-tilting"));
+            el.addEventListener("pointermove", (event) => {
+                const r = el.getBoundingClientRect();
+                const px = (event.clientX - r.left) / r.width - .5;
+                const py = (event.clientY - r.top) / r.height - .5;
+                ry = px * max * 2;
+                rx = -py * max * 2;
+                if (!raf) raf = requestAnimationFrame(apply);
+            });
+            el.addEventListener("pointerleave", () => {
+                el.classList.remove("is-tilting");
+                rx = 0; ry = 0;
+                if (!raf) raf = requestAnimationFrame(apply);
+            });
+        });
+    }
+
+    // Hien dan: moi muc mot lan, cac phan tu cung hang lech nhau 70ms
+    const items = document.querySelectorAll(".hp-reveal");
+    if (!items.length) return;
+    if (reduce || !("IntersectionObserver" in window)) {
+        items.forEach((el) => el.classList.add("is-in"));
+        return;
+    }
+    items.forEach((el) => {
+        const parent = el.parentElement;
+        const sibs = parent ? Array.prototype.filter.call(parent.children, (c) => c.classList.contains("hp-reveal")) : [];
+        el.style.setProperty("--i", String(Math.max(sibs.indexOf(el), 0)));
+    });
+    const io = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add("is-in");
+            io.unobserve(entry.target);
+        });
+    }, { threshold: .12, rootMargin: "0px 0px -30px 0px" });
+    items.forEach((el) => io.observe(el));
+});

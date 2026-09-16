@@ -8721,3 +8721,85 @@ body:has(.hp-float) .chat-panel {
         transform: none;
     }
 }
+
+
+/* ===== V3 motion: chieu sau tinh te (chi khi khach khong bat "giam chuyen dong") ===== */
+@media (prefers-reduced-motion: no-preference) {
+    /* Hero xuat hien theo lop khi tai trang */
+    @keyframes hpRise {
+        from { opacity: 0; transform: translateY(22px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hp-hero__inner > * {
+        animation: hpRise .7s cubic-bezier(.16, 1, .3, 1) backwards;
+    }
+
+    .hp-hero__inner > h1 { animation-delay: .05s; }
+    .hp-hero__inner > p { animation-delay: .17s; }
+    .hp-hero__inner > .hp-hero__cta { animation-delay: .28s; }
+
+    .hp-hero__media img {
+        animation: hpPhotoIn 1.1s cubic-bezier(.16, 1, .3, 1) backwards;
+    }
+
+    @keyframes hpPhotoIn {
+        from { opacity: 0; transform: scale(1.06); }
+        to { opacity: 1; transform: scale(1); }
+    }
+
+    .hp-board {
+        animation: hpRise .8s cubic-bezier(.16, 1, .3, 1) .4s backwards;
+    }
+
+    /* Anh hero troi cham khi cuon (CSS scroll-driven, khong dung JS scroll) */
+    @supports (animation-timeline: scroll()) {
+        @media (min-width: 992px) {
+            .hp-hero__media img {
+                animation: hpPhotoIn 1.1s cubic-bezier(.16, 1, .3, 1) backwards, hpDrift linear both;
+                animation-timeline: auto, scroll(root);
+                animation-range: normal, 0 700px;
+                will-change: transform;
+            }
+
+            @keyframes hpDrift {
+                from { transform: scale(1.12) translateY(-28px); }
+                to { transform: scale(1.12) translateY(34px); }
+            }
+        }
+    }
+
+    /* Nghieng 3D nhe theo chuot (JS gan --rx/--ry, chi tren may co chuot) */
+    .hp-tilt {
+        transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+        transform-style: preserve-3d;
+        transition: transform .35s cubic-bezier(.16, 1, .3, 1), border-color .18s ease, box-shadow .18s ease;
+        will-change: transform;
+    }
+
+    .hp-tilt.is-tilting {
+        transition: transform .08s linear, border-color .18s ease, box-shadow .18s ease;
+    }
+
+    .hp-board.hp-tilt:hover {
+        box-shadow: 0 26px 56px rgba(16, 24, 40, .18);
+    }
+
+    /* Cac muc hien dan khi cuon toi */
+    .js-anim .hp-reveal {
+        opacity: 0;
+        transform: translateY(18px);
+        transition: opacity .65s cubic-bezier(.16, 1, .3, 1), transform .65s cubic-bezier(.16, 1, .3, 1);
+        transition-delay: calc(var(--i, 0) * 70ms);
+    }
+
+    .js-anim .hp-reveal.is-in {
+        opacity: 1;
+        transform: none;
+    }
+
+    .js-anim .hp-reveal.is-in.hp-cat,
+    .js-anim .hp-reveal.is-in.hp-product {
+        transition-delay: 0s;
+    }
+}
