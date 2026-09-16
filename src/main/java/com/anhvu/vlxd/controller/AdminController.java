@@ -7,6 +7,8 @@ import com.anhvu.vlxd.entity.CustomerOrder;
 import com.anhvu.vlxd.entity.Product;
 import com.anhvu.vlxd.entity.QuoteRequest;
 import com.anhvu.vlxd.entity.Review;
+import com.anhvu.vlxd.entity.AppUser;
+import com.anhvu.vlxd.repository.AppUserRepository;
 import com.anhvu.vlxd.repository.CategoryRepository;
 import com.anhvu.vlxd.repository.ReviewRepository;
 import com.anhvu.vlxd.repository.CustomerOrderRepository;
@@ -73,6 +75,21 @@ public class AdminController {
     private final EmailContactService emailContactService;
     private final ObjectMapper objectMapper;
     private final ReviewRepository reviewRepository;
+    private final AppUserRepository appUserRepository;
+
+    /** Mot dong trong tab "Tai khoan": thong tin dang ky + so don da dat (ghep theo so dien thoai). */
+    public record AccountRow(String email, String fullName, String phone, String role, String provider,
+                             java.time.LocalDateTime createdAt, long orders, double totalSpent) {
+        public boolean isAdmin() {
+            return "ADMIN".equalsIgnoreCase(role);
+        }
+
+        public String providerLabel() {
+            if ("GOOGLE".equalsIgnoreCase(provider)) return "Google";
+            if ("PASSWORD".equalsIgnoreCase(provider)) return "Tự đăng ký";
+            return "Không rõ";
+        }
+    }
 
     @GetMapping(value = "/admin", produces = "text/html;charset=UTF-8")
     public String dashboard(@RequestParam(required = false) String status,
@@ -84,6 +101,7 @@ public class AdminController {
                             @RequestParam(required = false) String stock,
                             @RequestParam(required = false) String debt,
                             @RequestParam(defaultValue = "0") int ppage,
+                            @RequestParam(required = false) String acc,
                             Model model,
                             Authentication authentication) throws Exception {
         List<Product> products = productRepository.findAll();
@@ -203,6 +221,33 @@ public class AdminController {
         // ----- Danh gia -----
         model.addAttribute("reviews", reviewRepository.findAllByOrderByCreatedAtDesc());
         model.addAttribute("pendingReviews", reviewRepository.countByApprovedFalse());
+
+        // ----- Tai khoan da dang ky (chi xem) -----
+        // Ghep don hang theo so dien thoai de biet khach nao da mua
+        Map<String, long[]> ordersByPhone = new LinkedHashMap<>();
+        for (OrderGroupView group : allGroups) {
+            String key = digitsOnly(group.getPhone());
+            if (key.isEmpty()) continue;
+            long[] stat = ordersByPhone.computeIfAbsent(key, k -> new long[]{0, 0});
+            stat[0]++;
+            if ("COMPLETED".equalsIgnoreCase(group.getStatus())) {
+                stat[1] += group.getTotal() == null ? 0 : group.getTotal().longValue();
+            }
+        }
+        String accountQuery = acc == null ? "" : acc.trim();
+        List<AccountRow> accounts = new ArrayList<>();
+        for (AppUser user : appUserRepository.findAllByOrderByCreatedAtDesc()) {
+            long[] stat = ordersByPhone.getOrDefault(digitsOnly(user.getPhone()), new long[]{0, 0});
+            accounts.add(new AccountRow(user.getEmail(), user.getFullName(), user.getPhone(),
+                    user.getRole(), user.getProvider(), user.getCreatedAt(), stat[0], stat[1]));
+        }
+        List<AccountRow> shownAccounts = accountQuery.isEmpty() ? accounts : accounts.stream()
+                .filter(row -> fold(row.email() + " " + row.fullName() + " " + row.phone()).contains(fold(accountQuery)))
+                .toList();
+        model.addAttribute("accounts", shownAccounts);
+        model.addAttribute("accountTotal", accounts.size());
+        model.addAttribute("accountGoogle", accounts.stream().filter(row -> "GOOGLE".equalsIgnoreCase(row.provider())).count());
+        model.addAttribute("acc", accountQuery);
 
         return "admin/dashboard";
     }
@@ -686,6 +731,11 @@ public class AdminController {
     }
 
     /** Bo dau, chu thuong de tim kiem "xi mang" ra "Xi măng". */
+    /** Chi giu chu so de ghep so dien thoai giua tai khoan va don hang. */
+    private static String digitsOnly(String value) {
+        return value == null ? "" : value.replaceAll("\\D+", "");
+    }
+
     private static String fold(String value) {
         if (value == null) {
             return "";

@@ -16,4 +16,6 @@ public interface AppUserRepository extends JpaRepository<AppUser, Long> {
     boolean existsByUsernameIgnoreCase(String username);
 
     List<AppUser> findAllByRoleIgnoreCase(String role);
+
+    List<AppUser> findAllByOrderByCreatedAtDesc();
 }

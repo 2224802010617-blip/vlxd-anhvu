@@ -39,6 +39,10 @@ public class AppUser {
     @Column(nullable = false)
     private Boolean active = true;
 
+    /** Cach tao tai khoan: PASSWORD (tu dang ky) hoac GOOGLE. Cu de trong = khong ro. */
+    @Column(length = 20)
+    private String provider;
+
     @Column(length = 120)
     private String resetToken;
 

@@ -95,6 +95,7 @@ public class AuthController {
                 .password(passwordEncoder.encode(password))
                 .role("USER")
                 .active(true)
+                .provider("PASSWORD")
                 .build());
         return "redirect:/dang-nhap?registered=true";
     }

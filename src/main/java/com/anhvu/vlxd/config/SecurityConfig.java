@@ -134,6 +134,7 @@ public class SecurityConfig {
             user.setFullName(displayName);
             user.setRole(admin ? "ADMIN" : "USER");
             user.setActive(true);
+            user.setProvider("GOOGLE");
             if (user.getId() == null) {
                 user.setPassword(passwordEncoder.encode(UUID.randomUUID().toString()));
             }
