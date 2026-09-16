@@ -876,3 +876,65 @@ document.addEventListener("DOMContentLoaded", () => {
     }, { threshold: .12, rootMargin: "0px 0px -30px 0px" });
     items.forEach((el) => io.observe(el));
 });
+
+
+// ===== V4 banner: tu chuyen anh, cham, mui ten, vuot tay; dung khi re chuot; khong tu chay neu giam chuyen dong =====
+document.addEventListener("DOMContentLoaded", () => {
+    const box = document.getElementById("heroSlides");
+    if (!box) return;
+    const slides = Array.prototype.slice.call(box.querySelectorAll(".hp-slide"));
+    if (slides.length < 2) return;
+    const dotsBox = box.querySelector(".hp-slides__dots");
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let current = slides.findIndex((s) => s.classList.contains("is-active"));
+    if (current < 0) current = 0;
+    let timer = 0;
+
+    const dots = slides.map((_, i) => {
+        const b = document.createElement("button");
+        b.type = "button";
+        b.setAttribute("role", "tab");
+        b.setAttribute("aria-label", "Ảnh " + (i + 1) + " / " + slides.length);
+        b.addEventListener("click", () => { go(i); restart(); });
+        if (dotsBox) dotsBox.appendChild(b);
+        return b;
+    });
+
+    const go = (idx) => {
+        slides[current].classList.remove("is-active");
+        dots[current].classList.remove("is-active");
+        dots[current].setAttribute("aria-selected", "false");
+        current = (idx + slides.length) % slides.length;
+        slides[current].classList.add("is-active");
+        dots[current].classList.add("is-active");
+        dots[current].setAttribute("aria-selected", "true");
+    };
+
+    const stop = () => { if (timer) { window.clearInterval(timer); timer = 0; } };
+    const start = () => { if (!reduce && !timer) timer = window.setInterval(() => go(current + 1), 5200); };
+    const restart = () => { stop(); start(); };
+
+    go(current);
+    start();
+
+    const prev = box.querySelector(".hp-slides__arrow--prev");
+    const next = box.querySelector(".hp-slides__arrow--next");
+    if (prev) prev.addEventListener("click", () => { go(current - 1); restart(); });
+    if (next) next.addEventListener("click", () => { go(current + 1); restart(); });
+
+    box.addEventListener("mouseenter", stop);
+    box.addEventListener("mouseleave", start);
+    box.addEventListener("focusin", stop);
+    box.addEventListener("focusout", start);
+    document.addEventListener("visibilitychange", () => { document.hidden ? stop() : start(); });
+
+    // Vuot tay tren dien thoai
+    let startX = null;
+    box.addEventListener("pointerdown", (e) => { if (e.pointerType !== "mouse") startX = e.clientX; }, { passive: true });
+    box.addEventListener("pointerup", (e) => {
+        if (startX === null) return;
+        const dx = e.clientX - startX;
+        startX = null;
+        if (Math.abs(dx) > 40) { go(dx < 0 ? current + 1 : current - 1); restart(); }
+    }, { passive: true });
+});
