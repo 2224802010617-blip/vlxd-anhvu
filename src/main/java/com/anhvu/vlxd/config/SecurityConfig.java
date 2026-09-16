@@ -20,6 +20,7 @@ import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.XorCsrfTokenRequestAttributeHandler;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -82,13 +83,16 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * Dang nhap xong luon ve trang chu, ke ca tai khoan quan tri (admin vao trang quan tri
+     * bang muc "Quan tri" tren menu). Ngoai le: neu khach bam vao mot trang can dang nhap
+     * (vi du mo thang /admin) thi sau khi dang nhap tra ve dung trang do.
+     */
     @Bean
     AuthenticationSuccessHandler loginSuccessHandler() {
-        return (request, response, authentication) -> {
-            boolean admin = authentication.getAuthorities().stream()
-                    .anyMatch(authority -> "ROLE_ADMIN".equals(authority.getAuthority()));
-            response.sendRedirect(admin ? "/admin" : "/");
-        };
+        SavedRequestAwareAuthenticationSuccessHandler handler = new SavedRequestAwareAuthenticationSuccessHandler();
+        handler.setDefaultTargetUrl("/");
+        return handler;
     }
 
     @Bean

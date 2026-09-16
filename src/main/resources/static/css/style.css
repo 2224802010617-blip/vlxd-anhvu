@@ -7675,15 +7675,28 @@ body.hp main {
     display: none;
 }
 
-@media (min-width: 1024px) and (max-width: 1399px) {
+@media (min-width: 1200px) and (max-width: 1499px) {
+    .sh__in {
+        gap: 12px;
+    }
+
+    .sh__menu {
+        gap: 10px;
+    }
+
     .sh__nav a {
-        padding: 0 10px;
-        font-size: .9rem;
+        padding: 0 8px;
+        font-size: .88rem;
+    }
+
+    .sh__call {
+        padding: 0 16px;
+        font-size: .95rem;
     }
 
     .sh .qh-search {
-        max-width: 210px;
-        min-width: 140px;
+        max-width: 200px;
+        min-width: 120px;
     }
 
     .sh__user a span {
@@ -7697,7 +7710,7 @@ body.hp main {
     }
 }
 
-@media (max-width: 1023px) {
+@media (max-width: 1199px) {
     .sh__in {
         gap: 10px;
         min-height: 64px;
@@ -10576,3 +10589,31 @@ body:has(.hp-float) .chat-panel {
         position: static;
     }
 }
+
+
+/* Thanh dau trang khi da dang nhap: giu gon de khong day nut goi */
+.sh__user form button svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+}
+
+@media (min-width: 1200px) {
+    /* Thanh ngang chat cho: an email va chu "Dang xuat", chi giu icon (co tooltip) */
+    .sh__email {
+        display: none;
+    }
+
+    .sh__user form button {
+        width: 40px;
+        padding: 0;
+        gap: 0;
+        justify-content: center;
+    }
+
+    .sh__user form button span {
+        display: none;
+    }
+}
+
+
