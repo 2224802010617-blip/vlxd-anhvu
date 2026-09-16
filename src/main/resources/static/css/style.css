@@ -10598,27 +10598,6 @@ body:has(.hp-float) .chat-panel {
     fill: currentColor;
 }
 
-@media (min-width: 1200px) {
-    /* Thanh ngang chat cho: an email va chu "Dang xuat", chi giu icon (co tooltip) */
-    .sh__email {
-        display: none;
-    }
-
-    .sh__user form button {
-        width: 40px;
-        padding: 0;
-        gap: 0;
-        justify-content: center;
-    }
-
-    .sh__user form button span {
-        display: none;
-    }
-}
-
-
-
-
 /* Khoi gap (details): bat buoc an noi dung khi dang dong.
    Can thiet vi cac quy tac display cua rieng ta (.pay-form, .mail-form, .receive-form,
    .inventory-more input, form danh gia, cau tra loi FAQ) co the ghi de kieu mac dinh
@@ -10627,50 +10606,6 @@ details:not([open]) > *:not(summary) {
     display: none;
 }
 
-
-/* Thanh dau trang: cho biet dang dang nhap bang tai khoan nao.
-   Man hinh ngang khong du cho ca email, nen chi hien vong tron chu cai dau
-   (di chuot vao thay email day du); email day du nam trong menu gap. */
-.sh__who {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    min-width: 0;
-}
-
-.sh__who > b {
-    display: grid;
-    place-items: center;
-    flex: 0 0 auto;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    background: var(--ink);
-    color: #fff;
-    font-family: var(--f-display);
-    font-size: .88rem;
-    font-weight: 800;
-    line-height: 1;
-    cursor: default;
-}
-
-@media (max-width: 1199px) {
-    /* Trong menu gap: vong tron + email day du */
-    .sh__who > b {
-        width: 34px;
-        height: 34px;
-    }
-
-    .sh__email {
-        overflow: hidden;
-        color: var(--mute);
-        font-size: .9rem;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-}
-
-
 /* Admin tren dien thoai: chu dai (email, dia chi) phai xuong dong trong the, khong tran ra ngoai */
 @media (max-width: 760px) {
     .admin-table:not(.inventory-table) tbody td,
@@ -10678,5 +10613,151 @@ details:not([open]) > *:not(summary) {
     .admin-table:not(.inventory-table) tbody td a {
         overflow-wrap: anywhere;
         word-break: break-word;
+    }
+}
+
+/* ===== O tai khoan tren thanh dau trang =====
+   Thanh ngang khong du cho email day du (logo + 7 muc menu + o tim + nut goi),
+   nen chi de vong tron chu cai; bam vao mo o nho hien email day du va nut Dang xuat.
+   Trong menu gap (dien thoai) thi hien san, khong phai bam. */
+.sh__account {
+    position: relative;
+}
+
+.sh__user .sh__avatar,
+.sh__avatar {
+    display: grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: var(--ink);
+    color: #fff;
+    font-family: var(--f-display);
+    font-size: .92rem;
+    font-weight: 800;
+    line-height: 1;
+    min-height: 0;
+    cursor: pointer;
+    transition: transform .15s ease;
+}
+
+.sh__avatar:hover,
+.sh__avatar[aria-expanded="true"] {
+    transform: scale(1.06);
+}
+
+.sh__pop-label {
+    color: var(--mute);
+    font-size: .74rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+}
+
+.sh__pop .sh__email {
+    color: var(--ink);
+    font-size: .95rem;
+    font-weight: 600;
+    overflow-wrap: anywhere;
+}
+
+.sh__pop form {
+    margin: 0;
+}
+
+.sh__pop form button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    min-height: 42px;
+    padding: 0 16px;
+    border: 1px solid var(--line);
+    border-radius: var(--pill);
+    background: #fff;
+    color: var(--ink);
+    font: inherit;
+    font-size: .92rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color .18s ease;
+}
+
+.sh__pop form button:hover {
+    border-color: var(--ink);
+}
+
+.sh__pop form button svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+}
+
+@media (min-width: 1200px) {
+    /* O nho bung ra duoi vong tron */
+    .sh__pop {
+        position: absolute;
+        top: calc(100% + 12px);
+        right: 0;
+        z-index: 95;
+        display: none;
+        flex-direction: column;
+        gap: 10px;
+        min-width: 250px;
+        padding: 16px 18px;
+        border: 1px solid var(--line);
+        border-radius: var(--r);
+        background: #fff;
+        box-shadow: 0 24px 60px rgba(17, 20, 24, .18);
+    }
+
+    .sh__account.is-open .sh__pop {
+        display: flex;
+    }
+}
+
+@media (max-width: 1199px) {
+    /* Trong menu gap: hien san, khong can bam. Hang 1 vong tron + email, hang 2 nut dang xuat. */
+    .sh__account {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+    }
+
+    .sh__user .sh__avatar {
+        width: 38px;
+        height: 38px;
+        pointer-events: none;
+    }
+
+    .sh__pop {
+        display: contents;
+    }
+
+    .sh__pop-label {
+        display: none;
+    }
+
+    .sh__pop .sh__email {
+        grid-column: 2;
+        color: var(--ink-2);
+        font-size: .92rem;
+        font-weight: 600;
+        line-height: 1.35;
+        overflow-wrap: anywhere;
+    }
+
+    .sh__pop form {
+        grid-column: 1 / -1;
+    }
+
+    .sh__pop form button {
+        min-height: 46px;
     }
 }

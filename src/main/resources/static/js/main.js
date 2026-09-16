@@ -975,3 +975,30 @@ document.addEventListener("DOMContentLoaded", () => {
     }, { threshold: .4 });
     targets.forEach((el) => io.observe(el));
 });
+
+
+// ===== O tai khoan tren thanh dau trang: bam vong tron de xem email day du =====
+document.addEventListener("DOMContentLoaded", () => {
+    const box = document.querySelector(".sh__account");
+    const avatar = box ? box.querySelector(".sh__avatar") : null;
+    if (!box || !avatar) return;
+
+    const setOpen = (open) => {
+        box.classList.toggle("is-open", open);
+        avatar.setAttribute("aria-expanded", String(open));
+    };
+
+    avatar.addEventListener("click", (event) => {
+        event.stopPropagation();
+        setOpen(!box.classList.contains("is-open"));
+    });
+    document.addEventListener("click", (event) => {
+        if (!box.contains(event.target)) setOpen(false);
+    });
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && box.classList.contains("is-open")) {
+            setOpen(false);
+            avatar.focus();
+        }
+    });
+});
