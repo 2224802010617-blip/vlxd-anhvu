@@ -7675,7 +7675,8 @@ body.hp main {
     display: none;
 }
 
-@media (min-width: 1200px) and (max-width: 1499px) {
+@media (min-width: 1200px) {
+    /* Thanh ngang dung mot co chu tu 1200px tro len, de con cho cho ten tai khoan */
     .sh__in {
         gap: 12px;
     }
@@ -7695,10 +7696,14 @@ body.hp main {
     }
 
     .sh .qh-search {
-        max-width: 200px;
+        flex: 1 1 200px;
+        max-width: 240px;
         min-width: 120px;
     }
+}
 
+@media (min-width: 1200px) and (max-width: 1499px) {
+    /* Hep hon: nut Dang nhap chi con icon */
     .sh__user a span {
         display: none;
     }
@@ -10626,12 +10631,29 @@ details:not([open]) > *:not(summary) {
 
 .sh__user .sh__avatar,
 .sh__avatar {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    max-width: 100%;
+    min-width: 0;
+    min-height: 0;
+    height: 40px;
+    padding: 0 6px 0 0;
+    border: 0;
+    border-radius: var(--pill);
+    background: transparent;
+    color: var(--ink);
+    font: inherit;
+    cursor: pointer;
+    transition: background .18s ease;
+}
+
+.sh__avatar > b {
     display: grid;
     place-items: center;
+    flex: 0 0 auto;
     width: 36px;
     height: 36px;
-    padding: 0;
-    border: 0;
     border-radius: 50%;
     background: var(--ink);
     color: #fff;
@@ -10639,14 +10661,37 @@ details:not([open]) > *:not(summary) {
     font-size: .92rem;
     font-weight: 800;
     line-height: 1;
-    min-height: 0;
-    cursor: pointer;
-    transition: transform .15s ease;
 }
 
-.sh__avatar:hover,
-.sh__avatar[aria-expanded="true"] {
-    transform: scale(1.06);
+.sh__caret {
+    flex: 0 0 auto;
+    width: 14px;
+    height: 14px;
+    fill: var(--mute);
+}
+
+.sh__user .sh__avatar:hover,
+.sh__user .sh__avatar[aria-expanded="true"] {
+    background: var(--soft);
+}
+
+/* Ten hien canh vong tron khi thanh con cho; hep thi tu an di */
+.sh__name {
+    display: none;
+    min-width: 0;
+    overflow: hidden;
+    font-size: .9rem;
+    font-weight: 600;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+@media (min-width: 1400px) {
+    /* Du cho thi hien ten canh vong tron */
+    .sh__name {
+        display: block;
+        max-width: 120px;
+    }
 }
 
 .sh__pop-label {
@@ -10731,9 +10776,18 @@ details:not([open]) > *:not(summary) {
     }
 
     .sh__user .sh__avatar {
+        height: auto;
+        padding: 0;
+        pointer-events: none;
+    }
+
+    .sh__avatar > b {
         width: 38px;
         height: 38px;
-        pointer-events: none;
+    }
+
+    .sh__caret {
+        display: none;
     }
 
     .sh__pop {
