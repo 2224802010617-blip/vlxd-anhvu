@@ -175,8 +175,12 @@ public class ProductController {
         boolean hasPrice = product.getPrice() != null && product.getPrice().signum() > 0;
         model.addAttribute("guide", guide);
         model.addAttribute("hasPrice", hasPrice);
-        model.addAttribute("detailParagraphs", product.getDetail() == null ? List.of()
-                : java.util.Arrays.stream(product.getDetail().split("\\r?\\n")).map(String::trim).filter(s -> !s.isEmpty()).toList());
+        // Mo ta chi tiet: admin viet thi dung, khong thi lay noi dung mac dinh theo ten san pham
+        ProductGuideService.Detail detail = productGuideService.detailFor(product);
+        List<String> ownParagraphs = product.getDetail() == null ? List.of()
+                : java.util.Arrays.stream(product.getDetail().split("\\r?\\n")).map(String::trim).filter(s -> !s.isEmpty()).toList();
+        model.addAttribute("detailParagraphs", ownParagraphs.isEmpty() ? detail.paragraphs() : ownParagraphs);
+        model.addAttribute("detailSpecs", detail.specs());
         model.addAttribute("structuredData", structuredData(product, guide, hasPrice));
         return "product-detail";
     }

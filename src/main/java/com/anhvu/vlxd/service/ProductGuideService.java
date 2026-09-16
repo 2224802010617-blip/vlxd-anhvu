@@ -14,6 +14,27 @@ import java.util.Locale;
 @Service
 public class ProductGuideService {
 
+    /** Noi dung rieng cho tung san pham, doc tu content/product-details.json (khoa = ten san pham). */
+    public record Detail(List<List<String>> specs, List<String> paragraphs) {}
+
+    private final java.util.Map<String, Detail> details;
+
+    public ProductGuideService(com.fasterxml.jackson.databind.ObjectMapper objectMapper) {
+        java.util.Map<String, Detail> loaded = java.util.Map.of();
+        try (java.io.InputStream in = new org.springframework.core.io.ClassPathResource("content/product-details.json").getInputStream()) {
+            loaded = objectMapper.readValue(in, new com.fasterxml.jackson.core.type.TypeReference<java.util.Map<String, Detail>>() {});
+        } catch (Exception e) {
+            org.slf4j.LoggerFactory.getLogger(ProductGuideService.class).warn("Khong doc duoc product-details.json: {}", e.getMessage());
+        }
+        this.details = loaded;
+    }
+
+    /** Noi dung mac dinh theo ten san pham; khong co thi tra ve rong. */
+    public Detail detailFor(Product product) {
+        Detail d = details.get(product.getName() == null ? "" : product.getName().trim());
+        return d == null ? new Detail(List.of(), List.of()) : d;
+    }
+
     public record Norm(String item, String value) {}
 
     public record Faq(String question, String answer) {}

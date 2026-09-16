@@ -10510,3 +10510,63 @@ body:has(.hp-float) .chat-panel {
 }
 
 .inventory-more textarea[name="detail"] { width: 100%; min-height: 96px; margin-top: 6px; padding: 8px 10px; border: 1px solid rgba(148,163,184,.3); border-radius: 8px; background: #0f172a; color: #f8fafc; font: inherit; font-size: .88rem; resize: vertical; }
+
+
+/* Trang san pham: khoi "Ve san pham" = bai viet + bang thong so */
+.pd-detail {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: 40px;
+    align-items: start;
+}
+
+.pd-specs {
+    position: sticky;
+    top: 92px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 20px;
+}
+
+.pd-specs h3 {
+    margin: 0;
+    padding: 16px 22px;
+    background: var(--soft);
+    font-size: 1.05rem;
+}
+
+.pd-specs table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: .95rem;
+}
+
+.pd-specs th,
+.pd-specs td {
+    padding: 12px 22px;
+    border-top: 1px solid var(--line);
+    text-align: left;
+    vertical-align: top;
+}
+
+.pd-specs th {
+    width: 42%;
+    color: var(--mute);
+    font-weight: 600;
+}
+
+.pd-specs td {
+    color: var(--ink);
+    font-weight: 600;
+}
+
+@media (max-width: 991px) {
+    .pd-detail {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 22px;
+    }
+
+    .pd-specs {
+        position: static;
+    }
+}

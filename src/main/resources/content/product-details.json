@@ -1,0 +1,322 @@
+{
+  "Gạch ống 8x8x18": {
+    "specs": [["Kích thước", "80 x 80 x 180 mm, 4 lỗ"], ["Khối lượng", "khoảng 1,3 đến 1,5 kg/viên"], ["Loại", "gạch đất sét nung, lò tuynel"], ["Tiêu chuẩn", "TCVN 1451, mác từ M50"], ["Định mức", "55 đến 60 viên/m² tường 10"]],
+    "paragraphs": [
+      "Gạch ống 8x8x18 là loại gạch xây phổ biến nhất trong nhà ở dân dụng ở miền Nam. Viên gạch có bốn lỗ rỗng dọc thân nên nhẹ, cách âm, cách nhiệt tốt hơn gạch đặc và tiết kiệm vữa khi xây. Kích thước 80 x 80 x 180 mm cho phép xây tường 10 (một hàng gạch) và tường 20 (hai hàng) đều thuận tay.",
+      "Gạch nung bằng lò tuynel có màu đỏ cam đều, cạnh sắc, tiếng gõ đanh. Cường độ chịu nén thường đạt mác M50 trở lên, đủ cho tường bao và tường ngăn nhà phố, nhà cấp 4. Độ hút nước của gạch nung ở mức 8 đến 18 phần trăm, nên cần tưới ẩm gạch trước khi xây để vữa không bị hút khô.",
+      "Khi tính khối lượng, tường 10 cần khoảng 55 đến 60 viên cho mỗi mét vuông, tường 20 cần gấp đôi. Nên đặt dư 3 đến 5 phần trăm cho hao hụt khi cắt góc và vận chuyển. Bãi giao gạch xếp lớp trên xe, đếm được từng lớp khi xuống hàng."
+    ]
+  },
+  "Gạch Tuynel": {
+    "specs": [["Kích thước", "80 x 80 x 180 mm (gạch ống) hoặc 40 x 80 x 180 mm (gạch thẻ)"], ["Loại", "gạch đất sét nung lò tuynel"], ["Tiêu chuẩn", "TCVN 1451"], ["Ứng dụng", "tường bao, tường ngăn, chân tường, bậc thềm"]],
+    "paragraphs": [
+      "Gạch tuynel là gạch đất sét nung trong lò tuynel liên tục, nhiệt độ ổn định nên viên gạch chín đều, ít cong vênh và cường độ cao hơn gạch nung lò đứng truyền thống. Màu gạch đỏ tươi đồng đều, bề mặt phẳng nên tô ít tốn vữa.",
+      "Gạch tuynel tại bãi có cả dạng gạch ống 4 lỗ và gạch thẻ đặc. Gạch ống dùng cho phần lớn tường nhà; gạch thẻ đặc dùng ở chân tường, bậc thềm, bồn hoa, chỗ cần chịu lực và chống thấm tốt hơn. Hai loại xây chung một mạch vữa vì cùng chiều dài 180 mm.",
+      "Gạch tuynel hút nước vừa phải, vẫn nên tưới ẩm trước khi xây. Bảo quản gạch xếp chồng gọn, che mưa để gạch không ngấm nước lâu ngày sinh rêu. Định mức tham khảo cho tường 10 khoảng 55 đến 60 viên mỗi mét vuông với gạch ống, khoảng 110 viên với gạch thẻ."
+    ]
+  },
+  "Gạch block": {
+    "specs": [["Kích thước phổ biến", "190 x 190 x 390 mm, có loại 90 x 190 x 390 mm"], ["Loại", "gạch bê tông cốt liệu không nung"], ["Tiêu chuẩn", "TCVN 6477, mác M75 đến M100"], ["Định mức", "khoảng 12,5 viên/m² với loại 19 x 19 x 39"]],
+    "paragraphs": [
+      "Gạch block là gạch bê tông không nung, ép từ xi măng, đá mi và cát bằng máy rung ép. Viên gạch lớn hơn gạch nung nhiều lần nên một mét vuông tường chỉ cần khoảng 12,5 viên, xây rất nhanh và ít mạch vữa. Gạch không qua nung nên thân thiện môi trường và giá thành trên mỗi mét vuông tường thấp.",
+      "Gạch block cường độ cao, hút nước thấp, ít co ngót, phù hợp tường rào, nhà xưởng, nhà kho, tường bao công trình và hạng mục phụ. Với nhà ở, gạch block dùng cho tường ngoài, tường ngăn không chịu lực khi kết cấu chính đã là khung bê tông.",
+      "Khi xây gạch block dùng vữa mác 75 trở lên, không cần tưới ẩm gạch nhiều như gạch nung. Bề mặt gạch nhám nên vữa tô bám tốt. Lỗ rỗng của gạch có thể đổ bê tông và đặt thép đứng để tăng chịu lực cho tường rào cao."
+    ]
+  },
+  "Xi măng PCB40": {
+    "specs": [["Loại", "xi măng poóc lăng hỗn hợp PCB40"], ["Cường độ nén 28 ngày", "không nhỏ hơn 40 MPa"], ["Đóng gói", "bao 50 kg"], ["Tiêu chuẩn", "TCVN 6260"], ["Ứng dụng", "móng, cột, dầm, sàn, xây tô"]],
+    "paragraphs": [
+      "Xi măng PCB40 là loại xi măng phổ thông nhất cho xây dựng dân dụng. Mác 40 nghĩa là cường độ nén mẫu chuẩn sau 28 ngày đạt tối thiểu 40 MPa, đủ cho toàn bộ kết cấu nhà phố, nhà cấp 4 và nhà xưởng nhỏ: móng, cột, dầm, sàn, cầu thang, bể nước.",
+      "Xi măng PCB40 cũng dùng cho vữa xây và vữa tô. Với vữa xây tường thông thường pha theo mác 75, với vữa tô mác 75 đến 100. Trộn đúng tỷ lệ, tránh thêm nước quá nhiều để vữa không nứt chân chim và bê tông đạt mác thiết kế.",
+      "Bao xi măng 50 kg cần kê cao khỏi nền ít nhất 30 cm, che kín, dùng trong 60 ngày kể từ ngày sản xuất để giữ cường độ. Mỗi lô xi măng về bãi có chứng chỉ chất lượng của nhà máy, bạn có thể yêu cầu khi nhận hàng."
+    ]
+  },
+  "Xi măng trắng Thái Bình": {
+    "specs": [["Loại", "xi măng poóc lăng trắng"], ["Độ trắng", "cao, bề mặt sáng đều"], ["Đóng gói", "bao theo quy cách nhà máy"], ["Ứng dụng", "chà ron, ốp lát, granito, trang trí"]],
+    "paragraphs": [
+      "Xi măng trắng Thái Bình là xi măng poóc lăng trắng sản xuất trong nước, dùng cho các hạng mục cần bề mặt sáng màu: chà ron gạch, đá; lát granito; đắp phào chỉ; trộn màu làm gạch bông và các chi tiết trang trí.",
+      "Xi măng trắng có độ mịn cao, dễ trộn với bột màu để tạo màu vữa theo ý muốn, không làm xám màu như xi măng đen. Khi chà ron gạch sáng màu, dùng xi măng trắng cho mạch ron đều màu và không loang.",
+      "Bảo quản xi măng trắng kỹ hơn xi măng thường vì dễ bị ố khi ngấm ẩm. Kê cao, che kín và dùng trong 60 ngày. Trộn bằng dụng cụ sạch để không lẫn xi măng đen làm xỉn màu."
+    ]
+  },
+  "Xi măng trắng AALBORG WHITE": {
+    "specs": [["Xuất xứ", "Aalborg Portland, Đan Mạch"], ["Loại", "xi măng trắng cường độ cao"], ["Độ trắng", "rất cao, ổn định giữa các lô"], ["Ứng dụng", "đá mài, gạch terrazzo, chà ron cao cấp, bê tông trang trí"]],
+    "paragraphs": [
+      "Aalborg White là xi măng trắng nhập khẩu từ Đan Mạch, được thợ đá mài và thợ trang trí ưa dùng vì độ trắng rất cao và ổn định giữa các lô. Cường độ cũng cao hơn xi măng trắng phổ thông nên dùng được cho cấu kiện trang trí chịu lực nhẹ.",
+      "Xi măng này hợp cho terrazzo, gạch bông, bậc cầu thang đá mài, bồn hoa, bề mặt bê tông trang trí và chà ron gạch, đá cao cấp. Pha với bột màu cho màu tươi, trong, không bị xám.",
+      "Vì là hàng nhập, giá cao hơn xi măng trắng trong nước; nên dùng đúng chỗ cần độ trắng cao. Bảo quản như xi măng trắng khác: kê cao, che kín, tránh lẫn xi măng đen."
+    ]
+  },
+  "Xi măng trắng SCG PCW 50.i": {
+    "specs": [["Xuất xứ", "SCG, Thái Lan"], ["Loại", "xi măng trắng PCW 50"], ["Cường độ", "mác 50, cao hơn xi măng trắng thông thường"], ["Ứng dụng", "ốp lát, chà ron, đá mài, trang trí ngoài trời"]],
+    "paragraphs": [
+      "Xi măng trắng SCG PCW 50.i của tập đoàn SCG Thái Lan có mác 50, cường độ cao, độ trắng tốt và thời gian ninh kết ổn định. Hợp cho hạng mục trang trí có yêu cầu chịu lực và độ bền ngoài trời như bậc thềm đá mài, bồn hoa, mặt bàn bê tông.",
+      "Dùng cho chà ron, cán nền lát gạch sáng màu, đắp phào chỉ, đúc chi tiết trang trí. Trộn với bột màu theo tỷ lệ nhỏ để tạo màu pastel đều.",
+      "Xi măng trắng nhập khẩu cần bảo quản khô, kê cao và dùng sớm sau khi mở bao. Với công trình dùng nhiều, đặt theo đợt để hàng luôn mới."
+    ]
+  },
+  "Vữa chống cháy": {
+    "specs": [["Loại", "vữa khô trộn sẵn, gốc xi măng và phụ gia chịu nhiệt"], ["Cách dùng", "pha nước theo hướng dẫn trên bao, trát hoặc phun"], ["Ứng dụng", "bảo vệ kết cấu thép, ống kỹ thuật, tường ngăn cháy"], ["Ghi chú", "độ dày lớp trát theo yêu cầu giới hạn chịu lửa của thiết kế"]],
+    "paragraphs": [
+      "Vữa chống cháy là vữa khô trộn sẵn tại nhà máy, gồm xi măng, cốt liệu nhẹ và phụ gia chịu nhiệt. Khi trát lên kết cấu thép, ống gió, ống kỹ thuật, lớp vữa làm chậm tốc độ truyền nhiệt, giúp kết cấu giữ khả năng chịu lực lâu hơn khi có cháy.",
+      "Vữa dùng cho nhà xưởng, kho, tầng hầm, trục kỹ thuật và các công trình có yêu cầu phòng cháy theo thiết kế. Độ dày lớp trát quyết định giới hạn chịu lửa, nên thi công theo đúng bản vẽ và hướng dẫn của nhà sản xuất.",
+      "Chỉ pha lượng nước ghi trên bao, trộn bằng máy cho đều, thi công trong thời gian cho phép sau khi trộn. Bề mặt thép cần sạch dầu, gỉ để vữa bám chắc."
+    ]
+  },
+  "Xi măng chống cháy": {
+    "specs": [["Loại", "xi măng chịu nhiệt cao"], ["Ứng dụng", "xây gạch chịu lửa, lò, bếp, ống khói, lò đốt"], ["Cách dùng", "trộn với cát chịu nhiệt hoặc bột gạch chịu lửa"], ["Đóng gói", "bao theo quy cách nhà sản xuất"]],
+    "paragraphs": [
+      "Xi măng chống cháy, còn gọi xi măng chịu nhiệt, giữ được cường độ ở nhiệt độ cao mà xi măng thường sẽ bị phân hủy. Dùng để xây, trát gạch chịu lửa trong lò nướng, bếp củi, lò đốt, ống khói và các vị trí tiếp xúc nhiệt liên tục.",
+      "Khi xây gạch chịu lửa, trộn xi măng chịu nhiệt với cát chịu nhiệt hoặc bột gạch chịu lửa theo tỷ lệ nhà sản xuất khuyến cáo, mạch vữa mỏng để hạn chế nứt khi giãn nở nhiệt.",
+      "Bảo quản khô, tránh ẩm. Sau khi xây nên để khối xây khô tự nhiên vài ngày rồi mới đốt nóng dần để vữa không nứt."
+    ]
+  },
+  "Xi măng Nghi Sơn Premium": {
+    "specs": [["Nhà sản xuất", "Xi măng Nghi Sơn, liên doanh Việt Nam và Nhật Bản"], ["Loại", "PCB40"], ["Đóng gói", "bao 50 kg"], ["Tiêu chuẩn", "TCVN 6260"], ["Ứng dụng", "bê tông kết cấu, xây tô nhà ở"]],
+    "paragraphs": [
+      "Xi măng Nghi Sơn là thương hiệu liên doanh Việt Nam và Nhật Bản, được nhiều nhà thầu chọn cho kết cấu vì chất lượng ổn định giữa các lô và thời gian ninh kết đều. Dòng Premium PCB40 dùng cho móng, cột, dầm, sàn và cả xây tô.",
+      "Xi măng Nghi Sơn có màu xám sáng, độ mịn cao, bê tông sau đổ ít bị tách nước. Với công trình cần bề mặt bê tông đẹp như sàn, cầu thang lộ thiên, đây là lựa chọn phù hợp.",
+      "Bao 50 kg có lớp chống ẩm; vẫn cần kê cao, che kín và dùng trong 60 ngày. Chứng chỉ chất lượng theo lô có sẵn tại bãi."
+    ]
+  },
+  "Xi măng Hoàng Thạch": {
+    "specs": [["Nhà sản xuất", "Vicem Hoàng Thạch"], ["Loại", "PCB30 hoặc PCB40 theo lô"], ["Đóng gói", "bao 50 kg"], ["Tiêu chuẩn", "TCVN 6260"], ["Ứng dụng", "xây tô, bê tông dân dụng"]],
+    "paragraphs": [
+      "Xi măng Hoàng Thạch là thương hiệu lâu năm của Vicem, quen thuộc với thợ xây cả nước. Xi măng có thời gian ninh kết vừa phải, dễ thi công, phù hợp xây tô và bê tông dân dụng.",
+      "Với vữa xây tô, xi măng Hoàng Thạch cho vữa dẻo, bám tốt, ít nứt chân chim khi bảo dưỡng đủ nước. Với bê tông, dùng loại PCB40 cho kết cấu chịu lực.",
+      "Bảo quản bao xi măng khô ráo, kê cao, không xếp quá 10 bao một chồng. Dùng theo thứ tự lô nhập trước dùng trước để xi măng luôn mới."
+    ]
+  },
+  "Xi măng TOP": {
+    "specs": [["Loại", "xi măng PCB40"], ["Đóng gói", "bao 50 kg"], ["Ứng dụng", "xây tô, đổ bê tông dân dụng, nền sân"], ["Ưu điểm", "giá tốt cho khối lượng lớn"]],
+    "paragraphs": [
+      "Xi măng TOP là dòng xi măng PCB40 giá tốt, phù hợp các hạng mục xây tô, cán nền, đổ sân, móng nhà cấp 4 và công trình phụ với khối lượng lớn.",
+      "Xi măng đạt mác 40 theo tiêu chuẩn nên vẫn dùng được cho bê tông kết cấu nhà ở thông thường khi pha trộn đúng tỷ lệ và bảo dưỡng đủ nước.",
+      "Kê cao, che mưa, dùng sớm sau khi mở bao. Đơn khối lượng lớn bãi có giá riêng và giao theo đợt để hàng luôn mới."
+    ]
+  },
+  "Cát Tây Ninh": {
+    "specs": [["Nguồn", "cát sông vùng Tây Ninh"], ["Hạt", "vàng, to đều, ít bùn"], ["Mô đun độ lớn", "khoảng 2,0 đến 2,5"], ["Ứng dụng", "bê tông, xây, cán nền"], ["Đơn vị bán", "mét khối, giao xe ben"]],
+    "paragraphs": [
+      "Cát Tây Ninh là cát sông màu vàng, hạt to đều và sạch, được đánh giá cao trong nhóm cát tự nhiên ở miền Đông Nam Bộ. Hàm lượng bùn sét thấp giúp bê tông và vữa đạt mác dễ hơn so với cát lẫn nhiều tạp chất.",
+      "Cát dùng tốt cho bê tông móng, sàn, dầm, cột và cả vữa xây. Với vữa tô mặt nên sàng bỏ hạt to để mặt tô láng. Giá cát Tây Ninh cao hơn cát thường vì nguồn xa và chất lượng ổn định.",
+      "Khối lượng tính theo thùng xe ben, đo dài, rộng, cao thùng cùng tài xế khi nhận. Đổ cát lên nền sạch hoặc bạt để không lẫn đất."
+    ]
+  },
+  "Cát vàng mi": {
+    "specs": [["Hạt", "vàng, cỡ vừa đến mịn"], ["Ứng dụng", "vữa xây, vữa tô, cán nền"], ["Định mức", "khoảng 1,1 m³ cát cho 1 m³ vữa"], ["Đơn vị bán", "mét khối"]],
+    "paragraphs": [
+      "Cát vàng mi là cát vàng hạt vừa đến mịn, dùng chủ yếu cho vữa xây và vữa tô. Cát có màu vàng, ít bùn, trộn với xi măng cho vữa dẻo, bám gạch tốt.",
+      "Với tô mặt tường, cát vàng mi cho mặt tô mịn hơn cát xây thường nhưng vẫn đủ độ nhám để lớp sơn nước bám chắc. Có thể sàng thêm nếu tô trần hoặc bề mặt cần rất láng.",
+      "Cát bán theo mét khối, giao bằng xe ben hoặc xe ba gác cho đơn nhỏ. Che cát khi mưa lớn để không trôi và lẫn đất."
+    ]
+  },
+  "Cát nghiền 2.8": {
+    "specs": [["Loại", "cát nhân tạo nghiền từ đá"], ["Mô đun độ lớn", "khoảng 2,8"], ["Hạt", "góc cạnh, sạch, đồng đều"], ["Tiêu chuẩn tham chiếu", "TCVN 9205 cát nghiền cho bê tông và vữa"], ["Ứng dụng", "bê tông kết cấu, gạch không nung"]],
+    "paragraphs": [
+      "Cát nghiền là cát nhân tạo sản xuất bằng cách nghiền và sàng đá, thay thế cát sông ngày càng khan hiếm. Hạt cát góc cạnh, sạch, cấp phối đều nên bê tông có độ bám dính cốt liệu tốt và cường độ ổn định.",
+      "Với mô đun độ lớn khoảng 2,8, cát nghiền hợp cho bê tông kết cấu mác 200 đến 300, gạch không nung, cấu kiện đúc sẵn. Trộn bê tông bằng cát nghiền có thể cần thêm một ít nước hoặc phụ gia để dễ đầm hơn cát sông.",
+      "Cát nghiền không lẫn bùn hữu cơ, không phải rửa trước khi dùng. Giá thường thấp hơn cát sông chất lượng tương đương."
+    ]
+  },
+  "Cát bê tông vàng": {
+    "specs": [["Hạt", "vàng, hạt lớn"], ["Mô đun độ lớn", "từ 2,0 trở lên"], ["Hàm lượng bùn sét", "thấp, dưới 3 phần trăm"], ["Định mức", "khoảng 0,45 đến 0,5 m³ cho 1 m³ bê tông"], ["Ứng dụng", "bê tông móng, cột, dầm, sàn"]],
+    "paragraphs": [
+      "Cát bê tông vàng là cát sông hạt lớn, sạch, dùng riêng cho bê tông kết cấu. Hạt to giúp giảm lượng xi măng cần dùng và bê tông ít co ngót hơn so với dùng cát mịn.",
+      "Một mét khối bê tông mác 200 đến 250 cần khoảng 0,45 đến 0,5 mét khối cát bê tông cùng với đá 1x2 và xi măng theo cấp phối. Với sàn, dầm, cột nên dùng đúng cát bê tông, không thay bằng cát xây tô.",
+      "Kiểm tra nhanh cát sạch bằng cách bóp nắm cát rồi mở tay, cát tơi rơi hết là đạt. Cát bán theo mét khối, đo thùng xe cùng tài xế."
+    ]
+  },
+  "Cát xây dựng": {
+    "specs": [["Hạt", "nhỏ đến vừa"], ["Ứng dụng", "vữa xây, vữa tô, lót nền, san nền"], ["Định mức", "khoảng 0,02 m³/m² tường 10; 1,1 m³ cho 1 m³ vữa"], ["Đơn vị bán", "mét khối, có xe ba gác cho đơn nhỏ"]],
+    "paragraphs": [
+      "Cát xây dựng là loại cát thông dụng nhất tại bãi, dùng cho vữa xây gạch, vữa tô tường, lót nền gạch và san nền nhỏ. Hạt nhỏ đến vừa, dễ trộn, giá hợp lý cho khối lượng lớn.",
+      "Với vữa xây tường 10 bằng gạch ống, mỗi mét vuông tường cần khoảng 0,02 mét khối cát. Vữa tô dày 15 mm cần khoảng 0,017 mét khối cho mỗi mét vuông. Cộng thêm 5 đến 10 phần trăm hao hụt khi thi công.",
+      "Đơn từ nửa khối bãi giao bằng xe ba gác vào hẻm; đơn lớn giao xe ben. Đo khối cùng tài xế khi nhận."
+    ]
+  },
+  "Cát bê tông hạt lớn": {
+    "specs": [["Hạt", "lớn, thô"], ["Mô đun độ lớn", "khoảng 2,5 đến 3,3"], ["Ứng dụng", "bê tông mác cao, sàn, dầm, móng lớn"], ["Định mức", "khoảng 0,45 m³ cho 1 m³ bê tông"]],
+    "paragraphs": [
+      "Cát bê tông hạt lớn có mô đun độ lớn cao, hạt thô, dùng cho bê tông mác cao và cấu kiện dày như móng băng, móng bè, sàn dầm nhịp lớn. Hạt lớn làm bộ khung cốt liệu chắc, bê tông ít co ngót và ít nứt.",
+      "Không dùng cát hạt lớn cho vữa tô vì mặt tô sẽ thô, khó láng. Với bê tông thông thường có thể trộn cát hạt lớn với một phần cát vàng để dễ đầm hơn.",
+      "Cát sạch, ít bùn. Bán theo mét khối, giao xe ben. Đặt trước một ngày với đơn trên 10 khối để bãi xếp xe."
+    ]
+  },
+  "Cát trắng": {
+    "specs": [["Hạt", "trắng, mịn, đều"], ["Ứng dụng", "tô mặt, chà ron, trang trí, sân vườn, hồ cá, sân chơi"], ["Đơn vị bán", "mét khối, có đóng bao"]],
+    "paragraphs": [
+      "Cát trắng là cát mịn màu trắng sáng, dùng cho các hạng mục cần màu sạch và bề mặt mịn: chà ron gạch sáng màu, tô mặt trang trí, làm nền hồ cá, tiểu cảnh sân vườn, sân chơi trẻ em.",
+      "Với xi măng trắng, cát trắng cho vữa màu sáng đồng nhất, không bị vệt như cát vàng. Cát cần sạch tạp chất hữu cơ khi dùng cho hồ cá hoặc sân chơi.",
+      "Cát trắng có giá cao hơn cát thường, thường mua số lượng nhỏ; bãi có đóng bao để tiện chở vào hẻm hoặc lên tầng."
+    ]
+  },
+  "Đá 1x1": {
+    "specs": [["Cỡ hạt", "khoảng 5 đến 10 mm"], ["Ứng dụng", "bê tông mỏng, tấm đan, gạch bê tông, bê tông cấu kiện nhỏ"], ["Đơn vị bán", "mét khối"]],
+    "paragraphs": [
+      "Đá 1x1 là đá dăm cỡ nhỏ, hạt khoảng 5 đến 10 mm, dùng cho bê tông có tiết diện mỏng hoặc cốt thép dày mà đá 1x2 khó chui qua: tấm đan, nắp hố ga, lanh tô, gạch bê tông, bó vỉa.",
+      "Đá 1x1 cũng trộn cùng đá 1x2 để cải thiện cấp phối cốt liệu cho bê tông đặc chắc hơn. Với sàn mái mỏng 8 đến 10 cm, dùng đá 1x1 giúp đầm dễ và mặt bê tông kín.",
+      "Đá sạch, ít bụi. Bán theo mét khối, giao xe ben; đơn nhỏ có đóng bao."
+    ]
+  },
+  "Đá chẻ": {
+    "specs": [["Cỡ", "viên đá chẻ tay khoảng 10 x 20 cm"], ["Ứng dụng", "móng đá hộc, kè, bó nền, bồn hoa, tường trang trí"], ["Định mức", "khoảng 1,2 m³ đá cho 1 m³ móng"], ["Đơn vị bán", "mét khối"]],
+    "paragraphs": [
+      "Đá chẻ là đá tự nhiên chẻ tay thành viên vuông vức cỡ khoảng 10 x 20 cm, hai mặt tương đối phẳng. Dùng xây móng đá hộc cho nhà cấp 4, nhà một tầng, xây kè, bó nền, bồn hoa và tường trang trí kiểu đá mộc.",
+      "Móng đá chẻ xây bằng vữa xi măng mác 75 đến 100, chèn mạch kín. Với đất nền tốt, móng đá chẻ tiết kiệm hơn móng bê tông cốt thép cho công trình nhỏ.",
+      "Khoảng 1,2 mét khối đá chẻ cho một mét khối móng xây. Đá bán theo mét khối, giao xe ben; xếp gọn tại công trình để không chiếm lối đi."
+    ]
+  },
+  "Đá 5x7 xanh": {
+    "specs": [["Cỡ hạt", "khoảng 50 đến 70 mm"], ["Màu", "đá xanh, cường độ cao"], ["Ứng dụng", "lót móng, làm đường, bê tông móng lớn, kè"], ["Đơn vị bán", "mét khối"]],
+    "paragraphs": [
+      "Đá 5x7 xanh là đá dăm cỡ lớn từ mỏ đá xanh, cường độ cao. Dùng làm lớp lót móng, rải nền đường trước khi cấp phối, đổ bê tông móng khối lớn hoặc chèn kè, mương.",
+      "Nhờ hạt to, lớp đá 5x7 tạo nền ổn định, thoát nước tốt, hợp cho nền đất yếu cần lớp đệm dày. Trên nền đá 5x7 thường rải thêm đá 0x4 hoặc đá mi để làm phẳng trước khi đổ bê tông.",
+      "Đá bán theo mét khối, giao xe ben. Đường vào công trình cần rộng từ 3 mét cho xe ben nhỏ."
+    ]
+  },
+  "Đá 1x2 đen": {
+    "specs": [["Cỡ hạt", "khoảng 10 đến 20 mm"], ["Màu", "đá đen"], ["Ứng dụng", "bê tông móng, cột, dầm, sàn"], ["Định mức", "khoảng 0,85 đến 0,9 m³ cho 1 m³ bê tông"], ["Đơn vị bán", "mét khối"]],
+    "paragraphs": [
+      "Đá 1x2 là cỡ đá chuẩn cho bê tông kết cấu: hạt khoảng 10 đến 20 mm, vừa đủ nhỏ để len qua lớp thép dầm, cột, vừa đủ lớn để bộ khung cốt liệu chắc. Đá 1x2 đen khai thác từ đá bazan, nặng và chắc.",
+      "Một mét khối bê tông mác 200 đến 250 cần khoảng 0,85 đến 0,9 mét khối đá 1x2. Đá cần sạch bụi; nếu đá quá bụi nên tưới rửa trước khi trộn để xi măng bám tốt.",
+      "Đá bán theo mét khối, giao xe ben. Đổ đá chỗ trống, cách xa miệng cống. Đơn lớn cho đổ sàn nên đặt trước một ngày."
+    ]
+  },
+  "Đá xanh Biên Hòa": {
+    "specs": [["Nguồn", "mỏ đá vùng Biên Hòa, Đồng Nai"], ["Cỡ hạt", "1x2 chuẩn, khoảng 10 đến 20 mm"], ["Đặc điểm", "cường độ cao, ít bụi, màu xanh"], ["Ứng dụng", "bê tông mác cao, kết cấu chịu lực lớn"]],
+    "paragraphs": [
+      "Đá xanh Biên Hòa là đá 1x2 khai thác từ các mỏ đá vùng Biên Hòa, nổi tiếng ở miền Nam về cường độ và độ sạch. Đá màu xanh sẫm, cạnh sắc, ít bụi, hợp cho bê tông mác cao từ 300 trở lên và cấu kiện chịu lực lớn.",
+      "Nhà thầu chọn đá xanh Biên Hòa cho móng cọc, dầm sàn nhịp lớn, cột nhà cao tầng và bê tông thương phẩm. Với nhà ở thông thường, đá xanh cho bê tông chắc hơn đá đen cùng cỡ.",
+      "Giá đá xanh cao hơn đá đen. Bán theo mét khối, giao xe ben, có chứng từ nguồn gốc mỏ khi công trình yêu cầu."
+    ]
+  },
+  "Đá 0x4 xanh": {
+    "specs": [["Cỡ hạt", "hỗn hợp từ bụi đá đến 40 mm"], ["Ứng dụng", "cấp phối nền đường, lót móng, nền sân, lu lèn"], ["Định mức", "khoảng 0,1 m³/m² cho lớp dày 10 cm"], ["Đơn vị bán", "mét khối"]],
+    "paragraphs": [
+      "Đá 0x4 là đá cấp phối gồm nhiều cỡ hạt từ bụi đá đến 40 mm, khi lu lèn các hạt chèn vào nhau tạo lớp nền rất chặt. Dùng làm nền đường nội bộ, sân bãi, lót móng nhà, nền nhà xưởng trước khi đổ bê tông.",
+      "Rải đá 0x4 theo lớp dày 10 đến 15 cm, tưới ẩm rồi lu hoặc đầm kỹ. Lớp 10 cm cần khoảng 0,1 mét khối đá cho mỗi mét vuông. Nền đá 0x4 chặt giúp bê tông phía trên không bị lún nứt.",
+      "Đá bán theo mét khối, giao xe ben. Đơn san nền lớn bãi có dịch vụ lu lèn kèm theo."
+    ]
+  },
+  "Đá mi sàng": {
+    "specs": [["Cỡ hạt", "0 đến 5 mm, đã sàng bỏ bụi thô"], ["Ứng dụng", "gạch không nung, lót nền, san lấp, bê tông mác thấp, trộn vữa"], ["Định mức", "khoảng 0,1 m³/m² cho lớp dày 10 cm"], ["Đơn vị bán", "mét khối, có đóng bao"]],
+    "paragraphs": [
+      "Đá mi sàng là hạt đá nhỏ 0 đến 5 mm thu được khi sàng đá dăm, đã bỏ phần bụi thô. Dùng sản xuất gạch block không nung, làm lớp lót nền, san lấp, chèn mạch đá lát và trộn bê tông mác thấp thay một phần cát.",
+      "Đá mi sàng lu lèn tốt, thoát nước, ít lún nên hợp cho lót nền sân, đường nội bộ và lớp đệm dưới gạch lát vỉa hè. Với gạch block, đá mi là cốt liệu chính cùng xi măng.",
+      "Bán theo mét khối, giao xe ben; đơn nhỏ có đóng bao để chở vào hẻm hoặc lên lầu."
+    ]
+  },
+  "Đá 4x6 đen": {
+    "specs": [["Cỡ hạt", "khoảng 40 đến 60 mm"], ["Màu", "đá đen"], ["Ứng dụng", "bê tông lót móng, đường, kè, chèn hố ga"], ["Đơn vị bán", "mét khối"]],
+    "paragraphs": [
+      "Đá 4x6 là đá dăm cỡ lớn dùng cho bê tông lót móng, bê tông khối lớn không cốt thép hoặc cốt thép thưa, làm lớp móng đường và chèn kè. Nhờ hạt to, lượng xi măng cho một mét khối bê tông lót thấp hơn dùng đá 1x2.",
+      "Với móng nhà, lớp bê tông lót đá 4x6 mác 100 dày 10 cm đổ trước khi đặt thép móng giúp mặt nền phẳng, sạch. Đá cũng dùng làm lớp nền cho sân, đường trước khi rải đá 0x4.",
+      "Đá bán theo mét khối, giao xe ben. Đường vào cần rộng từ 3 mét."
+    ]
+  },
+  "Thép cây D10": {
+    "specs": [["Đường kính", "10 mm, thép gân"], ["Khối lượng", "0,617 kg/m; cây 11,7 m khoảng 7,2 kg"], ["Mác thép", "CB300V hoặc CB400V theo lô"], ["Tiêu chuẩn", "TCVN 1651"], ["Ứng dụng", "thép sàn, thép đai, thép chờ, dầm nhỏ"]],
+    "paragraphs": [
+      "Thép cây D10 là thép gân đường kính 10 mm, dùng nhiều nhất cho thép sàn hai lớp, thép đai cột dầm, thép chờ cầu thang và dầm nhỏ. Mỗi mét thép D10 nặng 0,617 kg, một cây dài 11,7 mét nặng khoảng 7,2 kg.",
+      "Thép về bãi theo lô của nhà máy, có nhãn dập trên thân cây và chứng chỉ chất lượng CO/CQ. Mác CB300V dùng cho nhà ở thông thường, CB400V cho kết cấu yêu cầu cao hơn theo bản vẽ.",
+      "Giá tính theo ki lô gam, cân đối chiếu tại bãi. Đặt theo cây thì bãi quy ra ki lô gam. Kê thép cách đất, che mưa; tính thêm 2 đến 3 phần trăm hao hụt khi cắt uốn."
+    ]
+  },
+  "Thép tròn trơn": {
+    "specs": [["Đường kính", "D6, D8, có dạng cuộn hoặc cây"], ["Mác thép", "CB240T"], ["Khối lượng", "D6 0,222 kg/m; D8 0,395 kg/m"], ["Ứng dụng", "thép đai, thép phân bố, thép chờ, buộc"]],
+    "paragraphs": [
+      "Thép tròn trơn là thép cỡ nhỏ D6, D8 bề mặt nhẵn, dẻo, dễ uốn bằng tay hoặc máy uốn nhỏ. Dùng làm thép đai cột dầm, thép phân bố sàn, thép chờ và buộc cố định vị trí thép chịu lực.",
+      "Thép trơn cung cấp dạng cuộn hoặc cắt cây theo yêu cầu. Thép D6 nặng 0,222 kg mỗi mét, D8 nặng 0,395 kg mỗi mét. Đai cột nhà phố thường dùng D6 với khoảng cách 15 đến 20 cm.",
+      "Bán theo ki lô gam, có chứng chỉ chất lượng theo lô. Bảo quản kê cao, che mưa để không gỉ."
+    ]
+  },
+  "Thép cây gân": {
+    "specs": [["Đường kính", "D12 đến D32 theo yêu cầu"], ["Mác thép", "CB300V, CB400V"], ["Chiều dài cây", "11,7 m"], ["Tiêu chuẩn", "TCVN 1651"], ["Ứng dụng", "thép chủ móng, cột, dầm, sàn"]],
+    "paragraphs": [
+      "Thép cây gân là thép chịu lực chính trong kết cấu bê tông cốt thép: thép chủ móng, cột, dầm và thép sàn lớp dưới. Bề mặt có gân xoắn giúp bám dính bê tông tốt. Bãi có các đường kính từ D12 đến D32 theo yêu cầu.",
+      "Khối lượng mỗi mét tính bằng đường kính nhân đường kính chia 162: D12 0,888 kg, D14 1,208 kg, D16 1,578 kg, D18 1,998 kg, D20 2,466 kg, D22 2,984 kg, D25 3,853 kg. Một cây dài 11,7 mét.",
+      "Mác thép CB300V hoặc CB400V theo bản vẽ thiết kế; thép có nhãn nhà máy và chứng chỉ theo lô. Giá theo ki lô gam, cân tại bãi, giao xe tải; cần cắt ngắn để vào hẻm thì báo trước."
+    ]
+  },
+  "Thép hộp oval": {
+    "specs": [["Hình dạng", "hộp oval mạ kẽm"], ["Độ dày", "khoảng 0,7 đến 1,4 mm"], ["Chiều dài cây", "6 m"], ["Ứng dụng", "lan can, mái che, khung cửa, hàng rào, khung nội thất"]],
+    "paragraphs": [
+      "Thép hộp oval là thép ống thành mỏng tiết diện oval, thường mạ kẽm chống gỉ, bề mặt đẹp không cần sơn phủ nhiều. Dùng cho lan can, tay vịn, khung mái che, cửa cổng, hàng rào, giường tủ và khung nội thất.",
+      "Cây dài 6 mét, độ dày thành từ 0,7 đến 1,4 mm; thành dày hơn dùng cho kết cấu chịu lực như khung mái, thành mỏng cho trang trí. Hàn bằng que nhỏ hoặc hàn CO2 để không cháy thủng.",
+      "Bán theo ki lô gam hoặc theo cây quy đổi. Bảo quản kê cao, tránh cọ xước lớp mạ."
+    ]
+  },
+  "Thép hình I300": {
+    "specs": [["Chiều cao bụng", "300 mm"], ["Khối lượng", "khoảng 36 đến 47 kg/m tùy quy cách cánh"], ["Chiều dài cây", "6 m hoặc 12 m"], ["Ứng dụng", "dầm đỡ, dầm cầu trục, khung nhà xưởng"]],
+    "paragraphs": [
+      "Thép hình I300 là dầm chữ I cao 300 mm, dùng cho dầm đỡ nhịp lớn, dầm cầu trục, khung chính nhà xưởng, nhà tiền chế và sàn thép. Tiết diện chữ I chịu uốn tốt so với khối lượng thép.",
+      "Khối lượng khoảng 36 đến 47 kg mỗi mét tùy chiều rộng và độ dày cánh theo tiêu chuẩn của nhà máy. Cây dài 6 hoặc 12 mét; bãi có cắt theo kích thước nếu cần vận chuyển đường hẹp.",
+      "Bán theo ki lô gam, có chứng chỉ chất lượng. Giao bằng xe tải, cần đường vào rộng và chỗ hạ bằng xe cẩu hoặc nhân công."
+    ]
+  },
+  "Thép hình U200": {
+    "specs": [["Chiều cao", "200 mm"], ["Khối lượng", "khoảng 18 đến 25 kg/m tùy độ dày"], ["Chiều dài cây", "6 m hoặc 12 m"], ["Ứng dụng", "xà gồ, dầm phụ, khung máy, khung sàn thép"]],
+    "paragraphs": [
+      "Thép hình U200 là thép chữ U cao 200 mm, dùng làm xà gồ mái, dầm phụ, khung đỡ máy, khung sàn lửng, cột nhỏ và dầm cầu thang thép. Tiết diện chữ U dễ liên kết bằng bu lông và hàn.",
+      "Khối lượng khoảng 18 đến 25 kg mỗi mét tùy độ dày thân và cánh. Cây dài 6 hoặc 12 mét. Khi dùng làm xà gồ, khoảng cách xà gồ theo tải mái tôn và vùng gió.",
+      "Bán theo ki lô gam, chứng chỉ theo lô. Giao xe tải; báo trước nếu cần cắt ngắn để chở."
+    ]
+  },
+  "Thép hình I250": {
+    "specs": [["Chiều cao bụng", "250 mm"], ["Khối lượng", "khoảng 27 đến 38 kg/m tùy quy cách"], ["Chiều dài cây", "6 m hoặc 12 m"], ["Ứng dụng", "dầm chính nhà xưởng nhỏ, dầm sàn thép, khung mái"]],
+    "paragraphs": [
+      "Thép hình I250 là dầm chữ I cao 250 mm, cỡ trung, dùng cho dầm chính nhà xưởng nhỏ, dầm sàn thép, khung mái nhịp trung bình và dầm đỡ mái hiên lớn.",
+      "Khối lượng khoảng 27 đến 38 kg mỗi mét tùy tiêu chuẩn cánh. Cây dài 6 hoặc 12 mét. Liên kết bằng hàn hoặc bu lông cường độ cao theo thiết kế.",
+      "Bán theo ki lô gam, có chứng chỉ chất lượng. Giao xe tải, cần chỗ hạ hàng."
+    ]
+  },
+  "Thép hình H150": {
+    "specs": [["Kích thước", "H 150 x 150 mm"], ["Khối lượng", "khoảng 31,5 kg/m"], ["Chiều dài cây", "6 m hoặc 12 m"], ["Ứng dụng", "cột nhà xưởng nhỏ, cột nhà tiền chế, trụ mái"]],
+    "paragraphs": [
+      "Thép hình H150 là thép chữ H cánh rộng 150 x 150 mm, hai cánh bằng nhau nên chịu nén tốt theo cả hai phương. Dùng làm cột nhà xưởng nhỏ, cột nhà tiền chế, trụ mái che, khung nhà lắp ghép.",
+      "Khối lượng khoảng 31,5 kg mỗi mét với cánh dày 10 mm, thân dày 7 mm. Cây dài 6 hoặc 12 mét. Chân cột liên kết móng bằng bản mã và bu lông neo.",
+      "Bán theo ki lô gam, chứng chỉ theo lô, giao xe tải."
+    ]
+  },
+  "Thép hình I100": {
+    "specs": [["Chiều cao bụng", "100 mm"], ["Khối lượng", "khoảng 9 đến 13 kg/m tùy quy cách"], ["Chiều dài cây", "6 m"], ["Ứng dụng", "đà mái, khung nhỏ, thanh đỡ, khung máy"]],
+    "paragraphs": [
+      "Thép hình I100 là dầm chữ I cỡ nhỏ cao 100 mm, dùng cho đà đỡ mái tôn, khung kho nhỏ, thanh đỡ máng, khung máy và các hạng mục vừa và nhỏ. Nhẹ, dễ vận chuyển và hàn.",
+      "Khối lượng khoảng 9 đến 13 kg mỗi mét tùy chiều rộng cánh. Cây dài 6 mét, chở được bằng xe tải nhỏ.",
+      "Bán theo ki lô gam, có chứng chỉ theo lô."
+    ]
+  },
+  "San lấp mặt bằng": {
+    "specs": [["Cách tính", "theo m³ đã lu lèn hoặc theo ca máy"], ["Vật liệu san lấp", "đá mi, đá 0x4, cát san lấp, đất"], ["Máy móc", "xe ben, máy ủi, xe lu"], ["Phạm vi", "Bình Long và khu vực lân cận"]],
+    "paragraphs": [
+      "Dịch vụ san lấp mặt bằng của Anh Vũ gồm cung cấp vật liệu san lấp và thi công san, lu lèn cho nền nhà, sân bãi, đường nội bộ, nền xưởng. Vật liệu dùng đá mi, đá 0x4, cát hoặc đất tùy yêu cầu chịu tải của nền.",
+      "Quy trình: khảo sát hiện trạng, đo diện tích và cao độ cần nâng, tính khối lượng vật liệu, báo giá trọn gói gồm vật liệu, vận chuyển và máy thi công. Nền được san theo lớp và lu lèn từng lớp dày 20 đến 30 cm.",
+      "Bạn gửi địa chỉ, diện tích, độ cao cần nâng qua form báo giá hoặc Zalo; bãi hẹn khảo sát và gửi báo giá trong ngày làm việc."
+    ]
+  },
+  "Cho thuê giàn giáo": {
+    "specs": [["Loại", "giàn giáo khung thép 1,7 m và 1,53 m"], ["Phụ kiện", "chéo, kích chân, mâm giáo, cầu thang"], ["Cách tính", "theo bộ và số ngày thuê"], ["Giao nhận", "xe tải giao và thu hồi tại công trình"]],
+    "paragraphs": [
+      "Anh Vũ cho thuê giàn giáo khung thép cho thi công xây tô, sơn nước, lắp trần, làm mái. Bộ giàn giáo gồm khung chính cao 1,7 m hoặc 1,53 m, thanh chéo, kích chân tăng chỉnh và mâm giáo đứng thao tác.",
+      "Giá tính theo bộ và số ngày thuê, giao và thu hồi bằng xe tải tại công trình. Giàn giáo được kiểm tra mối hàn, độ thẳng khung trước khi giao để đảm bảo an toàn.",
+      "Lắp giàn giáo trên nền phẳng, kích chân đủ, chéo đủ hai mặt, không chồng quá chiều cao cho phép khi không có neo vào công trình. Báo số bộ, thời gian thuê và địa chỉ để bãi báo giá."
+    ]
+  },
+  "Đào móng, đào hầm, đào ao": {
+    "specs": [["Máy móc", "máy đào mini và cỡ vừa"], ["Cách tính", "theo ca máy hoặc theo m³ đất"], ["Kèm theo", "xe ben chở đất thải nếu cần"], ["Phạm vi", "Bình Long và khu vực lân cận"]],
+    "paragraphs": [
+      "Dịch vụ đào móng, đào hầm, đào ao bằng máy đào cho nhà ở, công trình phụ và nông nghiệp. Máy đào mini vào được hẻm và sân nhỏ để đào móng nhà phố; máy cỡ vừa cho đào hầm, đào ao, đào mương.",
+      "Giá tính theo ca máy hoặc theo mét khối đất tùy khối lượng. Có xe ben chở đất thải đi hoặc san đất tại chỗ theo yêu cầu. Bãi kết hợp cung cấp đá, cát cho bê tông lót và móng ngay sau khi đào.",
+      "Gửi bản vẽ móng hoặc kích thước hố đào, địa chỉ và đường vào để bãi chọn máy phù hợp và báo giá."
+    ]
+  },
+  "Cát đá đóng bao": {
+    "specs": [["Quy cách", "bao khoảng 20 đến 25 kg"], ["Loại", "cát xây, cát tô, đá 1x2, đá mi"], ["Ứng dụng", "sửa nhà nhỏ, hẻm nhỏ, chở lên tầng, công trình không có chỗ đổ"], ["Giao hàng", "xe ba gác hoặc xe máy"]],
+    "paragraphs": [
+      "Cát đá đóng bao là cát, đá được đóng sẵn từng bao khoảng 20 đến 25 kg, tiện cho sửa nhà nhỏ, vá nền, xây bồn hoa, công trình trong hẻm không có chỗ đổ vật liệu hoặc cần mang lên tầng cao.",
+      "Bãi đóng bao cát xây, cát tô, đá 1x2 và đá mi. Bao nhựa dệt chắc, chở bằng xe ba gác hoặc xe máy, xếp gọn không bụi bặm ra đường.",
+      "Giá tính theo bao, gọi hoặc nhắn số bao cần để bãi báo giá và giờ giao. Đơn nhiều bao vẫn giao trong ngày quanh Bình Long."
+    ]
+  }
+}
