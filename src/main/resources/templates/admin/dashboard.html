@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/css/style.css(v=68)}">
+    <link rel="stylesheet" th:href="@{/css/style.css(v=82)}">
 </head>
 <body class="admin-body no-js">
 <script>document.body.classList.remove("no-js");</script>
@@ -47,6 +47,7 @@
         <a href="#add-product"><i>➕</i><span>Thêm SP</span></a>
         <a href="#stock-log"><i>📜</i><span>Lịch sử kho</span></a>
         <a href="#customers"><i>👥</i><span>Khách hàng</span></a>
+        <a href="#reviews"><i>⭐</i><span>Đánh giá</span><b th:if="${pendingReviews > 0}" th:text="${pendingReviews}">0</b></a>
         <a href="#bulk-email"><i>✉️</i><span>Gửi mail</span></a>
         <a class="admin-nav__logout" href="/logout" onclick="event.preventDefault();document.getElementById('logoutForm').submit();"><i>⏻</i><span>Đăng xuất</span></a>
     </div>
@@ -695,6 +696,69 @@
                     </tr>
                     <tr th:if="${#lists.isEmpty(customers)}">
                         <td colspan="7">Chưa có khách đặt hàng.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </article>
+    </section>
+
+    <!-- ===== ĐÁNH GIÁ KHÁCH HÀNG ===== -->
+    <section id="reviews" class="admin-section">
+        <article class="admin-panel">
+            <div class="panel-head">
+                <h2>Đánh giá khách hàng</h2>
+                <span th:text="|${#lists.size(reviews)} đánh giá · ${pendingReviews} chờ duyệt · chỉ đánh giá đã duyệt mới hiện trên trang chủ|">0 đánh giá</span>
+            </div>
+            <form class="review-form" th:action="@{/admin/reviews}" method="post">
+                <p class="field-hint">Nhập lại nhận xét khách nói qua Zalo hoặc điện thoại. Ghi đúng lời khách, không tự viết thay khách.</p>
+                <div class="review-form__grid">
+                    <label>Tên khách <input type="text" name="customerName" maxlength="120" required placeholder="VD: Anh Hùng"></label>
+                    <label>Khách là <input type="text" name="customerRole" maxlength="120" placeholder="VD: Thầu xây dựng, Bình Long"></label>
+                    <label>Số sao
+                        <select name="rating">
+                            <option value="5">5 sao</option><option value="4">4 sao</option><option value="3">3 sao</option><option value="2">2 sao</option><option value="1">1 sao</option>
+                        </select>
+                    </label>
+                </div>
+                <label>Nội dung <textarea name="content" rows="2" maxlength="1000" required></textarea></label>
+                <button class="btn btn-danger" type="submit">Thêm đánh giá (hiện ngay)</button>
+            </form>
+            <div class="table-responsive admin-table-wrap">
+                <table class="table align-middle admin-table">
+                    <thead>
+                    <tr>
+                        <th>Khách</th>
+                        <th>Sao</th>
+                        <th>Nội dung</th>
+                        <th>Nguồn</th>
+                        <th>Ngày</th>
+                        <th>Trạng thái</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="r : ${reviews}" th:classappend="${!r.approved} ? 'is-pending'">
+                        <td data-label="Khách"><b th:text="${r.customerName}">Khách</b><small th:text="${r.customerRole}">Vai trò</small></td>
+                        <td data-label="Sao" th:text="|${r.rating}/5|">5/5</td>
+                        <td data-label="Nội dung" th:text="${r.content}">Nội dung</td>
+                        <td data-label="Nguồn" th:text="${r.source == 'WEB' ? 'Khách gửi trên web' : 'Cửa hàng nhập'}">Nguồn</td>
+                        <td data-label="Ngày" th:text="${r.createdAt != null ? #temporals.format(r.createdAt, 'dd/MM/yyyy') : '--'}">--</td>
+                        <td data-label="Trạng thái">
+                            <span class="status-pill status-done" th:if="${r.approved}">Đang hiện</span>
+                            <span class="status-pill status-new" th:unless="${r.approved}">Chờ duyệt</span>
+                        </td>
+                        <td data-label="Thao tác">
+                            <form th:action="@{/admin/reviews/{id}/approve(id=${r.id})}" method="post" class="d-inline">
+                                <button class="btn btn-sm btn-outline-dark" type="submit" th:text="${r.approved} ? 'Ẩn' : 'Duyệt và hiện'">Duyệt</button>
+                            </form>
+                            <form th:action="@{/admin/reviews/{id}/delete(id=${r.id})}" method="post" class="d-inline" onsubmit="return confirm('Xóa đánh giá này?');">
+                                <button class="btn btn-sm btn-delete" type="submit">Xóa</button>
+                            </form>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(reviews)}">
+                        <td colspan="7">Chưa có đánh giá nào.</td>
                     </tr>
                     </tbody>
                 </table>

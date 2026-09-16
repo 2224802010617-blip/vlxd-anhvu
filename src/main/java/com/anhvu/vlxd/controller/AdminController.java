@@ -6,7 +6,9 @@ import com.anhvu.vlxd.entity.Payment;
 import com.anhvu.vlxd.entity.CustomerOrder;
 import com.anhvu.vlxd.entity.Product;
 import com.anhvu.vlxd.entity.QuoteRequest;
+import com.anhvu.vlxd.entity.Review;
 import com.anhvu.vlxd.repository.CategoryRepository;
+import com.anhvu.vlxd.repository.ReviewRepository;
 import com.anhvu.vlxd.repository.CustomerOrderRepository;
 import com.anhvu.vlxd.repository.PaymentRepository;
 import com.anhvu.vlxd.repository.ProductRepository;
@@ -70,6 +72,7 @@ public class AdminController {
     private final NotificationService notificationService;
     private final EmailContactService emailContactService;
     private final ObjectMapper objectMapper;
+    private final ReviewRepository reviewRepository;
 
     @GetMapping(value = "/admin", produces = "text/html;charset=UTF-8")
     public String dashboard(@RequestParam(required = false) String status,
@@ -197,7 +200,44 @@ public class AdminController {
         model.addAttribute("customers", reportService.customers(allGroups, 30));
         model.addAttribute("customerCount", reportService.customers(allGroups, Integer.MAX_VALUE).size());
 
+        // ----- Danh gia -----
+        model.addAttribute("reviews", reviewRepository.findAllByOrderByCreatedAtDesc());
+        model.addAttribute("pendingReviews", reviewRepository.countByApprovedFalse());
+
         return "admin/dashboard";
+    }
+
+    @PostMapping("/admin/reviews")
+    public String createReview(@RequestParam String customerName,
+                               @RequestParam(required = false) String customerRole,
+                               @RequestParam int rating,
+                               @RequestParam String content) {
+        if (!customerName.isBlank() && !content.isBlank() && rating >= 1 && rating <= 5) {
+            reviewRepository.save(Review.builder()
+                    .customerName(customerName.trim())
+                    .customerRole(customerRole == null ? "" : customerRole.trim())
+                    .rating(rating)
+                    .content(content.trim())
+                    .approved(true)
+                    .source("ADMIN")
+                    .build());
+        }
+        return "redirect:/admin#reviews";
+    }
+
+    @PostMapping("/admin/reviews/{id}/approve")
+    public String toggleReview(@PathVariable Long id) {
+        reviewRepository.findById(id).ifPresent(review -> {
+            review.setApproved(!review.isApproved());
+            reviewRepository.save(review);
+        });
+        return "redirect:/admin#reviews";
+    }
+
+    @PostMapping("/admin/reviews/{id}/delete")
+    public String deleteReview(@PathVariable Long id) {
+        reviewRepository.deleteById(id);
+        return "redirect:/admin#reviews";
     }
 
     @PostMapping("/admin/orders/{code}/status")

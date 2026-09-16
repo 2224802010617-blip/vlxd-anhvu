@@ -9692,3 +9692,293 @@ body:has(.hp-float) .chat-panel {
     font-size: clamp(1.55rem, 2.6vw, 2.25rem);
     line-height: 1.12;
 }
+
+
+/* ===== Danh gia khach hang (trang chu) ===== */
+.hp-reviews__cta {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 0 16px;
+    border: 1px solid var(--line);
+    border-radius: var(--pill);
+    color: var(--ink);
+    font-weight: 600;
+    font-size: .92rem;
+    white-space: nowrap;
+    text-decoration: none;
+}
+
+.hp-reviews__cta:hover {
+    border-color: var(--ink);
+    color: var(--ink);
+}
+
+.hp-reviews__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.hp-review {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 26px 26px 22px;
+    border-radius: 20px;
+    background: var(--soft);
+}
+
+.hp-review:nth-child(3n+2) {
+    background: #fff;
+    border: 1px solid var(--line);
+}
+
+.hp-review__stars {
+    display: flex;
+    gap: 2px;
+    color: #d4d7dd;
+    font-size: 1.05rem;
+    line-height: 1;
+}
+
+.hp-review__stars .is-on {
+    color: var(--brand);
+}
+
+.hp-review blockquote {
+    margin: 0;
+    color: var(--ink);
+    font-size: 1.02rem;
+    line-height: 1.6;
+}
+
+.hp-review blockquote::before {
+    content: "\201C";
+}
+
+.hp-review blockquote::after {
+    content: "\201D";
+}
+
+.hp-review footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 10px;
+    margin-top: auto;
+    padding-top: 12px;
+    border-top: 1px solid var(--line);
+    font-size: .9rem;
+}
+
+.hp-review footer b {
+    font-weight: 700;
+}
+
+.hp-review footer span,
+.hp-review footer time {
+    color: var(--mute);
+}
+
+.hp-review footer time {
+    margin-left: auto;
+    font-size: .82rem;
+}
+
+.hp-reviews__form {
+    margin-top: 28px;
+}
+
+.hp-reviews__ok,
+.hp-reviews__err {
+    margin: 0 0 14px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-weight: 600;
+}
+
+.hp-reviews__ok {
+    background: #e8f6ee;
+    color: #146c43;
+}
+
+.hp-reviews__err {
+    background: var(--brand-tint);
+    color: var(--brand-dark);
+}
+
+.hp-reviews__form details {
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    background: #fff;
+}
+
+.hp-reviews__form summary {
+    padding: 18px 22px;
+    border-radius: 20px;
+    color: var(--ink);
+    font-weight: 700;
+    cursor: pointer;
+    list-style: none;
+}
+
+.hp-reviews__form summary::-webkit-details-marker {
+    display: none;
+}
+
+.hp-reviews__form summary::after {
+    content: "+";
+    float: right;
+    color: var(--mute);
+    font-family: var(--f-display);
+    font-size: 1.3rem;
+    line-height: 1;
+}
+
+.hp-reviews__form details[open] summary::after {
+    content: "\2212";
+}
+
+.hp-reviews__form form {
+    display: grid;
+    gap: 14px;
+    padding: 4px 22px 22px;
+}
+
+.hp-reviews__row {
+    display: grid;
+    grid-template-columns: 1.2fr 1.2fr .9fr;
+    gap: 14px;
+}
+
+.hp-reviews__form label {
+    display: grid;
+    gap: 6px;
+    color: var(--ink-2);
+    font-size: .9rem;
+    font-weight: 600;
+}
+
+.hp-reviews__form input,
+.hp-reviews__form select,
+.hp-reviews__form textarea {
+    min-height: 46px;
+    padding: 10px 14px;
+    border: 1px solid #cfd4dc;
+    border-radius: 12px;
+    background: #fff;
+    color: var(--ink);
+    font: inherit;
+    font-weight: 500;
+}
+
+.hp-reviews__form textarea {
+    resize: vertical;
+}
+
+.hp-reviews__form input:focus,
+.hp-reviews__form select:focus,
+.hp-reviews__form textarea:focus {
+    outline: none;
+    border-color: var(--ink);
+    box-shadow: 0 0 0 4px rgba(17, 20, 24, .08);
+}
+
+.hp-reviews__form .hp-btn {
+    justify-self: start;
+}
+
+.hp-hp {
+    position: absolute !important;
+    left: -9999px !important;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+}
+
+@media (max-width: 991px) {
+    .hp-reviews__grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+    }
+
+    .hp-reviews__row {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 575px) {
+    .hp-reviews__grid {
+        grid-template-columns: 1fr;
+    }
+
+    .hp-review {
+        padding: 20px 18px 18px;
+    }
+}
+
+/* Admin: dong danh gia cho duyet (nen toi -> to nhe mau vang, giu mau chu) */
+.admin-table tr.is-pending td {
+    background: rgba(250, 204, 21, .10);
+    box-shadow: inset 3px 0 0 #facc15;
+}
+
+/* Admin: form them danh gia */
+.review-form {
+    display: grid;
+    gap: 12px;
+    margin: 0 0 18px;
+    padding: 16px 18px 18px;
+    border: 1px solid rgba(148, 163, 184, .18);
+    border-radius: 12px;
+    background: rgba(255, 255, 255, .03);
+}
+
+.review-form .field-hint {
+    margin: 0;
+    color: #cbd5e1;
+    font-size: .88rem;
+}
+
+.review-form__grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1.2fr .6fr;
+    gap: 12px;
+}
+
+.review-form label {
+    display: grid;
+    gap: 6px;
+    color: #e2e8f0;
+    font-size: .85rem;
+    font-weight: 600;
+}
+
+.review-form input,
+.review-form select,
+.review-form textarea {
+    width: 100%;
+    min-height: 42px;
+    padding: 8px 12px;
+    border: 1px solid rgba(148, 163, 184, .3);
+    border-radius: 8px;
+    background: #0f172a;
+    color: #f8fafc;
+    font: inherit;
+}
+
+.review-form textarea {
+    min-height: 72px;
+    resize: vertical;
+}
+
+.review-form .btn {
+    justify-self: start;
+}
+
+@media (max-width: 767px) {
+    .review-form__grid {
+        grid-template-columns: 1fr;
+    }
+}

@@ -1,8 +1,10 @@
 package com.anhvu.vlxd.controller;
 
 import com.anhvu.vlxd.entity.Product;
+import com.anhvu.vlxd.repository.ReviewRepository;
 import com.anhvu.vlxd.service.ProductService;
 import com.anhvu.vlxd.web.CustomerOrderForm;
+import com.anhvu.vlxd.web.ReviewForm;
 import com.anhvu.vlxd.web.QuoteRequestForm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,6 +32,7 @@ import java.util.Objects;
 public class ProductController {
 
     private final ProductService productService;
+    private final ReviewRepository reviewRepository;
 
     @Value("${app.business.company-name}")
     private String companyName;
@@ -48,6 +51,8 @@ public class ProductController {
     public String index(@RequestParam(required = false) String keyword,
                         @RequestParam(required = false) String category,
                         @RequestParam(required = false, defaultValue = "relevance") String sort,
+                        @RequestParam(required = false) String reviewSent,
+                        @RequestParam(required = false) String reviewError,
                         Model model) {
         // Tim kiem / loc danh muc deu chuyen sang trang san pham rieng
         if ((keyword != null && !keyword.isBlank()) || (category != null && !category.isBlank())) {
@@ -80,6 +85,11 @@ public class ProductController {
         }
         model.addAttribute("priceBoard", priceBoard);
         model.addAttribute("productCount", products.size());
+        // Danh gia khach hang: chi hien danh gia da duyet, toi da 6 moi nhat
+        model.addAttribute("reviews", reviewRepository.findByApprovedTrueOrderByCreatedAtDesc().stream().limit(6).toList());
+        model.addAttribute("reviewForm", new ReviewForm());
+        model.addAttribute("reviewSent", reviewSent != null);
+        model.addAttribute("reviewError", reviewError == null ? "" : reviewError);
         model.addAttribute("priceUpdatedAt", products.stream()
                 .map(product -> product.getUpdatedAt() != null ? product.getUpdatedAt() : product.getCreatedAt())
                 .filter(Objects::nonNull)
