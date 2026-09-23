@@ -148,12 +148,18 @@ public class ProductController {
 
     @GetMapping(value = "/dat-hang", produces = "text/html;charset=UTF-8")
     public String orderPage(@RequestParam(required = false) String product,
+                            @RequestParam(required = false) java.math.BigDecimal quantity,
                             @RequestParam(defaultValue = "false") boolean orderSuccess,
                             Model model) {
         addCommonAttributes(model);
         model.addAttribute("products", productService.getAllActiveProducts());
         model.addAttribute("selectedProduct", product == null ? "" : product);
-        model.addAttribute("orderForm", prefillOrderForm(product));
+        CustomerOrderForm form = prefillOrderForm(product);
+        if (quantity != null && quantity.signum() > 0
+                && quantity.compareTo(new java.math.BigDecimal("9999999999.99")) <= 0) {
+            form.getItems().get(0).setQuantity(quantity.setScale(2, java.math.RoundingMode.UP));
+        }
+        model.addAttribute("orderForm", form);
         model.addAttribute("quoteForm", new QuoteRequestForm());
         model.addAttribute("orderSuccess", orderSuccess);
         return "order";

@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface StockMovementRepository extends JpaRepository<StockMovement, Long> {
+    List<StockMovement> findByReferenceAndType(String reference, String type);
     List<StockMovement> findTop30ByOrderByCreatedAtDescIdDesc();
 
     List<StockMovement> findByProductIdOrderByCreatedAtDescIdDesc(Long productId);

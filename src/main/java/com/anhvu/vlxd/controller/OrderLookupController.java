@@ -69,7 +69,15 @@ public class OrderLookupController {
         model.addAttribute("email", "xaydungvantaidaphuongthucanhvu@gmail.com");
         model.addAttribute("zalo", zaloUrl == null ? "" : zaloUrl.trim());
         model.addAttribute("zaloReady", zaloUrl != null && !zaloUrl.isBlank());
-        model.addAttribute("authenticated", false);
-        model.addAttribute("currentEmail", "");
+        var authentication = org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
+        boolean authenticated = authentication != null && authentication.isAuthenticated()
+                && !(authentication instanceof org.springframework.security.authentication.AnonymousAuthenticationToken);
+        String currentEmail = "";
+        if (authenticated) {
+            currentEmail = authentication.getPrincipal() instanceof org.springframework.security.oauth2.core.oidc.user.OidcUser user
+                    ? user.getEmail() : authentication.getName();
+        }
+        model.addAttribute("authenticated", authenticated);
+        model.addAttribute("currentEmail", currentEmail);
     }
 }

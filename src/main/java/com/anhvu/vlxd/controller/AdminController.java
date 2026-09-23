@@ -71,6 +71,7 @@ public class AdminController {
     private final ProductImageService productImageService;
     private final PaymentRepository paymentRepository;
     private final InventoryService inventoryService;
+    private final com.anhvu.vlxd.service.OrderStatusService orderStatusService;
     private final NotificationService notificationService;
     private final EmailContactService emailContactService;
     private final ObjectMapper objectMapper;
@@ -293,25 +294,12 @@ public class AdminController {
         if (!ORDER_STATUSES.contains(status)) {
             return "redirect:/admin#orders";
         }
-        List<CustomerOrder> lines = customerOrderRepository.findByOrderCodeOrderByIdAsc(code);
-        if (lines.isEmpty() && code.startsWith("DH")) {
-            // Don cu chua co orderCode: DH + id
-            try {
-                customerOrderRepository.findById(Long.parseLong(code.substring(2))).ifPresent(lines::add);
-            } catch (NumberFormatException ignored) {
-                // ma khong hop le -> khong cap nhat
-            }
-        }
-        boolean wasCompleted = !lines.isEmpty() && "COMPLETED".equalsIgnoreCase(lines.get(0).getStatus());
-        for (CustomerOrder line : lines) {
-            line.setStatus(status);
-        }
-        customerOrderRepository.saveAll(lines);
-        // Ton kho di theo trang thai: hoan thanh -> tru kho; roi khoi hoan thanh -> tra lai kho
-        if (!lines.isEmpty() && "COMPLETED".equals(status) && !wasCompleted) {
-            inventoryService.applyCompletion(code, lines);
-        } else if (!lines.isEmpty() && !"COMPLETED".equals(status) && wasCompleted) {
-            inventoryService.revertCompletion(code, lines);
+        List<CustomerOrder> lines;
+        try {
+            lines = orderStatusService.update(code, status);
+        } catch (IllegalArgumentException | IllegalStateException ex) {
+            redirectAttributes.addFlashAttribute("adminError", ex.getMessage());
+            return "redirect:/admin#orders";
         }
         if (!lines.isEmpty()) {
             String message = "Đơn " + code + " → " + AdminReportService.ORDER_STATUS_LABELS.getOrDefault(status, status) + ".";

@@ -14,6 +14,8 @@ import java.math.RoundingMode;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.Map;
+import java.util.TreeMap;
 
 /** Moi thay doi ton kho di qua day de co lich su nhap/xuat/dieu chinh. */
 @Service
@@ -26,6 +28,8 @@ public class InventoryService {
 
     private final ProductRepository productRepository;
     private final StockMovementRepository movementRepository;
+    private final InventoryPolicy inventoryPolicy;
+    private final jakarta.persistence.EntityManager entityManager;
 
     /** Nhap kho: tang ton, ghi gia von moi nhat len san pham. */
     @Transactional
@@ -72,57 +76,75 @@ public class InventoryService {
      */
     @Transactional
     public void applyCompletion(String orderCode, List<CustomerOrder> lines) {
-        if (movementRepository.existsByReferenceAndType(orderCode, OUT)) {
-            return;
-        }
+        Map<Long, Integer> outstanding = outstanding(orderCode);
+        Map<Long, Integer> quantities = new TreeMap<>();
         for (CustomerOrder line : lines) {
-            findProduct(line.getProductName()).ifPresent(product -> {
-                int qty = line.getQuantity() == null ? 0 : line.getQuantity().setScale(0, RoundingMode.CEILING).intValue();
-                if (qty <= 0) {
-                    return;
-                }
-                int after = Math.max(0, safeStock(product) - qty);
-                product.setStockQuantity(after);
-                productRepository.save(product);
-                movementRepository.save(StockMovement.builder()
-                        .productId(product.getId())
-                        .productName(product.getName())
-                        .type(OUT)
-                        .quantity(-qty)
-                        .stockAfter(after)
-                        .reference(orderCode)
-                        .build());
-            });
+            Product product = findProduct(line.getProductName()).orElseThrow(() ->
+                    new IllegalStateException("Không tìm thấy sản phẩm: " + line.getProductName()));
+            if (inventoryPolicy.isService(product)) continue;
+            int qty;
+            try {
+                qty = line.getQuantity().setScale(0, RoundingMode.CEILING).intValueExact();
+                if (qty <= 0) throw new ArithmeticException();
+                quantities.merge(product.getId(), qty, Math::addExact);
+            } catch (ArithmeticException | NullPointerException ex) {
+                throw new IllegalStateException("Số lượng không hợp lệ: " + line.getProductName());
+            }
+        }
+        Map<Long, Product> products = new TreeMap<>();
+        // Lock in ID order so simultaneous orders cannot oversell shared products.
+        for (var entry : quantities.entrySet()) {
+            Product product = lockedProduct(entry.getKey());
+            int needed = entry.getValue() - outstanding.getOrDefault(entry.getKey(), 0);
+            if (needed < 0) throw new IllegalStateException("Lịch sử kho không khớp đơn " + orderCode);
+            if (safeStock(product) < needed) {
+                throw new IllegalStateException("Không đủ tồn kho: " + product.getName()
+                        + " (còn " + safeStock(product) + ", cần " + needed + ").");
+            }
+            products.put(entry.getKey(), product);
+        }
+        for (var entry : quantities.entrySet()) {
+            int needed = entry.getValue() - outstanding.getOrDefault(entry.getKey(), 0);
+            if (needed > 0) changeStock(products.get(entry.getKey()), -needed, OUT, orderCode);
         }
     }
 
     /** Don roi khoi HOAN THANH (sua nham / huy): tra hang ve kho, cung chi mot lan. */
     @Transactional
     public void revertCompletion(String orderCode, List<CustomerOrder> lines) {
-        String reference = "Hoàn " + orderCode;
-        if (!movementRepository.existsByReferenceAndType(orderCode, OUT)
-                || movementRepository.existsByReferenceAndType(reference, IN)) {
-            return;
+        for (var entry : outstanding(orderCode).entrySet()) {
+            if (entry.getValue() > 0) {
+                changeStock(lockedProduct(entry.getKey()), entry.getValue(), IN, "Hoàn " + orderCode);
+            }
         }
-        for (CustomerOrder line : lines) {
-            findProduct(line.getProductName()).ifPresent(product -> {
-                int qty = line.getQuantity() == null ? 0 : line.getQuantity().setScale(0, RoundingMode.CEILING).intValue();
-                if (qty <= 0) {
-                    return;
-                }
-                int after = safeStock(product) + qty;
-                product.setStockQuantity(after);
-                productRepository.save(product);
-                movementRepository.save(StockMovement.builder()
-                        .productId(product.getId())
-                        .productName(product.getName())
-                        .type(IN)
-                        .quantity(qty)
-                        .stockAfter(after)
-                        .reference(reference)
-                        .build());
-            });
+    }
+
+    private Map<Long, Integer> outstanding(String code) {
+        Map<Long, Integer> result = new TreeMap<>();
+        for (StockMovement movement : movementRepository.findByReferenceAndType(code, OUT)) {
+            result.merge(movement.getProductId(), Math.negateExact(movement.getQuantity()), Math::addExact);
         }
+        for (StockMovement movement : movementRepository.findByReferenceAndType("Hoàn " + code, IN)) {
+            result.merge(movement.getProductId(), Math.negateExact(movement.getQuantity()), Math::addExact);
+        }
+        return result;
+    }
+
+    private Product lockedProduct(Long id) {
+        Product product = productRepository.findLockedById(id).orElseThrow(() ->
+                new IllegalStateException("Sản phẩm trong lịch sử kho không còn tồn tại: " + id));
+        // Name resolution may have loaded an older snapshot before acquiring the lock.
+        entityManager.refresh(product, jakarta.persistence.LockModeType.PESSIMISTIC_WRITE);
+        return product;
+    }
+
+    private void changeStock(Product product, int quantity, String type, String reference) {
+        int after = Math.addExact(safeStock(product), quantity);
+        product.setStockQuantity(after);
+        productRepository.save(product);
+        movementRepository.save(StockMovement.builder().productId(product.getId())
+                .productName(product.getName()).type(type).quantity(quantity)
+                .stockAfter(after).reference(reference).build());
     }
 
     public List<StockMovement> recent() {

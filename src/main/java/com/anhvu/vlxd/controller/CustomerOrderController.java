@@ -2,7 +2,6 @@ package com.anhvu.vlxd.controller;
 
 import com.anhvu.vlxd.entity.CustomerOrder;
 import com.anhvu.vlxd.entity.Product;
-import com.anhvu.vlxd.repository.CustomerOrderRepository;
 import com.anhvu.vlxd.repository.ProductRepository;
 import com.anhvu.vlxd.service.ProductService;
 import com.anhvu.vlxd.web.CustomerOrderForm;
@@ -41,7 +40,7 @@ public class CustomerOrderController {
     private static final String EMAIL = "xaydungvantaidaphuongthucanhvu@gmail.com";
     private static final BigDecimal ONLINE_PAYMENT_LIMIT = new BigDecimal("100000000");
 
-    private final CustomerOrderRepository customerOrderRepository;
+    private final com.anhvu.vlxd.service.OrderPersistenceService orderPersistenceService;
     private final ProductRepository productRepository;
     private final ProductService productService;
     private final com.anhvu.vlxd.service.NotificationService notificationService;
@@ -96,7 +95,7 @@ public class CustomerOrderController {
             Product product = resolvedProducts.get(i);
             BigDecimal quantity = items.get(i).getQuantity().setScale(2, RoundingMode.UP);
             BigDecimal lineTotal = product.getPrice().multiply(quantity).setScale(0, RoundingMode.UP);
-            savedOrders.add(customerOrderRepository.save(CustomerOrder.builder()
+            savedOrders.add(CustomerOrder.builder()
                     .customerName(form.getCustomerName().trim())
                     .phone(form.getPhone().trim())
                     .address(form.getAddress().trim())
@@ -108,15 +107,12 @@ public class CustomerOrderController {
                     .paymentMethod(form.getPaymentMethod().trim())
                     .note(finalNote)
                     .status("NEW")
-                    .build()));
+                    .build());
         }
 
         // Gan ma don chung = DH + id dong dau, de admin va tra cuu gom cac dong lai
-        String orderCode = "DH" + savedOrders.get(0).getId();
-        for (CustomerOrder order : savedOrders) {
-            order.setOrderCode(orderCode);
-        }
-        customerOrderRepository.saveAll(savedOrders);
+        savedOrders = orderPersistenceService.create(savedOrders);
+        String orderCode = savedOrders.get(0).getOrderCode();
 
         BigDecimal orderTotal = savedOrders.stream()
                 .map(CustomerOrder::getTotalAmount)

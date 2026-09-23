@@ -10186,12 +10186,13 @@ body:has(.hp-float) .chat-panel {
 
 .pd-calc__form {
     display: grid;
-    grid-template-columns: minmax(120px, 160px) 1fr auto;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
     gap: 16px;
     align-items: end;
 }
 
 .pd-calc__form label {
+    min-width: 0;
     display: grid;
     gap: 6px;
     color: var(--ink-2);
@@ -10200,6 +10201,9 @@ body:has(.hp-float) .chat-panel {
 }
 
 .pd-calc__form input {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
     min-height: 50px;
     padding: 0 14px;
     border: 1px solid #cfd4dc;
@@ -10217,6 +10221,9 @@ body:has(.hp-float) .chat-panel {
 }
 
 .pd-calc__out {
+    min-width: 0;
+    overflow-wrap: anywhere;
+    gap: 4px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -10239,6 +10246,13 @@ body:has(.hp-float) .chat-panel {
 .pd-calc__out small {
     color: var(--mute);
     font-size: .85rem;
+}
+
+.pd-calc__form > a {
+    grid-column: 1 / -1;
+    justify-self: stretch;
+    text-align: center;
+    white-space: normal;
 }
 
 /* Bang gia nhom */
