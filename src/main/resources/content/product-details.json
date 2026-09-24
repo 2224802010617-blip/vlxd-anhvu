@@ -318,5 +318,21 @@
       "Bãi đóng bao cát xây, cát tô, đá 1x2 và đá mi. Bao nhựa dệt chắc, chở bằng xe ba gác hoặc xe máy, xếp gọn không bụi bặm ra đường.",
       "Giá tính theo bao, gọi hoặc nhắn số bao cần để bãi báo giá và giờ giao. Đơn nhiều bao vẫn giao trong ngày quanh Bình Long."
     ]
+  },
+  "Vận tải hàng hóa": {
+    "specs": [["Phương tiện", "xe tải, xe ben, xe ba gác"], ["Hàng chở", "vật liệu xây dựng, máy móc, hàng hóa đường bộ"], ["Cách tính", "theo chuyến, theo khối lượng và quãng đường"], ["Phạm vi", "Bình Long và các tỉnh lân cận"]],
+    "paragraphs": [
+      "Anh Vũ nhận vận tải hàng hóa bằng đường bộ: chở cát, đá, gạch, xi măng, sắt thép từ bãi hoặc từ nơi khách chỉ định tới công trình, và chở các loại hàng hóa, máy móc khác theo yêu cầu.",
+      "Xe được chọn theo khối lượng và đường vào: xe ben cho cát đá, xe tải cho hàng bao và sắt thép, xe ba gác cho hẻm nhỏ. Cước tính theo chuyến, khối lượng và quãng đường, báo trước khi xe chạy.",
+      "Bạn gửi điểm lấy hàng, điểm giao, loại hàng và khối lượng qua form báo giá, hotline hoặc Zalo; bãi báo cước và hẹn giờ xe trong ngày."
+    ]
+  },
+  "Cẩu xe, kéo xe, cứu hộ": {
+    "specs": [["Dịch vụ", "cẩu xe, kéo xe, cứu hộ giao thông đường bộ"], ["Trường hợp", "xe hỏng máy, sa lầy, tai nạn, cần di chuyển xe"], ["Cách tính", "theo loại xe, quãng đường và điều kiện hiện trường"], ["Phạm vi", "Bình Long và khu vực lân cận"]],
+    "paragraphs": [
+      "Anh Vũ hỗ trợ cẩu xe, kéo xe và cứu hộ trên đường bộ khi xe hỏng máy, sa lầy, gặp sự cố hoặc cần chuyển xe tới gara, bãi giữ xe.",
+      "Khi gọi, bạn báo vị trí, loại xe, tình trạng xe và điểm cần đưa tới. Bãi điều xe phù hợp và báo phí dự kiến trước khi thực hiện; phí phụ thuộc loại xe, quãng đường và điều kiện hiện trường.",
+      "Gọi hotline 0866 785 645 để được hỗ trợ nhanh nhất. Với trường hợp có người bị thương, hãy gọi cấp cứu 115 trước."
+    ]
   }
 }

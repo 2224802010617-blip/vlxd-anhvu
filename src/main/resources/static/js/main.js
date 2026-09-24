@@ -499,7 +499,9 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             // X\u1eed l\u00fd b\u00e1o gi\u00e1 t\u1ef1 \u0111\u1ed9ng theo t\u1eeb kh\u00f3a "b\u1ea3ng gi\u00e1", "gi\u00e1", "bao nhi\u00eau" \u0111\u1ed1i v\u1edbi c\u00e1c s\u1ea3n ph\u1ea9m
-            const isPriceQuery = normalized.includes("gia") || normalized.includes("bao nhieu") || normalized.includes("bang gia");
+            // Cau co dien tich ("100m2 tuong can bao nhieu gach") la cau tinh vat tu, de nhanh tinh toan ben duoi xu ly
+            const hasArea = /(\d+)\s*m2/.test(normalized);
+            const isPriceQuery = !hasArea && (normalized.includes("gia") || normalized.includes("bao nhieu") || normalized.includes("bang gia"));
 
             if (isPriceQuery && productsData.length > 0) {
                 // L\u1ecdc s\u1ea3n ph\u1ea9m ph\u00f9 h\u1ee3p
@@ -513,12 +515,17 @@ document.addEventListener("DOMContentLoaded", () => {
                 else if (normalized.includes("thep") || normalized.includes("sat")) matchedProducts = productsData.filter(p => normalize(p.name).includes("thep") || normalize(p.category).includes("thep"));
 
                 // N\u1ebfu t\u00ecm th\u1ea5y m\u1ed9t s\u1ea3n ph\u1ea9m c\u1ee5 th\u1ec3 h\u01a1n
-                const words = normalized.split(/\s+/);
-                const specificMatches = productsData.filter(p => {
-                    const normName = normalize(p.name);
-                    return words.some(w => w.length > 2 && normName.includes(w)) &&
-                           (matchedProducts.length === 0 || matchedProducts.includes(p));
-                });
+                // Uu tien san pham khop nhieu tu nhat: "xi mang pcb40" chi con PCB40,
+                // khong de "mang" keo theo ca nhom roi cat mat san pham khach hoi
+                // Bo tu hoi chung ("gia" khop nham "gian giao", "bao" khop "dong bao")
+                const stopWords = ["gia", "bao", "nhieu", "bang", "can", "cho", "mua", "ban", "loai", "nao", "hien", "nay", "the", "xin"];
+                const words = normalized.split(/\s+/).filter(w => w.length > 2 && !stopWords.includes(w));
+                const scored = productsData
+                    .filter(p => matchedProducts.length === 0 || matchedProducts.includes(p))
+                    .map(p => ({ p, score: words.filter(w => normalize(p.name).includes(w)).length }))
+                    .filter(s => s.score > 0);
+                const bestScore = Math.max(0, ...scored.map(s => s.score));
+                const specificMatches = scored.filter(s => s.score === bestScore).map(s => s.p);
 
                 if (specificMatches.length > 0) {
                     matchedProducts = specificMatches;
@@ -532,7 +539,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     matchedProducts.slice(0, 5).forEach(p => {
                         html += `<tr>`;
                         html += `<td style="padding:6px; border:1px solid #e2e8f0;">${p.name}</td>`;
-                        html += `<td style="padding:6px; border:1px solid #e2e8f0; color:#ef4444; font-weight:500;">${formatCurrency(p.price)}</td>`;
+                        html += `<td style="padding:6px; border:1px solid #e2e8f0; color:#ef4444; font-weight:500;">${p.price > 0 ? formatCurrency(p.price) : "Li\u00ean h\u1ec7"}</td>`;
                         html += `<td style="padding:6px; border:1px solid #e2e8f0;">${p.unit}</td>`;
                         html += `</tr>`;
                     });
@@ -554,7 +561,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 if (isWall) {
                     // L\u1ecdc g\u1ea1ch \u0111\u1ec3 t\u00ednh
-                    const gach = productsData.find(p => normalize(p.category).includes("gach") || normalize(p.name).includes("gach"));
+                    // Dinh muc ben duoi la tuong 10 xay gach ong -> uu tien gach ong, khong lay gach dau danh sach
+                    const gach = productsData.find(p => normalize(p.name).includes("gach ong"))
+                        || productsData.find(p => normalize(p.category).includes("gach") || normalize(p.name).includes("gach"));
                     const xiMang = productsData.find(p => normalize(p.name).includes("xi mang"));
                     const cat = productsData.find(p => normalize(p.name).includes("cat"));
 

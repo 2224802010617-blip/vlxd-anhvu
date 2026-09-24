@@ -1,8 +1,10 @@
 package com.anhvu.vlxd.config;
 
 import com.anhvu.vlxd.entity.Category;
+import com.anhvu.vlxd.entity.DataMigration;
 import com.anhvu.vlxd.entity.Product;
 import com.anhvu.vlxd.repository.CategoryRepository;
+import com.anhvu.vlxd.repository.DataMigrationRepository;
 import com.anhvu.vlxd.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.text.Normalizer;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Locale;
 
@@ -18,25 +21,31 @@ import java.util.Locale;
 public class DataInitializer implements CommandLineRunner {
 
     private static final String STEEL_IMAGE = "/images/products/thep-cay-d10.jpg";
+    private static final String SERVICE_CATEGORY = "D\u1ECBch v\u1EE5";
+    private static final String REGISTERED_SERVICES_MIGRATION = "2026-09-dich-vu-theo-nganh-dang-ky";
 
     private final CategoryRepository categoryRepository;
     private final ProductRepository productRepository;
+    private final DataMigrationRepository dataMigrationRepository;
 
     @Override
     public void run(String... args) {
         fixSteelImages();
 
         // Chi seed khi DB trong. Admin da co the them/xoa san pham nen tuyet doi khong xoa de seed lai.
-        if (productRepository.count() > 0) {
-            return;
+        if (productRepository.count() == 0) {
+            seedProducts();
         }
+        addRegisteredServices();
+    }
 
+    private void seedProducts() {
         Category gach = categoryRepository.save(Category.builder().name("G\u1EA1ch").build());
         Category xiMang = categoryRepository.save(Category.builder().name("Xi m\u0103ng").build());
         Category cat = categoryRepository.save(Category.builder().name("C\u00E1t x\u00E2y d\u1EF1ng").build());
         Category da = categoryRepository.save(Category.builder().name("\u0110\u00E1 x\u00E2y d\u1EF1ng").build());
         Category thep = categoryRepository.save(Category.builder().name("Th\u00E9p").build());
-        Category dichVu = categoryRepository.save(Category.builder().name("D\u1ECBch v\u1EE5").build());
+        Category dichVu = categoryRepository.save(Category.builder().name(SERVICE_CATEGORY).build());
 
         List<Product> seedProducts = List.of(
                 product("G\u1EA1ch \u1ED1ng 8x8x18", "G\u1EA1ch x\u00E2y t\u01B0\u1EDDng ph\u1ED5 bi\u1EBFn cho c\u00F4ng tr\u00ECnh d\u00E2n d\u1EE5ng.", "1200", 50000, "vi\u00EAn", "/images/materials/brick.jpg", "55", gach),
@@ -87,6 +96,33 @@ public class DataInitializer implements CommandLineRunner {
         );
 
         productRepository.saveAll(seedProducts);
+        productRepository.saveAll(registeredServices(dichVu));
+    }
+
+    /** Dich vu theo nganh nghe dang ky kinh doanh (4933 van tai hang hoa, 5225 cau keo cuu ho). */
+    private List<Product> registeredServices(Category dichVu) {
+        return List.of(
+                product("V\u1EADn t\u1EA3i h\u00E0ng h\u00F3a", "V\u1EADn t\u1EA3i h\u00E0ng h\u00F3a \u0111\u01B0\u1EDDng b\u1ED9 b\u1EB1ng xe t\u1EA3i, xe ben: v\u1EADt li\u1EC7u x\u00E2y d\u1EF1ng, m\u00E1y m\u00F3c v\u00E0 h\u00E0ng h\u00F3a theo y\u00EAu c\u1EA7u.", "0", 1, "b\u00E1o gi\u00E1", null, "1", dichVu),
+                product("C\u1EA9u xe, k\u00E9o xe, c\u1EE9u h\u1ED9", "C\u1EA9u xe, k\u00E9o xe, c\u1EE9u h\u1ED9 giao th\u00F4ng \u0111\u01B0\u1EDDng b\u1ED9 khi xe h\u1ECFng, sa l\u1EA7y ho\u1EB7c g\u1EB7p s\u1EF1 c\u1ED1.", "0", 1, "b\u00E1o gi\u00E1", null, "1", dichVu)
+        );
+    }
+
+    /**
+     * DB dang chay (vd Railway) da co san pham nen khong seed lai: bo sung dich vu moi dung mot lan.
+     * Da danh dau thi bo qua, nen admin xoa dich vu thi khoi dong lai khong bi tao lai.
+     */
+    private void addRegisteredServices() {
+        if (dataMigrationRepository.existsById(REGISTERED_SERVICES_MIGRATION)) {
+            return;
+        }
+        Category dichVu = categoryRepository.findByName(SERVICE_CATEGORY)
+                .orElseGet(() -> categoryRepository.save(Category.builder().name(SERVICE_CATEGORY).build()));
+        List<String> existingNames = productRepository.findAll().stream().map(Product::getName).toList();
+        List<Product> missing = registeredServices(dichVu).stream()
+                .filter(service -> !existingNames.contains(service.getName()))
+                .toList();
+        productRepository.saveAll(missing);
+        dataMigrationRepository.save(new DataMigration(REGISTERED_SERVICES_MIGRATION, LocalDateTime.now()));
     }
 
     private boolean hasBrokenSampleData() {

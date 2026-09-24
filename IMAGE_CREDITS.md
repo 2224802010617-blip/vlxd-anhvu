@@ -16,3 +16,7 @@ Generated local assets:
 Pexels license reference:
 - https://help.pexels.com/hc/en-us/articles/360042295214-Can-I-use-the-photos-and-videos-for-a-commercial-project
 - https://help.pexels.com/hc/en-us/articles/360042295174-What-is-the-license-of-the-photos-and-videos-on-Pexels
+
+Service photos added 2026-09 (Pexels license, free for commercial use):
+- `products/van-tai-hang-hoa.jpg`: cropped from "Long Shot of a Truck in a Quarry Site" by Artem Makarov, https://www.pexels.com/photo/long-shot-of-a-truck-in-a-quarry-site-13224687/
+- `products/cau-xe-keo-xe-cuu-ho.jpg`: "A Car on a Tow Truck" by Jonathan Reynaga, https://www.pexels.com/photo/a-car-on-a-tow-truck-17429097/

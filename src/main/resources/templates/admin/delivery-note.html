@@ -36,6 +36,24 @@
         .sign b { display: block; margin-bottom: 64px; }
         .sign i { color: #666; font-size: 11px; }
         .foot { margin-top: 24px; font-size: 11px; color: #666; text-align: center; border-top: 1px solid #ccc; padding-top: 8px; }
+        /* Xem tren dien thoai: xep doc phan dau phieu, thong tin 1 cot, bang gon lai cho vua to phieu */
+        @media screen and (max-width: 640px) {
+            body { padding: 10px; font-size: 12px; }
+            .toolbar { justify-content: space-between; }
+            .sheet { padding: 16px 12px; }
+            .head { flex-direction: column; gap: 10px; }
+            .head > div:first-child { flex-direction: column; align-items: flex-start !important; }
+            .head > div:last-child { text-align: left !important; }
+            .head img { height: 40px; }
+            .title h1 { font-size: 17px; }
+            .meta { grid-template-columns: 1fr; }
+            .meta span { min-width: 88px; }
+            .meta b { overflow-wrap: anywhere; }
+            th, td { padding: 5px 4px; }
+            th { font-size: 10px; letter-spacing: 0; }
+            .sign { gap: 8px; }
+            .sign b { margin-bottom: 48px; }
+        }
         @media print {
             body { background: #fff; padding: 0; }
             .sheet { box-shadow: none; padding: 10mm 12mm; max-width: none; }
@@ -55,8 +73,8 @@
             <img src="/images/anh-vu-logo.svg" alt="VLXD Anh Vũ">
             <div class="company">
                 <b>CÔNG TY TNHH MTV TM DV XD ANH VŨ</b>
-                <span>617 Nguyễn Huệ, Tổ 8 KP Phú Cường, P. Bình Long, TP. Đồng Nai</span>
-                <span>ĐT: 0866 785 645 · MST: 3901312239</span>
+                <span>617 Nguyễn Huệ, Tổ 8 KP Phú Sơn, P. Bình Long, TP. Đồng Nai</span>
+                <span>ĐT: 0866 785 645 · Máy bàn: 02713 666 390 · MST: 3801312239</span>
                 <span>MB Bank 1991777790 · CÔNG TY TNHH MTV TM DV XD ANH VŨ</span>
             </div>
         </div>
@@ -96,7 +114,7 @@
         <tr th:each="line, st : ${order.lines}">
             <td th:text="${st.count}">1</td>
             <td th:text="${line.productName}">Sản phẩm</td>
-            <td class="num" th:text="${#numbers.formatDecimal(line.quantity, 0, 'POINT', 2, 'COMMA')}">1</td>
+            <td class="num" th:text="${line.quantity.stripTrailingZeros().scale() <= 0 ? #numbers.formatInteger(line.quantity, 0, 'POINT') : #numbers.formatDecimal(line.quantity, 0, 'POINT', 2, 'COMMA')}">1</td>
             <td th:text="${unitOf.get(#strings.toLowerCase(line.productName))}">bao</td>
             <td class="num" th:text="${#numbers.formatDecimal(line.unitPrice, 0, 'POINT', 0, 'COMMA')}">0</td>
             <td class="num" th:text="${#numbers.formatDecimal(line.totalAmount, 0, 'POINT', 0, 'COMMA')}">0</td>

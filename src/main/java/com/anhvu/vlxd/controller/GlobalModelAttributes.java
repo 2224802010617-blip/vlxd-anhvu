@@ -1,13 +1,18 @@
 package com.anhvu.vlxd.controller;
 
+import com.anhvu.vlxd.repository.AppUserRepository;
 import com.anhvu.vlxd.web.CustomerOrderForm;
 import com.anhvu.vlxd.web.QuoteRequestForm;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 
 @ControllerAdvice
+@RequiredArgsConstructor
 public class GlobalModelAttributes {
+
+    private final AppUserRepository appUserRepository;
 
     @ModelAttribute("quoteForm")
     public QuoteRequestForm quoteForm() {
@@ -28,8 +33,8 @@ public class GlobalModelAttributes {
     }
 
     /**
-     * Ten hien tren thanh dau trang: uu tien ho ten that (tai khoan Google co san),
-     * khong co thi lay phan truoc dau @ cua email. Tranh hien ky tu vo nghia nhu "2"
+     * Ten hien tren thanh dau trang: uu tien ho ten that (tai khoan Google co san,
+     * tai khoan dang ky bang email lay ho ten da luu), khong co thi lay phan truoc dau @ cua email. Tranh hien ky tu vo nghia nhu "2"
      * voi email bat dau bang so.
      */
     @ModelAttribute("currentDisplayName")
@@ -45,6 +50,12 @@ public class GlobalModelAttributes {
             }
         }
         String name = authentication.getName() == null ? "" : authentication.getName().trim();
+        String fullName = appUserRepository.findByEmailIgnoreCase(name)
+                .map(user -> user.getFullName())
+                .orElse(null);
+        if (fullName != null && !fullName.isBlank()) {
+            return fullName.trim();
+        }
         int at = name.indexOf('@');
         return at > 0 ? name.substring(0, at) : name;
     }
