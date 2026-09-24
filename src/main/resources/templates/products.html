@@ -230,20 +230,5 @@
 <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
 <script th:src="@{/js/main.js(v=31)}"></script>
 
-<button id="scrollToTopBtn" title="L&ecirc;n &#273;&#7847;u trang" style="display: none; position: fixed; bottom: 85px; right: 20px; z-index: 98; border: none; outline: none; background-color: var(--primary); color: white; cursor: pointer; padding: 12px; border-radius: 50%; box-shadow: 0 4px 10px rgba(0,0,0,0.3); transition: all 0.3s; width: 45px; height: 45px; align-items: center; justify-content: center;">&#8593;</button>
-
-<script>
-    let topBtn = document.getElementById("scrollToTopBtn");
-    window.onscroll = function() {
-        if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
-            topBtn.style.display = "flex";
-        } else {
-            topBtn.style.display = "none";
-        }
-    };
-    topBtn.onclick = function() {
-        window.scrollTo({top: 0, behavior: "smooth"});
-    };
-</script>
 </body>
 </html>
