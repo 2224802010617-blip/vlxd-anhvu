@@ -17,8 +17,9 @@ WORKDIR /app
 # Copy jar da build tu giai doan tren
 COPY --from=build /app/target/vlxd-anhvu-1.0.0.jar app.jar
 
-# Railway cap PORT qua bien moi truong; Spring doc SERVER_PORT
-ENV JAVA_OPTS=""
+# Render/Railway cap PORT qua bien moi truong; Spring doc SERVER_PORT
+# Gioi han bo nho cho goi free 512MB cua Render
+ENV JAVA_OPTS="-XX:MaxRAMPercentage=65 -XX:+UseSerialGC -Xss512k -XX:TieredStopAtLevel=1"
 EXPOSE 8095
 
 # Chay app; PORT do Railway inject se duoc map vao server.port
