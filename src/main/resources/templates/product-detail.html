@@ -6,12 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title th:text="${hasPrice} ? |${product.name} giá ${#numbers.formatDecimal(product.price, 0, 'POINT', 0, 'COMMA')} ₫/${product.unit} tại Bình Long, Đồng Nai - VLXD Anh Vũ| : |${product.name} tại Bình Long, Đồng Nai - VLXD Anh Vũ|">Chi tiết sản phẩm - VLXD Anh Vũ</title>
     <meta name="description" th:content="|${product.description} Giá tại bãi cập nhật, bảng giá cả nhóm ${product.category.name}, định mức tham khảo và giao tận công trình quanh Bình Long, Đồng Nai.|">
-    <link rel="canonical" th:href="|https://vlxd-app-production.up.railway.app/san-pham/${product.id}|">
+    <link rel="canonical" th:href="|https://vlxd-anhvu.onrender.com/san-pham/${product.id}|">
     <meta property="og:type" content="product">
     <meta property="og:title" th:content="|${product.name} - VLXD Anh Vũ|">
     <meta property="og:description" th:content="${product.description}">
-    <meta property="og:image" th:content="|https://vlxd-app-production.up.railway.app${product.imagePath}|">
-    <meta property="og:url" th:content="|https://vlxd-app-production.up.railway.app/san-pham/${product.id}|">
+    <meta property="og:image" th:content="|https://vlxd-anhvu.onrender.com${product.imagePath}|">
+    <meta property="og:url" th:content="|https://vlxd-anhvu.onrender.com/san-pham/${product.id}|">
     <meta property="og:locale" content="vi_VN">
     <link rel="icon" type="image/svg+xml" href="/images/anh-vu-logo.svg">
     <link rel="stylesheet" href="/fonts/fonts.css?v=1">

@@ -291,7 +291,7 @@ public class ProductController {
 
     /** Du lieu co cau truc cho Google: san pham + gia, cau hoi thuong gap, duong dan. */
     private String structuredData(Product product, ProductGuideService.Guide guide, boolean hasPrice) {
-        String base = "https://vlxd-app-production.up.railway.app";
+        String base = "https://vlxd-anhvu.onrender.com";
         String url = base + "/san-pham/" + product.getId();
         Map<String, Object> item = new LinkedHashMap<>();
         item.put("@type", "Product");

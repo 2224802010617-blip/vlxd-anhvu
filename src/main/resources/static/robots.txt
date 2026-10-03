@@ -5,4 +5,4 @@ Disallow: /dang-nhap
 Disallow: /dang-ky
 Disallow: /quen-mat-khau
 
-Sitemap: https://vlxd-app-production.up.railway.app/sitemap.xml
+Sitemap: https://vlxd-anhvu.onrender.com/sitemap.xml

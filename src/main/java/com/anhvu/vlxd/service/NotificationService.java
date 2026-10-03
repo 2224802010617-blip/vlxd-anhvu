@@ -32,7 +32,7 @@ public class NotificationService {
 
     public NotificationService(MailGateway mailGateway,
                                @Value("${app.security.admin-email:}") String adminEmail,
-                               @Value("${app.site-url:https://vlxd-app-production.up.railway.app}") String siteUrl,
+                               @Value("${app.site-url:https://vlxd-anhvu.onrender.com}") String siteUrl,
                                @Value("${app.business.company-name:}") String companyName,
                                @Value("${app.business.bank-account:}") String bankAccount,
                                @Value("${app.business.bank-name:}") String bankName,
