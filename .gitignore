@@ -52,3 +52,6 @@ Thumbs.db
 
 # ===== Node (neu co) =====
 node_modules/
+
+# Link Deploy Hook cua Render (bi mat, ai co link deu deploy duoc)
+render-deploy-hook.txt
