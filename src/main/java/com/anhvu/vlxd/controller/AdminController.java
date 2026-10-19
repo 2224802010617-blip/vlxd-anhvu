@@ -431,9 +431,18 @@ public class AdminController {
         List<OrderGroupView> group = reportService.groupOrders(lines);
         reportService.attachPayments(group, paymentRepository.findByOrderCodeOrderByPaidAtAsc(code));
         BigDecimal debt = group.get(0).getDebt();
-        BigDecimal toPay = amount == null || amount.signum() <= 0 ? debt : amount;
+        // De trong so tien = thu het phan con no; so am/0 hoac vuot so no la nhap nham
+        if (amount != null && amount.signum() <= 0) {
+            redirectAttributes.addFlashAttribute("adminError", "Số tiền thu phải lớn hơn 0.");
+            return "redirect:/admin?q=" + code + "#orders";
+        }
+        BigDecimal toPay = amount == null ? debt : amount;
         if (toPay.signum() <= 0) {
             redirectAttributes.addFlashAttribute("adminError", "Đơn " + code + " đã thu đủ.");
+            return "redirect:/admin?q=" + code + "#orders";
+        }
+        if (toPay.compareTo(debt) > 0) {
+            redirectAttributes.addFlashAttribute("adminError", "Số tiền thu vượt số còn nợ của đơn " + code + ".");
             return "redirect:/admin?q=" + code + "#orders";
         }
         paymentRepository.save(Payment.builder()
