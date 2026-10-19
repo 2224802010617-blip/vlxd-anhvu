@@ -8,6 +8,7 @@ target/
 
 # ===== Du lieu MySQL cuc bo (KHONG day len - rat nang, chua du lieu) =====
 .mysql-data/
+mysql-local/
 
 # ===== Cong cu / IDE =====
 .tools/
