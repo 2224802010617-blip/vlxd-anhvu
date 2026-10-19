@@ -69,7 +69,9 @@ public class CustomerOrder {
 
     @PrePersist
     void onCreate() {
-        createdAt = LocalDateTime.now();
+        if (createdAt == null) {
+            createdAt = LocalDateTime.now();
+        }
         if (status == null || status.isBlank()) {
             status = "NEW";
         }

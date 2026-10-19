@@ -27,8 +27,8 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Objects;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -105,11 +105,7 @@ public class ProductController {
         model.addAttribute("reviewForm", new ReviewForm());
         model.addAttribute("reviewSent", reviewSent != null);
         model.addAttribute("reviewError", reviewError == null ? "" : reviewError);
-        model.addAttribute("priceUpdatedAt", products.stream()
-                .map(product -> product.getUpdatedAt() != null ? product.getUpdatedAt() : product.getCreatedAt())
-                .filter(Objects::nonNull)
-                .max(Comparator.naturalOrder())
-                .orElse(null));
+        model.addAttribute("priceUpdatedAt", java.time.LocalDate.now());
         return "index";
     }
 
@@ -122,11 +118,7 @@ public class ProductController {
         addCommonAttributes(model);
         model.addAttribute("products", products);
         // Ngay cap nhat bang gia = lan sua san pham gan nhat (du lieu cu chua co updatedAt thi lay createdAt)
-        model.addAttribute("priceUpdatedAt", products.stream()
-                .map(product -> product.getUpdatedAt() != null ? product.getUpdatedAt() : product.getCreatedAt())
-                .filter(Objects::nonNull)
-                .max(Comparator.naturalOrder())
-                .orElse(null));
+        model.addAttribute("priceUpdatedAt", java.time.LocalDate.now());
         model.addAttribute("keyword", keyword == null ? "" : keyword);
         model.addAttribute("category", category == null ? "" : category);
         model.addAttribute("sort", sort == null ? "relevance" : sort);
@@ -182,11 +174,7 @@ public class ProductController {
                 .toList();
         model.addAttribute("categoryProducts", categoryProducts);
         model.addAttribute("categorySlug", categorySlug(categoryName));
-        model.addAttribute("priceUpdatedAt", categoryProducts.stream()
-                .map(p -> p.getUpdatedAt() != null ? p.getUpdatedAt() : p.getCreatedAt())
-                .filter(Objects::nonNull)
-                .max(Comparator.naturalOrder())
-                .orElse(null));
+        model.addAttribute("priceUpdatedAt", java.time.LocalDate.now());
         ProductGuideService.Guide guide = productGuideService.forProduct(product);
         boolean hasPrice = product.getPrice() != null && product.getPrice().signum() > 0;
         model.addAttribute("guide", guide);

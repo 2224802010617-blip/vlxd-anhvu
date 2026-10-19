@@ -155,7 +155,7 @@
         </div>
     </div>
     <div class="container footer-bottom">
-        <span>&copy; 2026 <b th:text="${companyName}">CÔNG TY TNHH MTV TM DV XD ANH VŨ</b>. Mọi quyền được bảo lưu.</span>
+        <span>&copy; <span th:text="${#temporals.year(#temporals.createNow())}">2026</span> <b th:text="${companyName}">CÔNG TY TNHH MTV TM DV XD ANH VŨ</b>. Mọi quyền được bảo lưu.</span>
     </div>
 </footer>
 
