@@ -1,6 +1,7 @@
 package com.anhvu.vlxd.web;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -61,6 +62,7 @@ public class CustomerOrderForm {
 
         @NotNull(message = "Vui lòng nhập số lượng.")
         @DecimalMin(value = "0.01", message = "Số lượng phải lớn hơn 0.")
+        @DecimalMax(value = "1000000", message = "Số lượng quá lớn, vui lòng gọi hotline để đặt đơn số lượng lớn.")
         private BigDecimal quantity;
     }
 }

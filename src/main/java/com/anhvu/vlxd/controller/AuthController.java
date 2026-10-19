@@ -153,7 +153,7 @@ public class AuthController {
     }
 
     @GetMapping("/dat-lai-mat-khau")
-    public String resetPasswordForm(@RequestParam String token, Model model) {
+    public String resetPasswordForm(@RequestParam(defaultValue = "") String token, Model model) {
         model.addAttribute("token", token);
         model.addAttribute("validToken", passwordResetService.isResetTokenValid(token));
         return "auth/reset-password";
