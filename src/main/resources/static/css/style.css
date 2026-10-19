@@ -11050,3 +11050,63 @@ details:not([open]) > *:not(summary) {
     min-height: 32px;
     padding: 0 10px;
 }
+
+/* ===== Fix 2026-10: form bao gia bi chu trang tren nen trang (nen da doi sang #fff o tren) ===== */
+.quote-form input,
+.quote-form textarea {
+    color: #101828;
+}
+
+.quote-form input::placeholder,
+.quote-form textarea::placeholder {
+    color: #667085;
+}
+
+/* May tinh vat lieu: o chon vat lieu cung kieu voi o nhap, nut Tinh ngay o cot rieng */
+.calc-form {
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1fr) auto;
+}
+
+.calc-form select {
+    width: 100%;
+    height: 52px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 0 12px;
+    background: #fff;
+    font: inherit;
+    outline: none;
+}
+
+.calc-form select:focus {
+    border-color: var(--red);
+    box-shadow: 0 0 0 4px rgba(239,24,40,.13);
+}
+
+.calc-form button {
+    height: 52px;
+    padding: 0 28px;
+}
+
+@media (max-width: 900px) {
+    .calc-form {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Chua cho nut "Goi ngay" noi o goc duoi, khong de che dong ban quyen cuoi trang */
+.footer {
+    padding-bottom: 96px;
+}
+
+/* Don vi nam cung dong: "Dinh muc / m2" va ket qua "5.500 vien" */
+.calc-form label span span,
+#calcResult strong span {
+    display: inline;
+    margin: 0;
+}
+
+/* Tat khoi 3D trang tri o hai ben man hinh rong: lo ra giua cac khoi trang nhu bi loi */
+.hp-decor {
+    display: none !important;
+}

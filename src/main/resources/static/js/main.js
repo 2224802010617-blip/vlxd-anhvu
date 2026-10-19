@@ -85,7 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const searchInput = document.querySelector("#productSearchInput");
 
     if (searchForm && searchInput) {
-        const normalize = (value) => value.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        const normalize = (value) => value.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\u0111/g, "d");
 
         // Khung goi y (tao dong, khong can server render)
         const box = document.createElement("div");
@@ -297,7 +297,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         ];
 
-        const normalize = (value) => value.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        const normalize = (value) => value.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\u0111/g, "d");
 
         // ===== Helper cho luong tu van xay nha =====
         const houseTypeName = (type) => type === "cap4" ? "nh&agrave; c&#7845;p 4" : (type === "pho" ? "nh&agrave; ph&#7889;" : "nh&agrave; t&#7847;ng");
@@ -315,8 +315,16 @@ document.addEventListener("DOMContentLoaded", () => {
             html += `<li><b>&#272;&aacute; 1x2 / 4x6:</b> ~${fmt(25 * scale)} m3</li>`;
             html += `<li><b>Th&eacute;p c&acirc;y g&acirc;n:</b> ~${fmt(steelBase * scale)} t&#7845;n</li>`;
             html += `</ul>`;
-            const pick = (kw) => productsData.find((p) => normalize(p.name).includes(kw));
-            const rows = [pick("gach"), pick("xi mang"), pick("cat"), pick("da 1x2") || pick("da"), pick("thep")].filter(Boolean);
+            // Uu tien dung mat hang cho nha o, bo qua dich vu chua co gia (0 d)
+            const pick = (...kws) => {
+                for (const kw of kws) {
+                    const found = productsData.find((p) => p.price > 0 && normalize(p.name).includes(kw));
+                    if (found) return found;
+                }
+                return null;
+            };
+            const rows = [pick("gach ong", "gach"), pick("xi mang pcb40", "xi mang"), pick("cat xay dung", "cat xay", "cat"),
+                pick("da 1x2", "da"), pick("thep cay gan", "thep cay", "thep")].filter(Boolean);
             if (rows.length > 0) {
                 html += `<p style="margin:6px 0 4px;">Gi&aacute; tham kh&#7843;o t&#7841;i Anh V&#361;:</p>`;
                 html += `<table style="width:100%; border-collapse: collapse; font-size: 13px;">`;
@@ -441,7 +449,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 html += `<li><b>&#272;&#7883;a ch&#7881;:</b> 617 Nguy&#7877;n Hu&#7879;, P. B&igrave;nh Long, TP. &#272;&#7891;ng Nai</li>`;
                 html += `<li><b>Hotline/Zalo:</b> <a href="tel:0866785645" style="color:#ef4444; font-weight:700;">0866785645</a></li>`;
                 html += `<li><b>Email:</b> xaydungvantaidaphuongthucanhvu@gmail.com</li>`;
-                html += `</ul><p style="font-size:12px; color:#64748b;">Anh/ch&#7883; g&#7885;i ho&#7843;c nh&#7855;n Zalo l&agrave; em b&aacute;o gi&aacute; ngay &#7841;!</p>`;
+                html += `</ul><p style="font-size:12px; color:#64748b;">Anh/ch&#7883; g&#7885;i ho&#7863;c nh&#7855;n Zalo l&agrave; em b&aacute;o gi&aacute; ngay &#7841;!</p>`;
                 return { text: html, isHtml: true };
             }
 

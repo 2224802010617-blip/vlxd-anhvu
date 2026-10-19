@@ -168,7 +168,8 @@ public class CustomerOrderController {
             CustomerOrder order = orders.get(i);
             Map<String, Object> line = new LinkedHashMap<>();
             line.put("name", order.getProductName());
-            line.put("quantity", order.getQuantity());
+            // 3.00 -> "3", 2.50 -> "2,5"
+            line.put("quantity", order.getQuantity().stripTrailingZeros().toPlainString().replace('.', ','));
             line.put("unit", products.get(i).getUnit());
             line.put("unitPriceDisplay", money(order.getUnitPrice()));
             line.put("lineTotalDisplay", money(order.getTotalAmount()));

@@ -338,7 +338,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const padding = { top: 24, right: 44, bottom: 34, left: 52 };
             const chartWidth = width - padding.left - padding.right;
             const chartHeight = height - padding.top - padding.bottom;
-            const maxRevenue = niceMax(Math.max(...rev, 0));
+            // Chua co doanh thu: truc 0-1M de vach chia khong bi lam tron thanh "0, 0, 1, 1, 1"
+            const maxRevenue = Math.max(...rev, 0) > 0 ? niceMax(Math.max(...rev)) : 1000000;
             // Truc so don: boi so cua 4 de 4 vach chia deu ra so nguyen
             const maxOrders = Math.max(4, Math.ceil(Math.max(...cnt, 0) / 4) * 4);
             const n = labels.length || 1;
