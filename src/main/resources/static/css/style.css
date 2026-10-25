@@ -11110,3 +11110,13 @@ details:not([open]) > *:not(summary) {
 .hp-decor {
     display: none !important;
 }
+
+/* The QR chuyen khoan: o man 1366px cot thong tin chi ~258px, so tai khoan 3.2rem va cac dong chu bi tran khoi the */
+.qr-payment-info > * {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.qr-payment-info strong {
+    font-size: clamp(1.6rem, 2.5vw, 3.2rem);
+}

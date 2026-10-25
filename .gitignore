@@ -55,3 +55,7 @@ node_modules/
 
 # Link Deploy Hook cua Render (bi mat, ai co link deu deploy duoc)
 render-deploy-hook.txt
+
+# Tai lieu ca nhan o thu muc goc (bao cao, mau cua truong) - khong dua len GitHub
+/*.docx
+/*.pdf
